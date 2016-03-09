@@ -13,4 +13,5 @@ hs_err_pid*
 
 .idea/
 out/
-2d_rpg.iml
+*.iml
+*.iws
