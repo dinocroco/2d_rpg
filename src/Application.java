@@ -2,6 +2,8 @@ import asciiPanel.AsciiPanel;
 import javax.swing.JFrame;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+
 import screen.*;
 
 public class Application extends JFrame implements KeyListener {
@@ -25,6 +27,10 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
+            // ctrl+c for exit
+            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
         screen = screen.respondToUserInput(e);
         repaint();
     }
