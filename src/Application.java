@@ -27,7 +27,6 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(System.nanoTime());
         if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
             // ctrl+c for exit
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
