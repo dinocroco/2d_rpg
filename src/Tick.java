@@ -7,20 +7,21 @@ import java.util.List;
 /**
  * Created by mrrobot on 16.03.16.
  */
-public class Tick {
+public class Tick implements Runnable {
 
     long lastMoment = System.nanoTime();
     long tickLength = 500000000;
     boolean playing = true;
     double unprocessed = 0.0;
-    List<List<GameAction>> gameActions = new ArrayList<>();
     Application app;
+    List<List<GameAction>> gameActions = new ArrayList<>();
 
-    public Tick() {
-        app = new Application();
-        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        app.setVisible(true);
+    public Tick(Application app) {
+        this.app = app;
+        //initTick();
+    }
 
+    public void run(){
         while (playing) {
             long thisMoment = System.nanoTime();
             //System.out.println(thisMoment-lastMoment);

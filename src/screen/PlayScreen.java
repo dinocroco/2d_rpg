@@ -20,6 +20,7 @@ public class PlayScreen implements Screen {
             case KeyEvent.VK_ENTER: return new WinScreen();
             case KeyEvent.VK_LEFT:
                 Movement movement = new Movement(0,-1);
+                //AddEvent();
         }
 
         return this;
