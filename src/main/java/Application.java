@@ -1,12 +1,11 @@
-import action.GameAction;
 import asciiPanel.AsciiPanel;
-import javax.swing.JFrame;
+import screen.Screen;
+import screen.StartScreen;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.util.List;
-
-import screen.*;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -28,12 +27,12 @@ public class Application extends JFrame implements KeyListener {
         ticking.start();
     }
 
-    @Override
+    //@Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-    @Override
+    //@Override
     public void keyPressed(KeyEvent e) {
         if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
             // ctrl+c for exit
@@ -44,7 +43,7 @@ public class Application extends JFrame implements KeyListener {
         //repaint();
     }
 
-    @Override
+    //@Override
     public void keyReleased(KeyEvent e) {
 
     }
