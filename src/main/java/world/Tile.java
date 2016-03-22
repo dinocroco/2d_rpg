@@ -7,7 +7,8 @@ import java.awt.*;
 public enum Tile {
     FLOOR((char)250, AsciiPanel.yellow),
     WALL((char)177, AsciiPanel.yellow),
-    BOUNDS('x', AsciiPanel.brightBlack);
+    BOUNDS('x', AsciiPanel.brightBlack),
+    PLAYER((char)254, AsciiPanel.cyan);
 
     private char glyph;
     public char glyph() { return glyph; }

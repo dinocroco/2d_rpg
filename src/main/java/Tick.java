@@ -1,4 +1,5 @@
 import action.GameAction;
+import player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class Tick implements Runnable {
     double unprocessed = 0.0;
     Application app;
     List<List<GameAction>> gameActions = new ArrayList<>();
+    List<Player> players;
 
     public Tick(Application app) {
         this.app = app;
@@ -51,6 +53,11 @@ public class Tick implements Runnable {
         if (gameActions.size() <= 0) {
             gameActions.add(new ArrayList<>());
         }
+        for (Player player : players) {
+            gameActions.add(player.getActions());
+
+        }
+
     }
 
 }
