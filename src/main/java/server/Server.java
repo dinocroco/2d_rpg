@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by mrrobot on 24.03.16.
- */
 public class Server {
 
     private List<Connection> connections = new ArrayList<>();
     private LinkedBlockingQueue messages = new LinkedBlockingQueue();
     ServerSocket serverSocket;
-    private int port;
 
     public Server(int port) {
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
 
-        this.port = port;
         Thread accept = new Thread() {
             public void run() {
                 while (true) {

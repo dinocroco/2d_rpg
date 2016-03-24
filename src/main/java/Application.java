@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -42,6 +41,9 @@ public class Application extends JFrame implements KeyListener {
             // ctrl+c for exit
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
+        if(e.getKeyCode()==KeyEvent.VK_SPACE){
+            server.sendToAll("space");
+        }
         screen = screen.respondToUserInput(e);
         // instead, ticking is responsible for redraw
         //repaint();
@@ -61,7 +63,6 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Server startServer(){
-        Server server = new Server(1336);
-        return server;
+        return new Server(1336);
     }
 }
