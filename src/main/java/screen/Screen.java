@@ -7,4 +7,5 @@ public interface Screen {
     void displayOutput(AsciiPanel terminal);
 
     Screen respondToUserInput(KeyEvent key);
+
 }

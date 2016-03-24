@@ -6,11 +6,13 @@ import java.util.List;
 import action.GameAction;
 import action.Movement;
 import asciiPanel.AsciiPanel;
+import player.Player;
 import world.World;
 import world.WorldBuilder;
 
 public class PlayScreen implements Screen {
     private World world;
+    Player player;
     private int screenWidth = 80;
     private int screenHeight = 24;
     private int viewX = 0;
@@ -58,4 +60,5 @@ public class PlayScreen implements Screen {
         }
         //terminal.write(player.glyph(), player.x - left, player.y - top, player.color());
     }
+
 }
