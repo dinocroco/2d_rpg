@@ -14,17 +14,12 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
-        client.send("aslfa");
     }
 
     public Client(String IPAddress, int port) throws IOException{
         socket = new Socket(IPAddress, port);
         messages = new LinkedBlockingQueue<Object>();
-        System.out.println("aa");
         server = new ConnectionToServer(socket);
-        System.out.println("aa");
-
-        System.out.println("CONTS");
 
         Thread messageHandling = new Thread() {
             public void run(){
