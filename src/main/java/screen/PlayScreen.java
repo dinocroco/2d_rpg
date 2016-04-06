@@ -2,6 +2,7 @@ package screen;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.TreeSet;
 
 import action.GameAction;
 import action.Movement;
@@ -45,8 +46,8 @@ public class PlayScreen implements Screen {
                 .build();
     }
 
-    public void AddEvent(List<List<GameAction>> events, GameAction action){
-        events.get(0).add(action);
+    public synchronized void AddEvent(TreeSet<GameAction> events, GameAction action){
+        events.add(action);
     }
 
     private void displayTiles(AsciiPanel terminal, int left, int top) {

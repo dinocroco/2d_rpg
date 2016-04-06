@@ -19,17 +19,4 @@ public class Player {
         this.y = y;
     }
 
-    public List<GameAction> actions = new ArrayList<>();
-
-    public List<GameAction> getActions(){
-        List<GameAction> newActions = new ArrayList<>(actions);
-        actions.clear();
-        return newActions;
-    }
-
-    public void doAction(GameAction action){
-        actions.add(action);
-    }
-
-
 }

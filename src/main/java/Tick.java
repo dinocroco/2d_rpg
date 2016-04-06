@@ -3,16 +3,16 @@ import player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class Tick implements Runnable {
 
-    long lastMoment = System.nanoTime();
-    long tickLength = 500000000;
-    boolean playing = true;
-    double unprocessed = 0.0;
-    Application app;
-    List<List<GameAction>> gameActions = new ArrayList<>();
-    List<Player> players;
+    private long lastMoment = System.nanoTime();
+    private long tickLength = 500000000;
+    private boolean playing = true;
+    private double unprocessed = 0.0;
+    private Application app;
+    private TreeSet<GameAction> gameActions = new TreeSet<>();
 
     public Tick(Application app) {
         this.app = app;
@@ -51,16 +51,8 @@ public class Tick implements Runnable {
     private void tick(){
         System.out.println("performing tick "+System.currentTimeMillis());
         if (gameActions.size() <= 0) return;
-        for (GameAction gameAction : gameActions.get(0)) {
+        for (GameAction gameAction : gameActions) {
             gameAction.run();
-        }
-        gameActions.remove(0);
-        if (gameActions.size() <= 0) {
-            gameActions.add(new ArrayList<>());
-        }
-        for (Player player : players) {
-            gameActions.add(player.getActions());
-
         }
 
     }

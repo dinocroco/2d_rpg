@@ -31,8 +31,4 @@ public class World {
         return tile(x, y).color();
     }
 
-    public void dig(int x, int y) {
-        if (tile(x,y).isDiggable())
-            tiles[x][y] = Tile.FLOOR;
-    }
 }

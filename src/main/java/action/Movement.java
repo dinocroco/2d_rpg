@@ -1,13 +1,11 @@
 package action;
 
-/**
- * Created by Ravana on 16.03.2016.
- */
-public class Movement implements GameAction {
+public class Movement extends GameAction{
     private int down;
     private int right;
 
-    public Movement(int down, int right) {
+    public Movement(int priority, int down, int right) {
+        super(priority);
         this.down = down;
         this.right = right;
     }
