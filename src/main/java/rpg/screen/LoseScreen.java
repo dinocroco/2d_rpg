@@ -1,7 +1,9 @@
 package rpg.screen;
 
-import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
+import rpg.server.Server;
+
+import java.awt.event.KeyEvent;
 
 public class LoseScreen implements Screen {
 
@@ -12,5 +14,10 @@ public class LoseScreen implements Screen {
 
     public Screen respondToUserInput(KeyEvent key) {
         return key.getKeyCode() == KeyEvent.VK_ENTER ? new StartScreen() : this;
+    }
+
+    @Override
+    public void sendOutput(Server server) {
+
     }
 }

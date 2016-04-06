@@ -3,6 +3,8 @@ package rpg.screen;
 import asciiPanel.AsciiPanel;
 import rpg.action.GameAction;
 import rpg.player.Player;
+import rpg.server.Server;
+import rpg.world.AsciiSymbol;
 import rpg.world.World;
 import rpg.world.WorldBuilder;
 
@@ -16,6 +18,10 @@ public class PlayScreen implements Screen {
     private int screenHeight = 24;
     private int viewX = 0;
     private int viewY = 0;
+
+    // these will not remain as constants
+    final int width = 90;
+    final int height = 31;
 
     public PlayScreen() {
         createWorld();
@@ -39,7 +45,7 @@ public class PlayScreen implements Screen {
     }
 
     private void createWorld(){
-        world = new WorldBuilder(90, 31)
+        world = new WorldBuilder(width, height)
                 .makeCaves()
                 .build();
     }
@@ -60,4 +66,14 @@ public class PlayScreen implements Screen {
         //terminal.write(rpg.player.glyph(), rpg.player.x - left, rpg.player.y - top, rpg.player.color());
     }
 
+    @Override
+    public void sendOutput(Server server) {
+        AsciiSymbol[][] symbols = new AsciiSymbol[width][height];
+        for(int i=0;i<width;i++){
+            for(int j=0;j<height;j++){
+                symbols[i][j] = new AsciiSymbol(world.glyph(i,j),world.color(i,j));
+            }
+        }
+        server.sendToAll(symbols);
+    }
 }

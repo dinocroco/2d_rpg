@@ -37,6 +37,8 @@ public class Tick implements Runnable {
             if (shouldRender) {
                 app.repaint();
                 System.out.println("rendering at "+System.currentTimeMillis());
+                // TODO do something about sending
+                //app.getScreen().sendOutput(app.server);
             } else {
                 try {
                     Thread.sleep((int)((tickLength-unprocessed)/1000000));
