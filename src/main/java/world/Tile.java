@@ -7,8 +7,8 @@ import java.awt.*;
 public enum Tile {
     FLOOR((char)250, AsciiPanel.yellow),
     WALL((char)177, AsciiPanel.yellow),
-    BOUNDS('x', AsciiPanel.brightBlack),
-    PLAYER((char)254, AsciiPanel.cyan);
+    BOUNDS('x', AsciiPanel.brightBlack);
+//    PLAYER((char)254, AsciiPanel.cyan); // see kirjeldab maailma, mängijad eksisteerivad maailmas mitte ei asenda seda
 
     private char glyph;
     public char glyph() { return glyph; }

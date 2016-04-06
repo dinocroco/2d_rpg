@@ -4,9 +4,6 @@ import player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mrrobot on 16.03.16.
- */
 public class Tick implements Runnable {
 
     long lastMoment = System.nanoTime();
@@ -25,6 +22,8 @@ public class Tick implements Runnable {
     public void run(){
         while (playing) {
             long thisMoment = System.nanoTime();
+            System.out.println("running run loop");
+            System.out.println(thisMoment);
             //System.out.println(thisMoment-lastMoment);
             unprocessed += (thisMoment - lastMoment);
             lastMoment = thisMoment;
@@ -39,6 +38,12 @@ public class Tick implements Runnable {
             if (shouldRender) {
                 app.repaint();
                 System.out.println("rendering at "+System.currentTimeMillis());
+            } else {
+                try {
+                    Thread.sleep((int)((tickLength-unprocessed)/1000000));
+                } catch (InterruptedException e){
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
