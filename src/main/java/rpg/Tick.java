@@ -1,8 +1,7 @@
-import action.GameAction;
-import player.Player;
+package rpg;
 
-import java.util.ArrayList;
-import java.util.List;
+import rpg.action.GameAction;
+
 import java.util.TreeSet;
 
 public class Tick implements Runnable {

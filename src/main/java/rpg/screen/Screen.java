@@ -1,7 +1,8 @@
-package screen;
+package rpg.screen;
+
+import asciiPanel.AsciiPanel;
 
 import java.awt.event.KeyEvent;
-import asciiPanel.AsciiPanel;
 
 public interface Screen {
     void displayOutput(AsciiPanel terminal);

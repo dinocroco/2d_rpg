@@ -1,4 +1,4 @@
-package world;
+package rpg.world;
 
 import asciiPanel.AsciiPanel;
 

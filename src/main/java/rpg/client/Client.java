@@ -1,5 +1,8 @@
-package client;
+package rpg.client;
 
+import rpg.Application;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,6 +17,10 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
+
+        Application app = new Application(0);
+        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setVisible(true);
     }
 
     public Client(String IPAddress, int port) throws IOException{

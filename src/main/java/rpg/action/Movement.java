@@ -1,4 +1,4 @@
-package action;
+package rpg.action;
 
 public class Movement extends GameAction{
     private int down;

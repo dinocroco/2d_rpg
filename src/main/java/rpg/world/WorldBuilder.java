@@ -1,4 +1,4 @@
-package world;
+package rpg.world;
 
 public class WorldBuilder {
     private int width;

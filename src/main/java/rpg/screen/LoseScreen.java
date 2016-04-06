@@ -1,12 +1,12 @@
-package screen;
+package rpg.screen;
 
 import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 
-public class WinScreen implements Screen {
+public class LoseScreen implements Screen {
 
     public void displayOutput(AsciiPanel terminal) {
-        terminal.write("You won.", 1, 1);
+        terminal.write("You lost.", 1, 1);
         terminal.writeCenter("-- press [enter] to restart --", 22);
     }
 
@@ -14,4 +14,3 @@ public class WinScreen implements Screen {
         return key.getKeyCode() == KeyEvent.VK_ENTER ? new StartScreen() : this;
     }
 }
-

@@ -1,4 +1,4 @@
-package server;
+package rpg.server;
 
 import java.io.*;
 import java.net.ServerSocket;

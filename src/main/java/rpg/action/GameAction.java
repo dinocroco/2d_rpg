@@ -1,4 +1,4 @@
-package action;
+package rpg.action;
 
 public abstract class GameAction implements Comparable<GameAction>  {
 

@@ -1,11 +1,8 @@
-package player;
+package rpg.player;
 
-import action.GameAction;
 import asciiPanel.AsciiPanel;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Player {
 

@@ -1,7 +1,10 @@
+package rpg;
+
 import asciiPanel.AsciiPanel;
-import screen.Screen;
-import screen.StartScreen;
-import server.Server;
+import rpg.screen.ClientScreen;
+import rpg.screen.Screen;
+import rpg.screen.StartScreen;
+import rpg.server.Server;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -30,6 +33,16 @@ public class Application extends JFrame implements KeyListener {
         server = startServer();
     }
 
+    public Application(int type){
+        super();
+        terminal = new AsciiPanel();
+        add(terminal);
+        screen = new ClientScreen();
+        addKeyListener(this);
+        repaint();
+        pack();
+    }
+
     //@Override
     public void keyTyped(KeyEvent e) {
 
@@ -56,7 +69,7 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void repaint(){
-        //server sends new data
+        //rpg.server sends new data
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();

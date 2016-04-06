@@ -1,15 +1,13 @@
-package screen;
+package rpg.screen;
+
+import asciiPanel.AsciiPanel;
+import rpg.action.GameAction;
+import rpg.player.Player;
+import rpg.world.World;
+import rpg.world.WorldBuilder;
 
 import java.awt.event.KeyEvent;
-import java.util.List;
 import java.util.TreeSet;
-
-import action.GameAction;
-import action.Movement;
-import asciiPanel.AsciiPanel;
-import player.Player;
-import world.World;
-import world.WorldBuilder;
 
 public class PlayScreen implements Screen {
     private World world;
@@ -59,7 +57,7 @@ public class PlayScreen implements Screen {
                 terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
             }
         }
-        //terminal.write(player.glyph(), player.x - left, player.y - top, player.color());
+        //terminal.write(rpg.player.glyph(), rpg.player.x - left, rpg.player.y - top, rpg.player.color());
     }
 
 }

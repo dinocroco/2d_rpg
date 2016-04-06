@@ -1,4 +1,4 @@
-package screen;
+package rpg.screen;
 
 import asciiPanel.AsciiPanel;
 import java.awt.event.KeyEvent;
