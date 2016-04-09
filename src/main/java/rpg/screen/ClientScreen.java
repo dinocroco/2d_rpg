@@ -4,13 +4,14 @@ import asciiPanel.AsciiPanel;
 import rpg.world.AsciiSymbol;
 import rpg.server.Server;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class ClientScreen implements Screen {
     private int screenWidth = 80;
     private int screenHeight = 24;
     // from WorldBuilder
-    private AsciiSymbol[][] view = new AsciiSymbol[90][31];
+    private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
     private int viewY = 0;
 
@@ -19,7 +20,17 @@ public class ClientScreen implements Screen {
         displayTiles(terminal,viewX,viewY);
     }
 
+    private AsciiSymbol[][] startView(int width, int height){
 
+        AsciiSymbol[][] startview = new AsciiSymbol[width][height];
+
+        for (int x = 0; x < width; x++){
+            for (int y = 0; y < height; y++){
+                startview[x][y]=new AsciiSymbol('.',Color.white);
+            }
+        }
+        return startview;
+    }
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
@@ -31,9 +42,8 @@ public class ClientScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-                // needs adding something to view first
-                //AsciiSymbol sym = view[wx][wy];
-                //terminal.write(sym.getGlyph(),sym.getColor());
+                AsciiSymbol sym = view[wx][wy];
+                terminal.write(sym.getGlyph(),wx,wy,sym.getColor());
             }
         }
     }

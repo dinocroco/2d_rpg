@@ -70,6 +70,7 @@ public class Application extends JFrame implements KeyListener {
     @Override
     public void repaint(){
         //rpg.server sends new data
+        screen.sendOutput(server);
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();

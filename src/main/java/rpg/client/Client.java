@@ -1,5 +1,6 @@
 package rpg.client;
 
+import asciiPanel.AsciiPanel;
 import rpg.Application;
 import rpg.world.AsciiSymbol;
 
@@ -37,7 +38,8 @@ public class Client {
                         Object message = messages.take();
                         // Do some handling here...
                         if(message instanceof AsciiSymbol[][]){
-                             app.getScreen().setView((AsciiSymbol[][]) message);
+                            app.getScreen().setView((AsciiSymbol[][]) message);
+                            //app.getScreen().displayOutput(new AsciiPanel(80,24));
                         }
                         System.out.println(message.getClass());
                         System.out.println("Message Received: " + message);

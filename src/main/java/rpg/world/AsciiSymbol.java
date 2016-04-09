@@ -3,9 +3,6 @@ package rpg.world;
 import java.awt.*;
 import java.io.Serializable;
 
-/**
- * Created by Ravana on 6.04.2016.
- */
 public class AsciiSymbol implements Serializable {
     private char glyph;
     private Color color;
