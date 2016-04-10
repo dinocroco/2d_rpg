@@ -77,10 +77,14 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Server startServer(){
-        return new Server(1336);
+        return new Server(1336,this);
     }
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public AsciiPanel getTerminal() {
+        return terminal;
     }
 }
