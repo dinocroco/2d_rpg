@@ -56,9 +56,6 @@ public class Application extends JFrame implements KeyListener {
             // ctrl+c for exit
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
-        if(e.getKeyCode()==KeyEvent.VK_SPACE){
-            server.sendToAll("space");
-        }
         screen = screen.respondToUserInput(e);
         // instead, ticking is responsible for redraw
         //repaint();
@@ -76,6 +73,10 @@ public class Application extends JFrame implements KeyListener {
         }
     }
 
+    public void executeKeyCode(int[] keycodes){
+        System.out.println("keycodes received:" +keycodes);
+
+    }
     @Override
     public void repaint(){
         //rpg.server sends new data

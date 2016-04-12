@@ -1,6 +1,7 @@
 package rpg.client;
 
 import rpg.Application;
+import rpg.screen.ClientScreen;
 import rpg.world.AsciiSymbol;
 
 import javax.swing.*;
@@ -9,13 +10,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private ConnectionToServer server;
     private LinkedBlockingQueue<Object> messages;
+    private LinkedBlockingQueue<int[]> keycodes;
     private Socket socket;
     private Application app;
+
 
     public static void main(String[] args) throws IOException {
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
@@ -29,6 +33,7 @@ public class Client {
         socket = new Socket(IPAddress, port);
         messages = new LinkedBlockingQueue<Object>();
         server = new ConnectionToServer(socket);
+        keycodes = new LinkedBlockingQueue<>();
 
 
         Thread messageHandling = new Thread() {
@@ -72,6 +77,7 @@ public class Client {
                         try{
                             Object obj = in.readObject();
                             messages.put(obj);
+
                         }
                         catch(Exception e){
                             //e.printStackTrace();
@@ -80,8 +86,29 @@ public class Client {
                 }
             };
 
+            Thread write = new Thread(){
+                public void run(){
+                    while(true){
+                        try{
+                            if(keycodes.size()>0) {
+                                send(keycodes.take());
+                                if (app.getScreen().getClass()== ClientScreen.class ){
+                                    System.out.println("class type clientscreen");
+                                    ClientScreen clientScreen = (ClientScreen) app.getScreen();
+                                    System.out.println("clientscreen.getkeycodes in Client"+clientScreen.getKeycodes());
+                                    keycodes.put(clientScreen.getKeycodes());
+                                }
+                            }
+                        } catch (InterruptedException e){
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            };
+
             //read.setDaemon(true);
             read.start();
+            write.start();
         }
 
         private void write(Object obj) {

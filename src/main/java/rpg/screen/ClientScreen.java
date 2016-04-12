@@ -6,6 +6,8 @@ import rpg.server.Server;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientScreen implements Screen {
     private int screenWidth = 80;
@@ -14,6 +16,24 @@ public class ClientScreen implements Screen {
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
     private int viewY = 0;
+    private int[] keycodesarray= new int[10];
+
+    private List<Integer> keycodes = new ArrayList<>();
+
+    public int[] getKeycodes() {
+        int index = 0;
+        for (int i = 0; i < keycodesarray.length; i++, index++) {
+            if(i< keycodes.size() && keycodes.get(i)!=null){
+                keycodesarray[index]=keycodes.get(i);
+                keycodes.remove(i);
+                i--;
+            }
+        }
+        for (int i : keycodesarray) {
+            System.out.println(i);
+        }
+        return keycodesarray;
+    }
 
     @Override
     public void displayOutput(AsciiPanel terminal) {
@@ -34,6 +54,10 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
+        System.out.println("clientscreen responding to user input"+key.getKeyCode());
+        keycodes.add(key.getKeyCode());
+        System.out.println("keycode added to list");
+        System.out.println(keycodes);
         return this;
     }
 
