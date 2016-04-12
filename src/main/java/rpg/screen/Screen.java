@@ -11,6 +11,8 @@ public interface Screen {
 
     void sendOutput(Server server);
 
+    default void sendDiff(Server server){return;}
+
     Screen respondToUserInput(KeyEvent key);
 
     default void setView(AsciiSymbol[][] view){

@@ -5,10 +5,12 @@ import rpg.action.GameAction;
 import rpg.player.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
+import rpg.world.Diff;
 import rpg.world.World;
 import rpg.world.WorldBuilder;
 
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.TreeSet;
 
 public class PlayScreen implements Screen {
@@ -75,5 +77,17 @@ public class PlayScreen implements Screen {
             }
         }
         server.sendToAll(symbols);
+    }
+
+    @Override
+    public void sendDiff(Server server) {
+        // send world.getDiff
+        List<Diff> diff = world.getDiff();
+        if(diff.isEmpty()){
+            // nothing to send
+            return;
+        }
+        server.sendToAll(diff);
+        world.clearDiff();
     }
 }
