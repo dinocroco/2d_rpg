@@ -2,6 +2,7 @@ package rpg;
 
 import asciiPanel.AsciiPanel;
 import rpg.screen.ClientScreen;
+import rpg.screen.PlayScreen;
 import rpg.screen.Screen;
 import rpg.screen.StartScreen;
 import rpg.server.Server;
@@ -16,6 +17,7 @@ public class Application extends JFrame implements KeyListener {
     private Screen screen;
     private Tick tick;
     public Server server;
+    private boolean sentInitialView = false;
 
     Application(){
         super();
@@ -70,17 +72,26 @@ public class Application extends JFrame implements KeyListener {
     @Override
     public void repaint(){
         //rpg.server sends new data
-        screen.sendOutput(server);
+        //screen.sendOutput(server);
+        if(!sentInitialView && screen.getClass() == PlayScreen.class){
+            screen.sendOutput(server);
+            sentInitialView = true;
+        }
+        screen.sendDiff(server);
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();
     }
 
     public Server startServer(){
-        return new Server(1336);
+        return new Server(1336,this);
     }
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public AsciiPanel getTerminal() {
+        return terminal;
     }
 }

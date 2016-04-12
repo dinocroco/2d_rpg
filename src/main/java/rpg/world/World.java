@@ -1,10 +1,13 @@
 package rpg.world;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     private Tile[][] tiles;
     private int width;
+    private List<Diff> diff = new ArrayList<>();
     public int width() { return width; }
 
     private int height;
@@ -31,4 +34,12 @@ public class World {
         return tile(x, y).color();
     }
 
+    public List<Diff> getDiff(){
+        // when changing tiles, then add to diff
+        return diff;
+    }
+
+    public void clearDiff(){
+        diff.clear();
+    }
 }

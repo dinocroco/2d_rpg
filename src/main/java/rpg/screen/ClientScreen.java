@@ -34,7 +34,7 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-        return null;
+        return this;
     }
 
     private void displayTiles(AsciiPanel terminal, int left, int top) {

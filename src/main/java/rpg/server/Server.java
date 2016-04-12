@@ -1,5 +1,7 @@
 package rpg.server;
 
+import rpg.Application;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,8 +14,10 @@ public class Server {
     private List<Connection> connections = new ArrayList<>();
     private LinkedBlockingQueue messages = new LinkedBlockingQueue();
     ServerSocket serverSocket;
+    private Application app;
 
-    public Server(int port) {
+    public Server(int port, Application app) {
+        this.app = app;
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e){
@@ -26,7 +30,7 @@ public class Server {
                     try {
                         Socket s = serverSocket.accept();
                         connections.add(new Connection(s));
-
+                        //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }
