@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -74,7 +75,7 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void executeKeyCode(int[] keycodes){
-        System.out.println("keycodes received:" +keycodes);
+        System.out.println("keycodes received:" + Arrays.toString(keycodes));
 
     }
     @Override
@@ -96,7 +97,7 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Screen getScreen() {
-        System.out.println("returning screen");
+        //System.out.println("returning screen");
         return screen;
     }
 

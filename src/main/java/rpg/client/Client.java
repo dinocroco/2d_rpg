@@ -10,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
@@ -90,14 +89,24 @@ public class Client {
                 public void run(){
                     while(true){
                         try{
-                            if(keycodes.size()>0) {
-                                send(keycodes.take());
-                                if (app.getScreen().getClass()== ClientScreen.class ){
-                                    System.out.println("class type clientscreen");
-                                    ClientScreen clientScreen = (ClientScreen) app.getScreen();
-                                    System.out.println("clientscreen.getkeycodes in Client"+clientScreen.getKeycodes());
-                                    keycodes.put(clientScreen.getKeycodes());
+                            if (app.getScreen().getClass()== ClientScreen.class ){
+                                //System.out.println("class type clientscreen");
+                                ClientScreen clientScreen = (ClientScreen) app.getScreen();
+                                int[] gotKeycodes = clientScreen.getKeycodes();
+                                if(gotKeycodes.length>0) {
+                                    keycodes.add(gotKeycodes);
                                 }
+                                //System.out.println("clientscreen.getkeycodes in Client"+clientScreen.getKeycodes());
+
+                            }
+                            if(keycodes.size()>0) {
+                                System.out.println("write thread to send");
+                                int[] sendingCodes = keycodes.take();
+                                if(sendingCodes.length>0) {
+                                    send(sendingCodes);
+                                }
+                            } else {
+                                Thread.sleep(50);
                             }
                         } catch (InterruptedException e){
                             throw new RuntimeException(e);

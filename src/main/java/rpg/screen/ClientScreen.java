@@ -1,8 +1,8 @@
 package rpg.screen;
 
 import asciiPanel.AsciiPanel;
-import rpg.world.AsciiSymbol;
 import rpg.server.Server;
+import rpg.world.AsciiSymbol;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,11 +16,12 @@ public class ClientScreen implements Screen {
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
     private int viewY = 0;
-    private int[] keycodesarray= new int[10];
+    //private int[] keycodesarray= new int[10];
 
     private List<Integer> keycodes = new ArrayList<>();
 
     public int[] getKeycodes() {
+        int[] keycodesarray= new int[10];
         int index = 0;
         for (int i = 0; i < keycodesarray.length; i++, index++) {
             if(i< keycodes.size() && keycodes.get(i)!=null){
@@ -29,10 +30,23 @@ public class ClientScreen implements Screen {
                 i--;
             }
         }
+        int count = 0;
         for (int i : keycodesarray) {
+            if(i == 0) continue;
+            count++;
             System.out.println(i);
         }
-        return keycodesarray;
+        if(count==0){
+            return new int[0];
+        }
+        int[] notNullKeycodes = new int[count];
+        index = 0;
+        for(int i: keycodesarray){
+            if(i==0) continue;
+            notNullKeycodes[index] = i;
+            index++;
+        }
+        return notNullKeycodes;
     }
 
     @Override
