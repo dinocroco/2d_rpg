@@ -30,6 +30,7 @@ public class Server {
                     try {
                         Socket s = serverSocket.accept();
                         connections.add(new Connection(s));
+                        app.newConnection();
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();

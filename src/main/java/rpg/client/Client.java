@@ -20,15 +20,16 @@ public class Client {
     public static void main(String[] args) throws IOException {
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
 
-        client.app = new Application(0);
-        client.app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client.app.setVisible(true);
     }
 
     public Client(String IPAddress, int port) throws IOException{
+        app = new Application(0);
+        app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        app.setVisible(true);
         socket = new Socket(IPAddress, port);
         messages = new LinkedBlockingQueue<Object>();
         server = new ConnectionToServer(socket);
+
 
         Thread messageHandling = new Thread() {
             public void run(){

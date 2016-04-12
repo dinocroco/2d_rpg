@@ -69,6 +69,13 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
+    public void newConnection(){
+        if(screen.getClass() == PlayScreen.class){
+
+            screen.sendOutput(server);
+        }
+    }
+
     @Override
     public void repaint(){
         //rpg.server sends new data
@@ -88,10 +95,15 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Screen getScreen() {
+        System.out.println("returning screen");
         return screen;
     }
 
     public AsciiPanel getTerminal() {
         return terminal;
+    }
+
+    public void resetView(){
+        sentInitialView = false;
     }
 }
