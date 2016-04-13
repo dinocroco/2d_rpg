@@ -3,14 +3,18 @@ package rpg.server;
 import rpg.Application;
 import rpg.client.ClientData;
 
-import java.io.*;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
 
@@ -18,9 +22,8 @@ public class Server {
     private LinkedBlockingQueue messages = new LinkedBlockingQueue();
     ServerSocket serverSocket;
     private Application app;
-    private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<Integer, Connection>());
+    private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<>());
     private LinkedBlockingQueue<Integer> idCodes = new LinkedBlockingQueue<>();
-
 
     public Server(int port, Application app) {
         this.app = app;
@@ -41,8 +44,8 @@ public class Server {
                             randomIndex = random.nextInt(998)+1;
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
+                        app.newConnection(randomIndex);
                         idCodes.put(randomIndex);
-                        app.newConnection();
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
