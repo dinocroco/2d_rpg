@@ -102,8 +102,13 @@ public class Client {
                             if(keycodes.size()>0) {
                                 System.out.println("write thread to send");
                                 int[] sendingCodes = keycodes.take();
+                                //ClientData dataToSend = new ClientData(randomint);
+                                //dataToSend.addKeycodes(sendingCodes);
+
                                 if(sendingCodes.length>0) {
                                     send(sendingCodes);
+                                    //send(dataToSend);
+
                                 }
                             } else {
                                 Thread.sleep(50);
