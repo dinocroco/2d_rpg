@@ -1,12 +1,14 @@
 package rpg.server;
 
 import rpg.Application;
+import rpg.client.ClientData;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.Random;
 
@@ -17,6 +19,7 @@ public class Server {
     ServerSocket serverSocket;
     private Application app;
     private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<Integer, Connection>());
+    private LinkedBlockingQueue<Integer> idCodes = new LinkedBlockingQueue<>();
 
 
     public Server(int port, Application app) {
@@ -38,10 +41,13 @@ public class Server {
                             randomIndex = random.nextInt(998)+1;
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
+                        idCodes.put(randomIndex);
                         app.newConnection();
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
+                    } catch (InterruptedException i){
+                        throw new RuntimeException(i);
                     }
                 }
             }
@@ -55,10 +61,10 @@ public class Server {
                 while(true){
                     try{
                         Object message = messages.take();
-                        if (message instanceof int[]){
+                        if (message instanceof ClientData){
                             System.out.println("received keycodes in server");
-                            int[] keycodes = (int[]) message;
-                            app.executeKeyCode(keycodes);
+                            ClientData clientData = (ClientData) message;
+                            app.executeKeyCode(clientData.getKeycodes());
                         }
                         //handling
 
