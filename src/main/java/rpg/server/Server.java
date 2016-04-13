@@ -92,7 +92,6 @@ public class Server {
                             if (obj instanceof ClientData) {
                                 ClientData clientdata = (ClientData) obj;
                                 clientMessages.put(clientdata);
-                                System.out.println("received clientdata in server");
                             }
                         } catch (EOFException e) {
                             System.out.println("Client disappeared");

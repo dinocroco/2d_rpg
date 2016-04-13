@@ -34,7 +34,6 @@ public class ClientScreen implements Screen {
         for (int i : keycodesarray) {
             if(i == 0) continue;
             count++;
-            System.out.println(i);
         }
         if(count==0){
             return new int[0];
@@ -68,9 +67,7 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-        System.out.println("clientscreen responding to user input"+key.getKeyCode());
         keycodes.add(key.getKeyCode());
-        System.out.println("keycode added to list");
         System.out.println(keycodes);
         return this;
     }
