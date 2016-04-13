@@ -23,7 +23,6 @@ public class Server {
     ServerSocket serverSocket;
     private Application app;
     private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<>());
-    private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<Integer, Connection>());
     private LinkedBlockingQueue<Integer> idCodes = new LinkedBlockingQueue<>();
 
 
@@ -48,7 +47,6 @@ public class Server {
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
                         idCodes.put(randomIndex);
-                        app.newConnection();
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
