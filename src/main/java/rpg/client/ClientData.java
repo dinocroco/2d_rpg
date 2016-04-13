@@ -1,7 +1,9 @@
 package rpg.client;
 
 
-public class ClientData {
+import java.io.Serializable;
+
+public class ClientData implements Serializable {
 
     private final int id;
     private int[] keycodes = new int[10];

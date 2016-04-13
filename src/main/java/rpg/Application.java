@@ -1,6 +1,7 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.client.ClientData;
 import rpg.player.Player;
 import rpg.screen.ClientScreen;
 import rpg.screen.PlayScreen;
@@ -79,8 +80,8 @@ public class Application extends JFrame implements KeyListener {
         }
     }
 
-    public void executeKeyCode(int[] keycodes){
-        System.out.println("keycodes received:" + Arrays.toString(keycodes));
+    public void executeKeyCode(ClientData clientdata){
+        System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
 
     }
     @Override

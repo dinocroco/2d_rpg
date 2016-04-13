@@ -19,12 +19,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Server {
 
     //private List<Connection> connections = new ArrayList<>();
-    private LinkedBlockingQueue messages = new LinkedBlockingQueue();
+    private LinkedBlockingQueue<ClientData> clientMessages = new LinkedBlockingQueue<>();
     ServerSocket serverSocket;
     private Application app;
     private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<>());
-    private LinkedBlockingQueue<Integer> idCodes = new LinkedBlockingQueue<>();
-
 
     public Server(int port, Application app) {
         this.app = app;
@@ -47,12 +45,9 @@ public class Server {
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
                         sendToOne(randomIndex,randomIndex);
-                        idCodes.put(randomIndex);
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
-                    } catch (InterruptedException i){
-                        throw new RuntimeException(i);
                     }
                 }
             }
@@ -64,16 +59,13 @@ public class Server {
         Thread messageHandling = new Thread(){
             public void run(){
                 while(true){
-                    try{
-                        Object message = messages.take();
-                        if (message instanceof ClientData){
-                            System.out.println("received keycodes in server");
-                            ClientData clientData = (ClientData) message;
-                            app.executeKeyCode(clientData.getKeycodes());
+                    try {
+                        ClientData clientDataReceived = clientMessages.take();
+                        if (clientDataReceived != null) {
+                            app.executeKeyCode(clientDataReceived);
                         }
-                        //handling
 
-                    } catch (InterruptedException ie){
+                    } catch (InterruptedException ie) {
                         ie.printStackTrace();
                     }
                 }
@@ -97,7 +89,11 @@ public class Server {
                     while(true){
                         try{
                             Object obj = in.readObject();
-                            messages.put(obj);
+                            if (obj instanceof ClientData) {
+                                ClientData clientdata = (ClientData) obj;
+                                clientMessages.put(clientdata);
+                                System.out.println("received clientdata in server");
+                            }
                         } catch (EOFException e) {
                             System.out.println("Client disappeared");
                             break;

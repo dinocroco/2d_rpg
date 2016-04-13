@@ -14,12 +14,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private ConnectionToServer server;
-    private LinkedBlockingQueue<Object> messages;
+    private LinkedBlockingQueue<AsciiSymbol[][]> asciiMessages;
     private LinkedBlockingQueue<int[]> keycodes;
     private Socket socket;
     private Application app;
-    private LinkedBlockingQueue<Integer> idcodes;
-
+    private int idCode;
 
     public static void main(String[] args) throws IOException {
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
@@ -31,29 +30,27 @@ public class Client {
         app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         app.setVisible(true);
         socket = new Socket(IPAddress, port);
-        messages = new LinkedBlockingQueue<Object>();
+        asciiMessages = new LinkedBlockingQueue<>();
         server = new ConnectionToServer(socket);
         keycodes = new LinkedBlockingQueue<>();
-        idcodes = new LinkedBlockingQueue<>();
 
 
         Thread messageHandling = new Thread() {
             public void run(){
                 while(true){
                     try{
-                        Object message = messages.take();
-                        // Do some handling here...
-                        if(message instanceof AsciiSymbol[][]){
-                            app.getScreen().setView((AsciiSymbol[][]) message);
-                            System.out.println("got view");
-                            app.getScreen().displayOutput(app.getTerminal());
-                            //app.getScreen().displayOutput(new AsciiPanel(80,24));
-                            app.repaint();
-                        }
-                        System.out.println(message.getClass());
-                        System.out.println("Message Received: " + message);
+                        AsciiSymbol[][] asciiView = asciiMessages.take();
+                        app.getScreen().setView(asciiView);
+                        app.getScreen().displayOutput(app.getTerminal());
+                        //app.getScreen().displayOutput(new AsciiPanel(80,24));
+                        app.repaint();
+
+                        //System.out.println(asciiView.getClass());
+                        //System.out.println("Message Received: " + asciiView);
                     }
-                    catch(InterruptedException e){ }
+                    catch(InterruptedException e){
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         };
@@ -79,10 +76,11 @@ public class Client {
                             Object obj = in.readObject();
                             if (obj instanceof Integer){
                                 int index = (int) obj;
-                                idcodes.put(index);
-                                System.out.println("received index"+index);
-                            }else {
-                                messages.put(obj);
+                                System.out.println("received index: "+index);
+                                idCode = index;
+                            }else if (obj instanceof AsciiSymbol[][]) {
+                                AsciiSymbol[][] asciiArray = (AsciiSymbol[][]) obj;
+                                asciiMessages.put(asciiArray);
                             }
 
                         }
@@ -98,7 +96,6 @@ public class Client {
                     while(true){
                         try{
                             if (app.getScreen().getClass()== ClientScreen.class ){
-                                //System.out.println("class type clientscreen");
                                 ClientScreen clientScreen = (ClientScreen) app.getScreen();
                                 int[] gotKeycodes = clientScreen.getKeycodes();
                                 if(gotKeycodes.length>0) {
@@ -110,12 +107,12 @@ public class Client {
                             if(keycodes.size()>0) {
                                 System.out.println("write thread to send");
                                 int[] sendingCodes = keycodes.take();
-                                //ClientData dataToSend = new ClientData(randomint);
-                                //dataToSend.addKeycodes(sendingCodes);
+                                ClientData dataToSend = new ClientData(idCode);
+                                dataToSend.addKeycodes(sendingCodes);
 
                                 if(sendingCodes.length>0) {
-                                    send(sendingCodes);
-                                    //send(dataToSend);
+                                    //send(sendingCodes);
+                                    send(dataToSend);
 
                                 }
                             } else {
