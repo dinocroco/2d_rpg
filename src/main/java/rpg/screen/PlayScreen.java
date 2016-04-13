@@ -2,7 +2,6 @@ package rpg.screen;
 
 import asciiPanel.AsciiPanel;
 import rpg.action.GameAction;
-import rpg.player.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -15,7 +14,6 @@ import java.util.TreeSet;
 
 public class PlayScreen implements Screen {
     private World world;
-    Player player;
     private int screenWidth = 80;
     private int screenHeight = 24;
     private int viewX = 0;

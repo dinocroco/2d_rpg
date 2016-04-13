@@ -10,10 +10,10 @@ public class Player {
     public int y;
     public final char glyph = (char)254;
     public final Color color = AsciiPanel.cyan;
+    public final int connectionId;
 
-    public Player(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Player(int id) {
+        connectionId = id;
     }
 
 }
