@@ -1,6 +1,7 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.player.Player;
 import rpg.screen.ClientScreen;
 import rpg.screen.PlayScreen;
 import rpg.screen.Screen;
@@ -11,7 +12,9 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -19,6 +22,7 @@ public class Application extends JFrame implements KeyListener {
     private Tick tick;
     public Server server;
     private boolean sentInitialView = false;
+    private List<Player> players = new ArrayList<>();
 
     Application(){
         super();
@@ -67,9 +71,10 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public void newConnection(){
+    public void newConnection(int clientIndex){
+        players.add(new Player(clientIndex));
+        System.out.println("client "+Integer.toString(clientIndex)+" connected");
         if(screen.getClass() == PlayScreen.class){
-
             screen.sendOutput(server);
         }
     }

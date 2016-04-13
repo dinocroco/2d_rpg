@@ -16,7 +16,7 @@ public class Server {
     private LinkedBlockingQueue messages = new LinkedBlockingQueue();
     ServerSocket serverSocket;
     private Application app;
-    private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<Integer, Connection>());
+    private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<>());
 
 
     public Server(int port, Application app) {
@@ -38,7 +38,7 @@ public class Server {
                             randomIndex = random.nextInt(998)+1;
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
-                        app.newConnection();
+                        app.newConnection(randomIndex);
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
