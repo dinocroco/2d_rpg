@@ -18,6 +18,7 @@ public class Client {
     private LinkedBlockingQueue<int[]> keycodes;
     private Socket socket;
     private Application app;
+    private LinkedBlockingQueue<Integer> idcodes;
 
 
     public static void main(String[] args) throws IOException {
@@ -33,6 +34,7 @@ public class Client {
         messages = new LinkedBlockingQueue<Object>();
         server = new ConnectionToServer(socket);
         keycodes = new LinkedBlockingQueue<>();
+        idcodes = new LinkedBlockingQueue<>();
 
 
         Thread messageHandling = new Thread() {
@@ -75,7 +77,13 @@ public class Client {
                     while(true){
                         try{
                             Object obj = in.readObject();
-                            messages.put(obj);
+                            if (obj instanceof Integer){
+                                int index = (int) obj;
+                                idcodes.put(index);
+                                System.out.println("received index"+index);
+                            }else {
+                                messages.put(obj);
+                            }
 
                         }
                         catch(Exception e){

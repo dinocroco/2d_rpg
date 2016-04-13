@@ -46,6 +46,7 @@ public class Server {
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
+                        sendToOne(randomIndex,randomIndex);
                         idCodes.put(randomIndex);
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (IOException ioe) {

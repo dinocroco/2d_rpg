@@ -89,6 +89,7 @@ public class ClientScreen implements Screen {
     @Override
     public void sendOutput(Server server) {
 
+
     }
 
     @Override
