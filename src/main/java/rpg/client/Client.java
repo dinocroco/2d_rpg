@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,10 +29,15 @@ public class Client {
     }
 
     public Client(String IPAddress, int port) throws IOException{
+        try {
+            socket = new Socket(IPAddress, port);
+        } catch (ConnectException e){
+            System.out.println("There is no server running");
+            return;
+        }
         app = new Application(0);
         app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         app.setVisible(true);
-        socket = new Socket(IPAddress, port);
         asciiMessages = new LinkedBlockingQueue<>();
         server = new ConnectionToServer(socket);
         keycodes = new LinkedBlockingQueue<>();
@@ -48,6 +54,13 @@ public class Client {
                             app.getScreen().setView(asciiView);
                             app.getScreen().displayOutput(app.getTerminal());
                             //app.getScreen().displayOutput(new AsciiPanel(80,24));
+                            app.repaint();
+                        }
+                        if(diff != null){
+                            // handle diff
+                            //System.out.println("received "+diff.toString());
+                            ((ClientScreen)app.getScreen()).parseDiff(diff);
+                            app.getScreen().displayOutput(app.getTerminal());
                             app.repaint();
                         }
                         sleep(50);

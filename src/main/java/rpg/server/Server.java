@@ -112,6 +112,7 @@ public class Server {
 
         public void write(Object obj){
             try {
+                out.reset();
                 out.writeObject(obj);
             } catch (IOException ioe){
                 ioe.printStackTrace();

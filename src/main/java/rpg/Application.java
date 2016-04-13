@@ -8,14 +8,13 @@ import rpg.screen.PlayScreen;
 import rpg.screen.Screen;
 import rpg.screen.StartScreen;
 import rpg.server.Server;
+import rpg.world.Diff;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -23,7 +22,7 @@ public class Application extends JFrame implements KeyListener {
     private Tick tick;
     public Server server;
     private boolean sentInitialView = false;
-    private List<Player> players = new ArrayList<>();
+    private Map<Integer,Player> players = new HashMap<>();
 
     Application(){
         super();
@@ -73,7 +72,11 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void newConnection(int clientIndex){
-        players.add(new Player(clientIndex));
+        Player player = new Player(clientIndex);
+        // find some place for it
+        player.setX(1);
+        player.setY(1);
+        players.put(clientIndex,player);
         System.out.println("client "+Integer.toString(clientIndex)+" connected");
         if(screen.getClass() == PlayScreen.class){
             screen.sendOutput(server);
@@ -81,8 +84,25 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void executeKeyCode(ClientData clientdata){
+        // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
         System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
-
+        if(screen.getClass() == PlayScreen.class) {
+            for (int i : clientdata.getKeycodes()) {
+                // TODO enne liikumist peab kontrollima kas ka võib, pole takistust, maailma lõppu, muud sellist
+                if (i == KeyEvent.VK_RIGHT) {
+                    players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()+1);
+                }
+                if (i == KeyEvent.VK_LEFT) {
+                    players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()-1);
+                }
+                if (i == KeyEvent.VK_UP) {
+                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()-1);
+                }
+                if (i == KeyEvent.VK_DOWN) {
+                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()+1);
+                }
+            }
+        }
     }
     @Override
     public void repaint(){
@@ -92,7 +112,24 @@ public class Application extends JFrame implements KeyListener {
             screen.sendOutput(server);
             sentInitialView = true;
         }
-        screen.sendDiff(server);
+        List<Diff> diff = screen.updateDiff(server);
+        if(diff == null){
+            diff = new ArrayList<>();
+        }
+        for (int key : players.keySet()) {
+            Player player = players.get(key);
+            if (player.hasChanged()) {
+                System.out.println(player);
+                diff.add(new Diff(player));
+                player.toUnchanged();
+            }
+        }
+        if(!diff.isEmpty()) {
+            for (Diff d : diff) {
+                screen.sendDiff(server, d);
+            }
+            diff.clear();
+        }
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();

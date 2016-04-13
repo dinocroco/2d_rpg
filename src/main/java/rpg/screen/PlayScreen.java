@@ -78,14 +78,21 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void sendDiff(Server server) {
+    public void sendDiff(Server server, Diff diff) {
+        System.out.println("sending one diff to all");
+        server.sendToAll(diff);
+    }
+
+    @Override
+    public List<Diff> updateDiff(Server server) {
         // send world.getDiff
         List<Diff> diff = world.getDiff();
         if(diff.isEmpty()){
             // nothing to send
-            return;
+            return null;
         }
-        server.sendToAll(diff);
+        //server.sendToAll(diff);
         world.clearDiff();
+        return diff;
     }
 }
