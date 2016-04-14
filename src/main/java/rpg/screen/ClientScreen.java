@@ -5,6 +5,7 @@ import rpg.player.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
+import rpg.world.Tile;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -18,6 +19,7 @@ public class ClientScreen implements Screen {
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
     private int viewY = 0;
+    private int playerId;
     private List<Player> players = new ArrayList<>();
 
     private List<Integer> keycodes = new ArrayList<>();
@@ -53,6 +55,8 @@ public class ClientScreen implements Screen {
     @Override
     public void displayOutput(AsciiPanel terminal) {
         //System.out.println("displayOutput redraw");
+        //System.out.println(viewX);
+        //System.out.println(viewY);
         displayTiles(terminal,viewX,viewY);
         displayPlayers(terminal,viewX,viewY);
     }
@@ -81,21 +85,21 @@ public class ClientScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-                AsciiSymbol sym = view[wx][wy];
-                terminal.write(sym.getGlyph(),wx,wy,sym.getColor());
+                AsciiSymbol sym = new AsciiSymbol(Tile.BOUNDS.glyph(),Tile.BOUNDS.color());
+                if(view.length>wx && wx>=0 && view[wx].length>wy && wy>=0) {
+                    sym = view[wx][wy];
+                }
+                terminal.write(sym.getGlyph(),x,y,sym.getColor());
             }
         }
     }
 
-    private void displayPlayers(AsciiPanel terminal, int viewX, int viewY) {
-        //System.out.println("displaying players");
-        //System.out.println(players.size());
+    private void displayPlayers(AsciiPanel terminal, int left, int top) {
+        // TODO display only works after first movement after join
         for (Player player : players) {
-            //System.out.println("displaying player");
-            // TODO check if player is on seen screen
-            int wx = viewX + player.getX();
-            int wy = viewY + player.getY();
-            //System.out.println(player.glyph);
+            int wx = player.getX()-left;
+            int wy = player.getY()-top;
+            if(wx>80 || wx<0 ||wy>24 || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
         }
     }
@@ -116,6 +120,7 @@ public class ClientScreen implements Screen {
             System.out.println("parsing found player");
             Player diffPlayer = diff.getPlayer();
             // find player with same id and replace it
+            boolean foundPlayer = false;
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
                 if (player.connectionId == diffPlayer.connectionId) {
@@ -124,11 +129,28 @@ public class ClientScreen implements Screen {
                     players.remove(i);
                     players.add(diffPlayer);
                     //System.out.println(players.get(players.size()-1).getX());
-                    return;
+                    foundPlayer = true;
+                    break;
                 }
             }
-            // so player with this id not found
-            players.add(diffPlayer);
+            for (Player player : players) {
+                if(player.connectionId==playerId){
+                    System.out.println("changing");
+                    viewX = player.getX()-40;
+                    viewY = player.getY()-12;
+                    break;
+                }
+            }
+            if(!foundPlayer) {
+                // so player with this id not found
+                players.add(diffPlayer);
+                viewX = diffPlayer.getX()-40;
+                viewY = diffPlayer.getY()-12;
+            }
         }
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
     }
 }

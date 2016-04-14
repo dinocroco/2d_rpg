@@ -10,28 +10,31 @@ public class Player implements Serializable {
     private int x;
     private int y;
     public final char glyph = (char)254;
-    public final Color color = AsciiPanel.cyan; // igal mängijal olgu erinev
+    public final Color color;
     public final int connectionId;
     private boolean hasChanged;
 
-    public Player() {
-        connectionId = -1;
-        System.out.println("parameetritete Player()");
-    }
-
+    // eventually load player info from somewhere instead of creating new for each connect
     public Player(int id) {
         connectionId = id;
+        color = AsciiPanel.cyan;
+        hasChanged = true;
+    }
+
+    public Player(int id, Color color) {
+        connectionId = id;
+        this.color = color;
         hasChanged = true;
     }
 
     public void setX(int x) {
-        // checks need to happen before set
+        // checks need to happen before set - player class wont know anything about world
         this.x = x;
         hasChanged = true;
     }
 
     public void setY(int y) {
-        // checks need to happen before set
+        // checks need to happen before set - player class wont know anything about world
         this.y = y;
         hasChanged = true;
     }

@@ -2,6 +2,7 @@ package rpg.screen;
 
 import asciiPanel.AsciiPanel;
 import rpg.action.GameAction;
+import rpg.player.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -10,6 +11,7 @@ import rpg.world.WorldBuilder;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 public class PlayScreen implements Screen {
@@ -63,7 +65,15 @@ public class PlayScreen implements Screen {
                 terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
             }
         }
-        //terminal.write(rpg.player.glyph(), rpg.player.x - left, rpg.player.y - top, rpg.player.color());
+    }
+
+    public void displayPlayers(AsciiPanel terminal, Map<Integer,Player> players){
+        for (Player player : players.values()) {
+            int wx = player.getX()-viewX;
+            int wy = player.getY()-viewY;
+            if(wx>80 || wx<0 ||wy>24 || wy<0) continue;
+            terminal.write(player.glyph,wx,wy,player.color);
+        }
     }
 
     @Override

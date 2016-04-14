@@ -52,6 +52,7 @@ public class Client {
                         Diff diff = diffs.poll();
                         if (asciiView != null){
                             app.getScreen().setView(asciiView);
+                            ((ClientScreen)app.getScreen()).setPlayerId(idCode);
                             app.getScreen().displayOutput(app.getTerminal());
                             //app.getScreen().displayOutput(new AsciiPanel(80,24));
                             app.repaint();

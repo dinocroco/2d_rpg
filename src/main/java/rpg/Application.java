@@ -11,10 +11,12 @@ import rpg.server.Server;
 import rpg.world.Diff;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.*;
+import java.util.List;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -72,8 +74,10 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void newConnection(int clientIndex){
-        Player player = new Player(clientIndex);
-        // find some place for it
+        Random rand = new Random();
+        Color color = new Color(rand.nextInt(0xFFFFFF));
+        Player player = new Player(clientIndex,color);
+        // TODO find some place for it, add color
         player.setX(1);
         player.setY(1);
         players.put(clientIndex,player);
@@ -132,6 +136,9 @@ public class Application extends JFrame implements KeyListener {
         }
         terminal.clear();
         screen.displayOutput(terminal);
+        if(screen.getClass()==PlayScreen.class){
+            ((PlayScreen)screen).displayPlayers(terminal,players);
+        }
         super.repaint();
     }
 
