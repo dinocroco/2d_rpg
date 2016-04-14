@@ -99,7 +99,7 @@ public class ClientScreen implements Screen {
         for (Player player : players) {
             int wx = player.getX()-left;
             int wy = player.getY()-top;
-            if(wx>80 || wx<0 ||wy>24 || wy<0) continue;
+            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
         }
     }
@@ -136,16 +136,16 @@ public class ClientScreen implements Screen {
             for (Player player : players) {
                 if(player.connectionId==playerId){
                     System.out.println("changing");
-                    viewX = player.getX()-40;
-                    viewY = player.getY()-12;
+                    viewX = player.getX()-screenWidth/2;
+                    viewY = player.getY()-screenHeight/2;
                     break;
                 }
             }
             if(!foundPlayer) {
                 // so player with this id not found
                 players.add(diffPlayer);
-                viewX = diffPlayer.getX()-40;
-                viewY = diffPlayer.getY()-12;
+                viewX = diffPlayer.getX()-screenWidth/2;
+                viewY = diffPlayer.getY()-screenHeight/2;
             }
         }
     }

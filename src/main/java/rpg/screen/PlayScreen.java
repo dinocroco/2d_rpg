@@ -71,7 +71,7 @@ public class PlayScreen implements Screen {
         for (Player player : players.values()) {
             int wx = player.getX()-viewX;
             int wy = player.getY()-viewY;
-            if(wx>80 || wx<0 ||wy>24 || wy<0) continue;
+            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
         }
     }
