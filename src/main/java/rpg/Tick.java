@@ -11,7 +11,6 @@ public class Tick implements Runnable {
     private boolean playing = true;
     private double unprocessed = 0.0;
     private Application app;
-    private TreeSet<GameAction> gameActions = new TreeSet<>();
     private long ticksPassed = 0;
 
     public Tick(Application app) {
@@ -55,9 +54,10 @@ public class Tick implements Runnable {
     private void tick(){
         //System.out.println("performing tick "+System.currentTimeMillis());
 
-        if(ticksPassed%12==0){
+        if(ticksPassed%120==0){
             app.addNewUnit(ticksPassed);
         }
+        app.executeGameEvents();
     }
 
 }

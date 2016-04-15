@@ -1,6 +1,8 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.action.GameAction;
+import rpg.action.Movement;
 import rpg.character.Unit;
 import rpg.client.ClientData;
 import rpg.character.Player;
@@ -27,6 +29,7 @@ public class Application extends JFrame implements KeyListener {
     private boolean sentInitialView = false;
     private Map<Integer,Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
+    private Set<GameAction> gameActions = new TreeSet<>();
 
     Application(){
         super();
@@ -75,7 +78,7 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public void newConnection(int clientIndex){
+    public synchronized void newConnection(int clientIndex){
         Random rand = new Random();
         Color color = new Color(rand.nextInt(0xFFFFFF));
         Player player = new Player(clientIndex,color);
@@ -94,17 +97,20 @@ public class Application extends JFrame implements KeyListener {
         System.out.println("client "+Integer.toString(clientIndex)+" connected");
     }
 
-    public void executeKeyCode(ClientData clientdata){
+    public synchronized void executeKeyCode(ClientData clientdata){
         // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
         //System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
         if(screen.getClass() == PlayScreen.class) {
             for (int i : clientdata.getKeycodes()) {
+                int id = clientdata.getId();
                 // TODO enne liikumist peab kontrollima kas ka võib, pole takistust, maailma lõppu, muud sellist
                 if (i == KeyEvent.VK_RIGHT) {
-                    players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()+1);
+                    addGameActions(new Movement(id,0,1));
+                    //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()+1);
                 }
                 if (i == KeyEvent.VK_LEFT) {
-                    players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()-1);
+                    addGameActions(new Movement(id,0,-1));
+                    //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()-1);
                 }
                 if (i == KeyEvent.VK_UP) {
                     players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()-1);
@@ -115,6 +121,30 @@ public class Application extends JFrame implements KeyListener {
             }
         }
     }
+
+    public synchronized void addGameActions(GameAction gameaction){
+        gameActions.add(gameaction);
+    }
+
+    public void executeGameEvents(){
+        Set<GameAction> toRemove = new TreeSet<>();
+        for (GameAction gameaction: gameActions) {
+            if(gameaction instanceof Movement) {
+                Movement moveaction = (Movement) gameaction;
+                if (gameaction.characterID < 1000) {
+
+                    players.get((int)gameaction.characterID).addToXY(moveaction.right,moveaction.down);
+                    toRemove.add(gameaction);
+                }
+            }
+        }
+        for (GameAction gameAction : toRemove) {
+            gameActions.remove(gameAction);
+        }
+
+        repaint();
+    }
+
     @Override
     public void repaint(){
         //rpg.server sends new data
@@ -150,6 +180,7 @@ public class Application extends JFrame implements KeyListener {
         terminal.clear();
         screen.displayOutput(terminal);
         if(screen.getClass()==PlayScreen.class){
+            // TODO display units too
             ((PlayScreen)screen).displayPlayers(terminal,players);
         }
         super.repaint();
@@ -172,7 +203,7 @@ public class Application extends JFrame implements KeyListener {
         sentInitialView = false;
     }
 
-    public void addNewUnit(long tickNr){
+    public synchronized void addNewUnit(long tickNr){
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
             PlayScreen playscreen = (PlayScreen) screen;

@@ -20,8 +20,13 @@ public class Unit implements GameCharacter, Serializable {
     public Unit(long tickNumber){
         Random rand = new Random();
         this.color = new Color(rand.nextInt(0xFFFFFF));
-        this.idCode=tickNumber;
+        this.idCode=tickNumber+1000;//>1000 so it won't match player id
         hasChanged = true;
+    }
+
+    @Override
+    public long getID() {
+        return idCode;
     }
 
     @Override

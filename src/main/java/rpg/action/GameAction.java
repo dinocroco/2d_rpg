@@ -1,14 +1,17 @@
 package rpg.action;
 
-public abstract class GameAction implements Comparable<GameAction>  {
+import java.io.Serializable;
 
-    private final int priority;
+public abstract class GameAction implements Comparable<GameAction>, Serializable {
 
-    public abstract void run();
+    private int priority = 0;
+    public final long characterID;
 
-    public GameAction(int priority) {
-        this.priority = priority;
+
+    public GameAction(long characterID) {
+        this.characterID = characterID;
     }
+
 
     @Override
     public int compareTo(GameAction o) {

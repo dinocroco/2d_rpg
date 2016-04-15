@@ -28,6 +28,11 @@ public class Player implements Serializable, GameCharacter {
     }
 
     @Override
+    public long getID() {
+        return (long) connectionId;
+    }
+
+    @Override
     public void setX(int x) {
         // checks need to happen before set - character class wont know anything about world
         this.x = x;
@@ -70,5 +75,21 @@ public class Player implements Serializable, GameCharacter {
     @Override
     public int getY() {
         return y;
+    }
+
+    public void addToX(int x){
+        hasChanged = true;
+        this.x+=x;
+    }
+
+    public void addToY(int y){
+        hasChanged = true;
+        this.y+=y;
+    }
+
+    public void addToXY(int x, int y){
+        hasChanged = true;
+        addToX(x);
+        addToY(y);
     }
 }

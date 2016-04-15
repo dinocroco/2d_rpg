@@ -1,17 +1,17 @@
 package rpg.action;
 
-public class Movement extends GameAction{
-    private int down;
-    private int right;
+import rpg.character.GameCharacter;
 
-    public Movement(int priority, int down, int right) {
-        super(priority);
+public class Movement extends GameAction{
+    public final int down;
+    public final int right;
+
+    public Movement(long characterID, int down, int right) {
+        super(characterID);
         this.down = down;
         this.right = right;
     }
 
-    @Override
-    public void run() {
 
-    }
+
 }

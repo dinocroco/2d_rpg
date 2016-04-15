@@ -14,4 +14,6 @@ public interface GameCharacter {
 
     void setY(int y);
 
+    long getID();
+
 }
