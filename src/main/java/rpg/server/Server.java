@@ -114,6 +114,9 @@ public class Server {
             try {
                 out.reset();
                 out.writeObject(obj);
+            } catch (SocketException e){
+                System.out.println("Client disconnected");
+                //TODO remove disconnected player
             } catch (IOException ioe){
                 ioe.printStackTrace();
             }

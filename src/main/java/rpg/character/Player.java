@@ -1,11 +1,11 @@
-package rpg.player;
+package rpg.character;
 
 import asciiPanel.AsciiPanel;
 
 import java.awt.*;
 import java.io.Serializable;
 
-public class Player implements Serializable {
+public class Player implements Serializable, GameCharacter {
 
     private int x;
     private int y;
@@ -14,7 +14,7 @@ public class Player implements Serializable {
     public final int connectionId;
     private boolean hasChanged;
 
-    // eventually load player info from somewhere instead of creating new for each connect
+    // eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
         connectionId = id;
         color = AsciiPanel.cyan;
@@ -27,22 +27,26 @@ public class Player implements Serializable {
         hasChanged = true;
     }
 
+    @Override
     public void setX(int x) {
-        // checks need to happen before set - player class wont know anything about world
+        // checks need to happen before set - character class wont know anything about world
         this.x = x;
         hasChanged = true;
     }
 
+    @Override
     public void setY(int y) {
-        // checks need to happen before set - player class wont know anything about world
+        // checks need to happen before set - character class wont know anything about world
         this.y = y;
         hasChanged = true;
     }
 
+    @Override
     public boolean hasChanged() {
         return hasChanged;
     }
 
+    @Override
     public void toUnchanged() {
         this.hasChanged = false;
     }
@@ -58,10 +62,12 @@ public class Player implements Serializable {
                 '}';
     }
 
+    @Override
     public int getX() {
         return x;
     }
 
+    @Override
     public int getY() {
         return y;
     }

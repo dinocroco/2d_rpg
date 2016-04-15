@@ -2,7 +2,7 @@ package rpg.screen;
 
 import asciiPanel.AsciiPanel;
 import rpg.action.GameAction;
-import rpg.player.Player;
+import rpg.character.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -89,7 +89,7 @@ public class PlayScreen implements Screen {
 
     @Override
     public void sendDiff(Server server, Diff diff) {
-        System.out.println("sending one diff to all");
+        //System.out.println("sending one diff to all");
         server.sendToAll(diff);
     }
 

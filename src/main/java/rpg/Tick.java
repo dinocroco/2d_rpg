@@ -12,6 +12,7 @@ public class Tick implements Runnable {
     private double unprocessed = 0.0;
     private Application app;
     private TreeSet<GameAction> gameActions = new TreeSet<>();
+    private long ticksPassed = 0;
 
     public Tick(Application app) {
         this.app = app;
@@ -30,6 +31,7 @@ public class Tick implements Runnable {
 
             while (unprocessed/tickLength >= 1) {
                 tick();
+                ticksPassed++;
                 unprocessed -= tickLength;
                 shouldRender = true;
             }
@@ -52,11 +54,10 @@ public class Tick implements Runnable {
 
     private void tick(){
         //System.out.println("performing tick "+System.currentTimeMillis());
-        if (gameActions.size() <= 0) return;
-        for (GameAction gameAction : gameActions) {
-            gameAction.run();
-        }
 
+        if(ticksPassed%12==0){
+            app.addNewUnit(ticksPassed);
+        }
     }
 
 }

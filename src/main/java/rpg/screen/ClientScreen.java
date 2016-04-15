@@ -1,7 +1,8 @@
 package rpg.screen;
 
 import asciiPanel.AsciiPanel;
-import rpg.player.Player;
+import rpg.character.Player;
+import rpg.character.Unit;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -21,7 +22,7 @@ public class ClientScreen implements Screen {
     private int viewY = 0;
     private int playerId;
     private List<Player> players = new ArrayList<>();
-
+    private List<Unit> units = new ArrayList<>();
     private List<Integer> keycodes = new ArrayList<>();
 
     public int[] getKeycodes() {
@@ -58,6 +59,7 @@ public class ClientScreen implements Screen {
         //System.out.println(viewX);
         //System.out.println(viewY);
         displayTiles(terminal,viewX,viewY);
+        displayUnits(terminal, viewX, viewY);
         displayPlayers(terminal,viewX,viewY);
     }
 
@@ -104,6 +106,15 @@ public class ClientScreen implements Screen {
         }
     }
 
+    private void displayUnits(AsciiPanel terminal, int left, int top) {
+        for (Unit unit : units ){
+            int wx = unit.getX()-left;
+            int wy = unit.getY()-top;
+            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
+        }
+    }
+
     @Override
     public void sendOutput(Server server) {
 
@@ -117,14 +128,14 @@ public class ClientScreen implements Screen {
 
     public void parseDiff(Diff diff){
         if(diff.getPlayer()!=null){
-            System.out.println("parsing found player");
+            System.out.println("parsing found character");
             Player diffPlayer = diff.getPlayer();
-            // find player with same id and replace it
+            // find character with same id and replace it
             boolean foundPlayer = false;
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
                 if (player.connectionId == diffPlayer.connectionId) {
-                    //System.out.println("replacing old player");
+                    //System.out.println("replacing old character");
                     //System.out.println(players.get(i).getX());
                     players.remove(i);
                     players.add(diffPlayer);
@@ -142,12 +153,30 @@ public class ClientScreen implements Screen {
                 }
             }
             if(!foundPlayer) {
-                // so player with this id not found
+                // so character with this id not found
                 //check if view location should be changed
                 players.add(diffPlayer);
                 viewX = diffPlayer.getX()-screenWidth/2;
                 viewY = diffPlayer.getY()-screenHeight/2;
             }
+        }
+        if(diff.getUnit()!=null){
+            Unit diffUnit = diff.getUnit();
+            boolean foundUnit = false;
+            for (int i = 0; i < units.size(); i++) {
+                Unit unit= units.get(i);
+                if (unit.idCode == diffUnit.idCode) {
+                    units.remove(i);
+                    units.add(diffUnit);
+                    foundUnit = true;
+                    break;
+                }
+            }
+            if(!foundUnit) {
+                units.add(diffUnit);
+
+            }
+
         }
     }
 

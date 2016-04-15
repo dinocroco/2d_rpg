@@ -1,8 +1,9 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.character.Unit;
 import rpg.client.ClientData;
-import rpg.player.Player;
+import rpg.character.Player;
 import rpg.screen.ClientScreen;
 import rpg.screen.PlayScreen;
 import rpg.screen.Screen;
@@ -25,6 +26,7 @@ public class Application extends JFrame implements KeyListener {
     public Server server;
     private boolean sentInitialView = false;
     private Map<Integer,Player> players = new HashMap<>();
+    private List<Unit> units = new ArrayList<>();
 
     Application(){
         super();
@@ -80,7 +82,7 @@ public class Application extends JFrame implements KeyListener {
         // TODO find some place for it, add color
         if(screen.getClass() == PlayScreen.class){
             PlayScreen playscreen = (PlayScreen) screen;
-            Diff startingPoint = playscreen.getWorld().startingPoint(players);
+            Diff startingPoint = playscreen.getWorld().playerStartingPoint(players);
             if (startingPoint!=null) {
                 player.setX(startingPoint.getX());
                 player.setY(startingPoint.getY());
@@ -94,7 +96,7 @@ public class Application extends JFrame implements KeyListener {
 
     public void executeKeyCode(ClientData clientdata){
         // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
-        System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
+        //System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
         if(screen.getClass() == PlayScreen.class) {
             for (int i : clientdata.getKeycodes()) {
                 // TODO enne liikumist peab kontrollima kas ka võib, pole takistust, maailma lõppu, muud sellist
@@ -128,9 +130,15 @@ public class Application extends JFrame implements KeyListener {
         for (int key : players.keySet()) {
             Player player = players.get(key);
             if (player.hasChanged()) {
-                System.out.println(player);
+                //System.out.println(player);
                 diff.add(new Diff(player));
                 player.toUnchanged();
+            }
+        }
+        for (Unit unit: units){
+            if(unit.hasChanged()){
+                diff.add(new Diff(unit));
+                unit.toUnchanged();
             }
         }
         if(!diff.isEmpty()) {
@@ -162,5 +170,20 @@ public class Application extends JFrame implements KeyListener {
 
     public void resetView(){
         sentInitialView = false;
+    }
+
+    public void addNewUnit(long tickNr){
+        Unit unit = new Unit(tickNr);
+        if(screen.getClass() == PlayScreen.class) {
+            PlayScreen playscreen = (PlayScreen) screen;
+            Diff startingPoint = playscreen.getWorld().unitStartingPoint(players,units);
+            if (startingPoint != null) {
+                unit.setX(startingPoint.getX());
+                unit.setY(startingPoint.getY());
+            }
+            screen.sendOutput(server);
+        }
+        units.add(unit);
+
     }
 }

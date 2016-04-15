@@ -1,6 +1,7 @@
 package rpg.world;
 
-import rpg.player.Player;
+import rpg.character.Player;
+import rpg.character.Unit;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ public class Diff implements Serializable {
     private int x;
     private int y;
     private Player player = null;
+    private Unit unit = null;
 
     public Diff(Tile tile, int x, int y) {
         this.tile = tile;
@@ -17,8 +19,12 @@ public class Diff implements Serializable {
     }
 
     public Diff(Player player) {
-        // in client it would work by drawing only most recent case of player of this id
+        // in client it would work by drawing only most recent case of character of this id
         this.player = player;
+    }
+
+    public Diff(Unit unit){
+        this.unit = unit;
     }
 
     public Tile getTile() {
@@ -35,5 +41,9 @@ public class Diff implements Serializable {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Unit getUnit() {
+        return unit;
     }
 }
