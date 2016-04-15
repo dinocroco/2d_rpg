@@ -105,4 +105,8 @@ public class PlayScreen implements Screen {
         world.clearDiff();
         return diff;
     }
+
+    public World getWorld() {
+        return world;
+    }
 }

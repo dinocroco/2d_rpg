@@ -78,13 +78,18 @@ public class Application extends JFrame implements KeyListener {
         Color color = new Color(rand.nextInt(0xFFFFFF));
         Player player = new Player(clientIndex,color);
         // TODO find some place for it, add color
-        player.setX(1);
-        player.setY(1);
-        players.put(clientIndex,player);
-        System.out.println("client "+Integer.toString(clientIndex)+" connected");
         if(screen.getClass() == PlayScreen.class){
+            PlayScreen playscreen = (PlayScreen) screen;
+            Diff startingPoint = playscreen.getWorld().startingPoint(players);
+            if (startingPoint!=null) {
+                player.setX(startingPoint.getX());
+                player.setY(startingPoint.getY());
+            }
+
             screen.sendOutput(server);
         }
+        players.put(clientIndex,player);
+        System.out.println("client "+Integer.toString(clientIndex)+" connected");
     }
 
     public void executeKeyCode(ClientData clientdata){

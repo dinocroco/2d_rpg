@@ -8,7 +8,7 @@ public class Diff implements Serializable {
     private Tile tile;
     private int x;
     private int y;
-    private Player player;
+    private Player player = null;
 
     public Diff(Tile tile, int x, int y) {
         this.tile = tile;

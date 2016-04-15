@@ -143,6 +143,7 @@ public class ClientScreen implements Screen {
             }
             if(!foundPlayer) {
                 // so player with this id not found
+                //check if view location should be changed
                 players.add(diffPlayer);
                 viewX = diffPlayer.getX()-screenWidth/2;
                 viewY = diffPlayer.getY()-screenHeight/2;
