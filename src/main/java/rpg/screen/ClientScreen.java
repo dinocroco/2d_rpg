@@ -12,11 +12,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class ClientScreen implements Screen {
-    private final int screenWidth = 80;
-    private final int screenHeight = 24;
+    private int screenWidth = 80;
+    private int screenHeight = 24;
     // from WorldBuilder
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
@@ -24,14 +23,14 @@ public class ClientScreen implements Screen {
     private int playerId;
     private List<Player> players = new ArrayList<>();
     private List<Unit> units = new ArrayList<>();
-    private LinkedBlockingQueue<Integer> keycodes = new LinkedBlockingQueue<>();
+    private List<Integer> keycodes = new ArrayList<>();
 
     public int[] getKeycodes() {
         int[] keycodesarray= new int[10];
         int index = 0;
         for (int i = 0; i < keycodesarray.length; i++, index++) {
-            if(i< keycodes.size() && keycodes.peek()!=null){
-                keycodesarray[index]=keycodes.poll();
+            if(i< keycodes.size() && keycodes.get(i)!=null){
+                keycodesarray[index]=keycodes.get(i);
                 keycodes.remove(i);
                 i--;
             }
@@ -78,11 +77,7 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-        try {
-            keycodes.put(key.getKeyCode());
-        } catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-        }
+        keycodes.add(key.getKeyCode());
         System.out.println(keycodes);
         return this;
     }
