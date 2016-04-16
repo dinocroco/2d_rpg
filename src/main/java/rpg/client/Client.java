@@ -1,5 +1,6 @@
 package rpg.client;
 
+import org.apache.commons.io.IOUtils;
 import rpg.Application;
 import rpg.screen.ClientScreen;
 import rpg.world.AsciiSymbol;
@@ -15,6 +16,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
+
 
 public class Client {
     private ConnectionToServer server;
@@ -79,7 +81,8 @@ public class Client {
                     }
 
                 }
-                //app.setDisconnectScreen();
+                app.setDisconnectScreen();
+                app.repaint();
             }
         };
 
@@ -129,6 +132,7 @@ public class Client {
 
                         } catch (ClassNotFoundException e){
                             e.printStackTrace();
+                            System.out.println("Malformed respon1se");
 
                         } catch (IOException e){
                             e.printStackTrace();
@@ -167,23 +171,18 @@ public class Client {
                             throw new RuntimeException(e);
                         } catch (SocketException e){
                             System.out.println("server disconnected");
-                            try {
-                                in.close();
-                                out.close();
-                                socket.close();
-                                serverOpen = false;
-
-
-                            } catch (IOException ioe) {
-
-                                System.out.println("socket and stream closing in client failed");
-                            }
+                            serverOpen = false;
                             break;
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+
+                    IOUtils.closeQuietly(in);
+                    IOUtils.closeQuietly(out);
+                    IOUtils.closeQuietly(socket);
+
                 }
             };
 

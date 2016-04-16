@@ -6,10 +6,7 @@ import rpg.action.Movement;
 import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
-import rpg.screen.ClientScreen;
-import rpg.screen.PlayScreen;
-import rpg.screen.Screen;
-import rpg.screen.StartScreen;
+import rpg.screen.*;
 import rpg.server.Server;
 import rpg.world.Diff;
 
@@ -229,5 +226,9 @@ public class Application extends JFrame implements KeyListener {
         }
         units.add(unit);
 
+    }
+
+    public void setDisconnectScreen(){
+        screen = new DisconnectScreen();
     }
 }
