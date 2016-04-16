@@ -46,6 +46,10 @@ public class Server {
                         app.newConnection(randomIndex);
                         sendToOne(randomIndex,randomIndex);
                         //connections.get(connections.size()-1).write(app.getScreen());
+                    } catch (SocketException e){
+                        System.out.println("socket failed");
+                        e.printStackTrace();
+                        break;
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
                     }
@@ -121,7 +125,11 @@ public class Server {
                 ioe.printStackTrace();
             }
         }
-
+        public void close() throws IOException {
+            out.close();
+            in.close();
+            socket.close();
+        }
     }
 
     public void sendToOne(int index, Object message) {
@@ -132,6 +140,13 @@ public class Server {
         for (int id:clientMap.keySet()){
             clientMap.get(id).write(message);
         }
+    }
+
+    public void shutDown() throws IOException{
+        for (Connection connection : clientMap.values()) {
+            connection.close();
+        }
+        serverSocket.close();
     }
 
 }
