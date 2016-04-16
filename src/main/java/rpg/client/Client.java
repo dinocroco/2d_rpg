@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,9 +31,9 @@ public class Client {
 
     public static void main(String[] args) throws IOException{
         //Client client = new Client("192.168.1.81",1336);
-        Client client = new Client("192.168.1.69",1336);
+        //Client client = new Client("192.168.1.69",1336);
 
-        //Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
+        Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
 
     }
 
@@ -202,7 +203,7 @@ public class Client {
         }
 
         private void write(Object obj) throws IOException {
-
+            out.reset();
             out.writeObject(obj);
 
         }

@@ -11,10 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
@@ -45,7 +42,7 @@ public class Server {
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
-                        sendToOne(randomIndex,randomIndex);
+                        sendToOne(randomIndex,new Integer(randomIndex));
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (SocketException e){
                         System.out.println("socket failed");
@@ -115,16 +112,10 @@ public class Server {
 
         }
 
-        public void write(Object obj){
-            try {
-                out.reset();
-                out.writeObject(obj);
-            } catch (SocketException e){
-                System.out.println("Client disconnected");
-                //TODO remove disconnected player
-            } catch (IOException ioe){
-                ioe.printStackTrace();
-            }
+        public void write(Object obj) throws IOException{
+            //out.reset();
+            System.out.println("sending"+obj.getClass());
+            out.writeObject(obj);
         }
         public void close() throws IOException {
             IOUtils.closeQuietly(out);
@@ -134,12 +125,32 @@ public class Server {
     }
 
     public void sendToOne(int index, Object message) {
-        clientMap.get(index).write(message);
+        try {
+            clientMap.get(index).write(message);
+        } catch (SocketException e) {
+            System.out.println("Client disconnected");
+            app.onDisconnect(index);
+            clientMap.remove(index);
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
     }
 
     public void sendToAll(Object message){
-        for (int id:clientMap.keySet()){
-            clientMap.get(id).write(message);
+        List<Integer> ids = new ArrayList<>();
+        for (int id : clientMap.keySet()){
+            try {
+                clientMap.get(id).write(message);
+            } catch (SocketException e){
+                System.out.println("Client disconnected");
+                app.onDisconnect(id);
+                ids.add(id);
+            } catch (IOException ioe){
+                ioe.printStackTrace();
+            }
+        }
+        for (Integer id : ids) {
+            clientMap.remove(id);
         }
     }
 

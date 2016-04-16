@@ -88,7 +88,6 @@ public class Application extends JFrame implements KeyListener {
         Random rand = new Random();
         Color color = new Color(rand.nextInt(0xFFFFFF));
         Player player = new Player(clientIndex,color);
-        // TODO find some place for it, add color
         if(screen.getClass() == PlayScreen.class){
             PlayScreen playscreen = (PlayScreen) screen;
             Diff startingPoint = playscreen.getWorld().playerStartingPoint();
@@ -99,11 +98,15 @@ public class Application extends JFrame implements KeyListener {
 
             screen.sendOutput(server);
         }
+        // TODO something about this
         screen.getWorld().getPlayers().put(clientIndex,player);
         System.out.println("client "+Integer.toString(clientIndex)+" connected");
     }
 
-
+    public synchronized void onDisconnect(int clientIndex){
+        screen.getWorld().getPlayers().remove(clientIndex);
+        System.out.println("Kicked client "+clientIndex);
+    }
 
     public synchronized void executeKeyCode(ClientData clientdata){
         // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
@@ -157,8 +160,6 @@ public class Application extends JFrame implements KeyListener {
 
     public synchronized void executeGameEvents(){
         if(screen.getClass()==PlayScreen.class) {
-
-
             List<GameAction> toRemove = new ArrayList<>();
             List<Long> idCodes = new ArrayList<>();
             for (GameAction gameaction : gameActions) {
