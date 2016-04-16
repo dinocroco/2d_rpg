@@ -6,12 +6,14 @@ import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 
 import javax.swing.*;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
@@ -22,8 +24,11 @@ public class Client {
     private Socket socket;
     private Application app;
     private int idCode;
+    private boolean serverOpen;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
+        //Client client = new Client("192.168.1.81",1336);
+
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
 
     }
@@ -31,6 +36,7 @@ public class Client {
     public Client(String IPAddress, int port) throws IOException{
         try {
             socket = new Socket(IPAddress, port);
+            serverOpen = true;
         } catch (ConnectException e){
             System.out.println("There is no server running");
             return;
@@ -46,7 +52,7 @@ public class Client {
 
         Thread messageHandling = new Thread() {
             public void run(){
-                while(true){
+                while(serverOpen){
                     try{
                         AsciiSymbol[][] asciiView = asciiMessages.poll();
                         Diff diff = diffs.poll();
@@ -73,6 +79,7 @@ public class Client {
                     }
 
                 }
+                //app.setDisconnectScreen();
             }
         };
 
@@ -85,10 +92,17 @@ public class Client {
         ObjectOutputStream out;
         Socket socket;
 
-        ConnectionToServer(Socket socket) throws IOException {
+        ConnectionToServer(Socket socket) {
             this.socket = socket;
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
+            try {
+                out = new ObjectOutputStream(socket.getOutputStream());
+                in = new ObjectInputStream(socket.getInputStream());
+            } catch (IOException e){
+                e.printStackTrace();
+                System.out.println("connecting to server failed");
+                return;
+            }
+
 
             Thread read = new Thread(){
                 public void run(){
@@ -107,9 +121,18 @@ public class Client {
                                 diffs.put(diff);
                             }
 
-                        }
-                        catch(Exception e){
-                            //e.printStackTrace();
+                        } catch(InterruptedException e) {
+                            e.printStackTrace();
+                        }catch (EOFException e){
+                            System.out.println("unable to read object from inputstream");
+                            break;
+
+                        } catch (ClassNotFoundException e){
+                            e.printStackTrace();
+
+                        } catch (IOException e){
+                            e.printStackTrace();
+
                         }
                     }
                 }
@@ -142,6 +165,23 @@ public class Client {
                             }
                         } catch (InterruptedException e){
                             throw new RuntimeException(e);
+                        } catch (SocketException e){
+                            System.out.println("server disconnected");
+                            try {
+                                in.close();
+                                out.close();
+                                socket.close();
+                                serverOpen = false;
+
+
+                            } catch (IOException ioe) {
+
+                                System.out.println("socket and stream closing in client failed");
+                            }
+                            break;
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -152,19 +192,16 @@ public class Client {
             write.start();
         }
 
-        private void write(Object obj) {
-            try{
-                out.writeObject(obj);
-            }
-            catch(IOException e){
-                //e.printStackTrace();
-            }
+        private void write(Object obj) throws IOException {
+
+            out.writeObject(obj);
+
         }
 
 
     }
 
-    public void send(Object obj) {
+    public void send(Object obj) throws IOException{
         server.write(obj);
     }
 }

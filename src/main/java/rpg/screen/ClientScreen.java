@@ -79,9 +79,6 @@ public class ClientScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key) {
         keycodes.add(key.getKeyCode());
-        try {
-            System.out.println(keycodes);
-        } catch (ConcurrentModificationException e){}
         return this;
     }
 
