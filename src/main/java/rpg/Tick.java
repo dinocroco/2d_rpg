@@ -7,7 +7,7 @@ import java.util.TreeSet;
 public class Tick implements Runnable {
 
     private long lastMoment = System.nanoTime();
-    private long tickLength = 500000000;
+    private long tickLength = 100000000;
     private boolean playing = true;
     private double unprocessed = 0.0;
     private Application app;

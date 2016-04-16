@@ -126,26 +126,51 @@ public class Application extends JFrame implements KeyListener {
                     addGameActions(new Movement(id,0,1));
 //                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()+1);
                 }
+                if (i == KeyEvent.VK_ESCAPE) {
+                    for (int j = 0; j < gameActions.size(); j++) {
+                        if (gameActions.get(j).characterID == clientdata.getId()){
+                            gameActions.remove(j);
+                            j--;
+                        }
+
+                    }
+                }
             }
         }
     }
 
-    public synchronized void addGameActions(GameAction gameaction){
-        gameActions.add(gameaction);
+    public synchronized void addGameActions(GameAction actionToAdd){
+        int count = 0;
+        for (GameAction gameaction : gameActions) {
+            if (gameaction.characterID == actionToAdd.characterID){
+                count++;
+            }
+            if (count > 3){
+                return;
+            }
+        }
+        gameActions.add(actionToAdd);
+
     }
 
     public void executeGameEvents(){
         List<GameAction> toRemove = new ArrayList<>();
+        List<Long> idCodes = new ArrayList<>();
         for (GameAction gameaction: gameActions) {
+            long id = gameaction.characterID;
+            if(idCodes.contains(id)){
+                continue;
+            }
             if(gameaction instanceof Movement) {
                 Movement moveaction = (Movement) gameaction;
                 if (gameaction.characterID < 1000) {
-
                     players.get((int)gameaction.characterID).addToXY(moveaction.right,moveaction.down);
+                    idCodes.add(id);
                     toRemove.add(gameaction);
                     //gameaction.removePriority();
                 }
             }
+
         }
         //gameActions.remove(new DeletedAction());
         for (GameAction gameAction : toRemove) {

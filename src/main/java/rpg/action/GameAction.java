@@ -6,10 +6,14 @@ public abstract class GameAction implements Comparable<GameAction>, Serializable
 
     private int priority = 0;
     public final long characterID;
+    public final long actionTime;
+
 
 
     public GameAction(long characterID) {
         this.characterID = characterID;
+        this.actionTime = System.nanoTime();
+
     }
 
     public void removePriority() {
