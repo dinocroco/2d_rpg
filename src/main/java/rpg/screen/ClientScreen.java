@@ -11,7 +11,6 @@ import rpg.world.Tile;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ClientScreen implements Screen {
@@ -134,7 +133,7 @@ public class ClientScreen implements Screen {
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
                 if (player.connectionId == diffPlayer.connectionId) {
-                    //System.out.println("replacing old character");
+                    System.out.println("replacing old character");
                     players.remove(i);
                     players.add(diffPlayer);
                     foundPlayer = true;
@@ -172,7 +171,6 @@ public class ClientScreen implements Screen {
                 units.add(diffUnit);
 
             }
-
         }
     }
 

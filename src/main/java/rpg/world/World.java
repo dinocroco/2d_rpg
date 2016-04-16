@@ -142,7 +142,7 @@ public class World {
         return false;
     }
 
-    public Map<Integer, Player> getPlayers() {
+    public synchronized Map<Integer, Player> getPlayers() {
         return players;
     }
 

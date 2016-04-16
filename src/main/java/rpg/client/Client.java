@@ -131,6 +131,7 @@ public class Client {
                             } else if (obj instanceof Diff){
                                 Diff diff = (Diff) obj;
                                 diffs.put(diff);
+                                //System.out.println("PUT diff");
                             }
 
                         } catch(InterruptedException e) {

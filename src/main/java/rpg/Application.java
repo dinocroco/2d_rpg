@@ -190,6 +190,7 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void repaint(){
+        terminal.clear();
         //rpg.server sends new data
         //screen.sendOutput(server);
         if(screen.getClass() == PlayScreen.class) {
@@ -222,12 +223,13 @@ public class Application extends JFrame implements KeyListener {
                 diff.clear();
             }
         }
-        terminal.clear();
+
         screen.displayOutput(terminal);
         if (screen.getClass() == PlayScreen.class) {
             ((PlayScreen) screen).displayUnits(terminal, screen.getWorld().getUnits());
             ((PlayScreen) screen).displayPlayers(terminal, screen.getWorld().getPlayers());
         }
+        //System.out.println("repainting "+screen.getClass());
         super.repaint();
     }
 

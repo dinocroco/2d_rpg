@@ -113,8 +113,8 @@ public class Server {
         }
 
         public void write(Object obj) throws IOException{
-            //out.reset();
-            System.out.println("sending"+obj.getClass());
+            out.reset();
+            //System.out.println("sending"+obj.getClass());
             out.writeObject(obj);
         }
         public void close() throws IOException {
@@ -124,7 +124,7 @@ public class Server {
         }
     }
 
-    public void sendToOne(int index, Object message) {
+    public synchronized void sendToOne(int index, Object message) {
         try {
             clientMap.get(index).write(message);
         } catch (SocketException e) {
@@ -136,7 +136,7 @@ public class Server {
         }
     }
 
-    public void sendToAll(Object message){
+    public synchronized void sendToAll(Object message){
         List<Integer> ids = new ArrayList<>();
         for (int id : clientMap.keySet()){
             try {
