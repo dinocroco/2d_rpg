@@ -1,5 +1,6 @@
 package rpg.server;
 
+import org.apache.commons.io.IOUtils;
 import rpg.Application;
 import rpg.client.ClientData;
 
@@ -126,9 +127,9 @@ public class Server {
             }
         }
         public void close() throws IOException {
-            out.close();
-            in.close();
-            socket.close();
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(socket);
         }
     }
 

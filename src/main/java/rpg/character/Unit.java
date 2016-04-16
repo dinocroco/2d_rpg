@@ -1,6 +1,8 @@
 package rpg.character;
 
 
+import rpg.world.World;
+
 import java.awt.*;
 import java.io.Serializable;
 import java.util.*;
@@ -70,4 +72,19 @@ public class Unit implements GameCharacter, Serializable {
     public Color getColor() {
         return color;
     }
+
+
+    public void moveUnit(World world){
+        Random rand = new Random();
+        int randomInt = rand.nextInt(10);
+        if(randomInt == 1) {
+            if (world.vacantXY(x, y - 1)) {
+                y--;
+            } else if (world.vacantXY(x, y + 1)) {
+                y++;
+            }
+            hasChanged = true;
+        }
+    }
+
 }

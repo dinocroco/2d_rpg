@@ -25,8 +25,8 @@ public class Application extends JFrame implements KeyListener {
     private Tick tick;
     public Server server;
     private boolean sentInitialView = false;
-    private Map<Integer,Player> players = new HashMap<>();
-    private List<Unit> units = new ArrayList<>();
+    //private Map<Integer,Player> players = new HashMap<>();
+    //private List<Unit> units = new ArrayList<>();
     private List<GameAction> gameActions = new ArrayList<>();
 
     Application(){
@@ -91,7 +91,7 @@ public class Application extends JFrame implements KeyListener {
         // TODO find some place for it, add color
         if(screen.getClass() == PlayScreen.class){
             PlayScreen playscreen = (PlayScreen) screen;
-            Diff startingPoint = playscreen.getWorld().playerStartingPoint(players);
+            Diff startingPoint = playscreen.getWorld().playerStartingPoint();
             if (startingPoint!=null) {
                 player.setX(startingPoint.getX());
                 player.setY(startingPoint.getY());
@@ -99,9 +99,11 @@ public class Application extends JFrame implements KeyListener {
 
             screen.sendOutput(server);
         }
-        players.put(clientIndex,player);
+        screen.getWorld().getPlayers().put(clientIndex,player);
         System.out.println("client "+Integer.toString(clientIndex)+" connected");
     }
+
+
 
     public synchronized void executeKeyCode(ClientData clientdata){
         // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
@@ -154,29 +156,34 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void executeGameEvents(){
-        List<GameAction> toRemove = new ArrayList<>();
-        List<Long> idCodes = new ArrayList<>();
-        for (GameAction gameaction: gameActions) {
-            long id = gameaction.characterID;
-            if(idCodes.contains(id)){
-                continue;
-            }
-            if(gameaction instanceof Movement) {
-                Movement moveaction = (Movement) gameaction;
-                if (gameaction.characterID < 1000) {
-                    players.get((int)gameaction.characterID).addToXY(moveaction.right,moveaction.down);
-                    idCodes.add(id);
-                    toRemove.add(gameaction);
-                    //gameaction.removePriority();
+        if(screen.getClass()==PlayScreen.class) {
+
+
+            List<GameAction> toRemove = new ArrayList<>();
+            List<Long> idCodes = new ArrayList<>();
+            for (GameAction gameaction : gameActions) {
+                long id = gameaction.characterID;
+                if (idCodes.contains(id)) {
+                    continue;
                 }
+                if (gameaction instanceof Movement) {
+                    Movement moveaction = (Movement) gameaction;
+                    if (gameaction.characterID < 1000) {
+                        screen.getWorld().getPlayers().get((int) gameaction.characterID).addToXY(moveaction.right, moveaction.down);
+                        idCodes.add(id);
+                        toRemove.add(gameaction);
+                        //gameaction.removePriority();
+                    }
+                }
+
+            }
+            //gameActions.remove(new DeletedAction());
+            for (GameAction gameAction : toRemove) {
+                gameActions.remove(gameAction);
             }
 
+            screen.getWorld().moveUnits();
         }
-        //gameActions.remove(new DeletedAction());
-        for (GameAction gameAction : toRemove) {
-            gameActions.remove(gameAction);
-        }
-
         repaint();
     }
 
@@ -184,39 +191,41 @@ public class Application extends JFrame implements KeyListener {
     public void repaint(){
         //rpg.server sends new data
         //screen.sendOutput(server);
-        if(!sentInitialView && screen.getClass() == PlayScreen.class){
-            screen.sendOutput(server);
-            sentInitialView = true;
-        }
-        List<Diff> diff = screen.updateDiff(server);
-        if(diff == null){
-            diff = new ArrayList<>();
-        }
-        for (int key : players.keySet()) {
-            Player player = players.get(key);
-            if (player.hasChanged()) {
-                //System.out.println(player);
-                diff.add(new Diff(player));
-                player.toUnchanged();
+        if(screen.getClass() == PlayScreen.class) {
+            if (!sentInitialView) {
+                screen.sendOutput(server);
+                sentInitialView = true;
             }
-        }
-        for (Unit unit: units){
-            if(unit.hasChanged()){
-                diff.add(new Diff(unit));
-                unit.toUnchanged();
+            List<Diff> diff = screen.updateDiff(server);
+            if (diff == null) {
+                diff = new ArrayList<>();
             }
-        }
-        if(!diff.isEmpty()) {
-            for (Diff d : diff) {
-                screen.sendDiff(server, d);
+            for (int key : screen.getWorld().getPlayers().keySet()) {
+                Player player = screen.getWorld().getPlayers().get(key);
+                if (player.hasChanged()) {
+                    //System.out.println(player);
+                    diff.add(new Diff(player));
+                    player.toUnchanged();
+                }
             }
-            diff.clear();
+            for (Unit unit : screen.getWorld().getUnits()) {
+                if (unit.hasChanged()) {
+                    diff.add(new Diff(unit));
+                    unit.toUnchanged();
+                }
+            }
+            if (!diff.isEmpty()) {
+                for (Diff d : diff) {
+                    screen.sendDiff(server, d);
+                }
+                diff.clear();
+            }
         }
         terminal.clear();
         screen.displayOutput(terminal);
-        if(screen.getClass()==PlayScreen.class){
+        if (screen.getClass() == PlayScreen.class) {
             // TODO display units too
-            ((PlayScreen)screen).displayPlayers(terminal,players);
+            ((PlayScreen) screen).displayPlayers(terminal, screen.getWorld().getPlayers());
         }
         super.repaint();
     }
@@ -242,14 +251,16 @@ public class Application extends JFrame implements KeyListener {
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
             PlayScreen playscreen = (PlayScreen) screen;
-            Diff startingPoint = playscreen.getWorld().unitStartingPoint(players,units);
+            Diff startingPoint = playscreen.getWorld().unitStartingPoint();
             if (startingPoint != null) {
                 unit.setX(startingPoint.getX());
                 unit.setY(startingPoint.getY());
             }
             screen.sendOutput(server);
+            screen.getWorld().getUnits().add(unit);
         }
-        units.add(unit);
+
+
 
     }
 

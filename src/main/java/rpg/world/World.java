@@ -12,6 +12,8 @@ public class World {
     private Tile[][] tiles;
     private int width;
     private List<Diff> diff = new ArrayList<>();
+    private Map<Integer,Player> players = new HashMap<>();
+    private List<Unit> units = new ArrayList<>();
     public int width() { return width; }
 
     private int height;
@@ -47,7 +49,7 @@ public class World {
         diff.clear();
     }
 
-    public Diff playerStartingPoint(Map<Integer,Player> players) {
+    public Diff playerStartingPoint() {
 
         int x;
         int y;
@@ -82,7 +84,7 @@ public class World {
         return null;
     }
 
-    public Diff unitStartingPoint(Map<Integer,Player> players, List<Unit> units){
+    public Diff unitStartingPoint(){
         int x;
         int y;
         List<Integer> randomWidth = new ArrayList<>(width);
@@ -120,5 +122,37 @@ public class World {
             }
         }
         return null;
+    }
+
+    public boolean vacantXY(int x, int y){
+        if (tile(x,y)==Tile.FLOOR){
+            for (GameCharacter player: players.values()) {
+                if (x==player.getX() && y==player.getY()){
+                    return false;
+                }
+            }
+            for (Unit unit:units) {
+                if (x==unit.getX() && y==unit.getY()){
+                    return false;
+                }
+            }
+            return true;
+
+        }
+        return false;
+    }
+
+    public Map<Integer, Player> getPlayers() {
+        return players;
+    }
+
+    public List<Unit> getUnits() {
+        return units;
+    }
+
+    public void moveUnits(){
+        for (Unit unit : units){
+            unit.moveUnit(this);
+        }
     }
 }
