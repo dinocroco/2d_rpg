@@ -129,7 +129,7 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public void executeGameEvents(){
-        Set<GameAction> toRemove = new TreeSet<>();
+        List<GameAction> toRemove = new ArrayList<>();
         for (GameAction gameaction: gameActions) {
             if(gameaction instanceof Movement) {
                 Movement moveaction = (Movement) gameaction;
