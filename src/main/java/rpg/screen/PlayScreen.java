@@ -3,6 +3,7 @@ package rpg.screen;
 import asciiPanel.AsciiPanel;
 import rpg.action.GameAction;
 import rpg.character.Player;
+import rpg.character.Unit;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -73,6 +74,15 @@ public class PlayScreen implements Screen {
             int wy = player.getY()-viewY;
             if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
+        }
+    }
+
+    public void displayUnits(AsciiPanel terminal, List<Unit> units){
+        for (Unit unit : units) {
+            int wx = unit.getX()-viewX;
+            int wy = unit.getY()-viewY;
+            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
         }
     }
 

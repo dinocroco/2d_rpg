@@ -155,7 +155,7 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public void executeGameEvents(){
+    public synchronized void executeGameEvents(){
         if(screen.getClass()==PlayScreen.class) {
 
 
@@ -224,7 +224,7 @@ public class Application extends JFrame implements KeyListener {
         terminal.clear();
         screen.displayOutput(terminal);
         if (screen.getClass() == PlayScreen.class) {
-            // TODO display units too
+            ((PlayScreen) screen).displayUnits(terminal, screen.getWorld().getUnits());
             ((PlayScreen) screen).displayPlayers(terminal, screen.getWorld().getPlayers());
         }
         super.repaint();

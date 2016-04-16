@@ -128,7 +128,6 @@ public class ClientScreen implements Screen {
 
     public void parseDiff(Diff diff){
         if(diff.getPlayer()!=null){
-            System.out.println("parsing found character");
             Player diffPlayer = diff.getPlayer();
             // find character with same id and replace it
             boolean foundPlayer = false;
@@ -136,17 +135,14 @@ public class ClientScreen implements Screen {
                 Player player = players.get(i);
                 if (player.connectionId == diffPlayer.connectionId) {
                     //System.out.println("replacing old character");
-                    //System.out.println(players.get(i).getX());
                     players.remove(i);
                     players.add(diffPlayer);
-                    //System.out.println(players.get(players.size()-1).getX());
                     foundPlayer = true;
                     break;
                 }
             }
             for (Player player : players) {
                 if(player.connectionId==playerId){
-                    System.out.println("changing");
                     viewX = player.getX()-screenWidth/2;
                     viewY = player.getY()-screenHeight/2;
                     break;
