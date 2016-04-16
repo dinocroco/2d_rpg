@@ -155,4 +155,14 @@ public class World {
             unit.moveUnit(this);
         }
     }
+
+    public double distanceBetween(GameCharacter a, GameCharacter b){
+        return Math.sqrt((a.getX()-b.getX())*(a.getX()-b.getX())+(a.getY()-b.getY())*(a.getY()-b.getY()));
+    }
+
+    private List<Diff> findPath(GameCharacter unit, GameCharacter goal){
+        // this should return path from unit to goal, or null if unreachable, if 20 steps arent enough then unreachable
+        // when it is implemented, then public
+        return null;
+    }
 }
