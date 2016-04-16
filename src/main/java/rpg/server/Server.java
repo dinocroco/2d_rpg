@@ -46,7 +46,8 @@ public class Server {
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (SocketException e){
                         System.out.println("socket failed");
-                        e.printStackTrace();
+                        //e.printStackTrace();
+                        shutDown();
                         break;
                     } catch (IOException ioe) {
                         ioe.printStackTrace();
@@ -117,7 +118,7 @@ public class Server {
             //System.out.println("sending"+obj.getClass());
             out.writeObject(obj);
         }
-        public void close() throws IOException {
+        public void close() {
             IOUtils.closeQuietly(out);
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(socket);
@@ -154,11 +155,11 @@ public class Server {
         }
     }
 
-    public void shutDown() throws IOException{
+    public void shutDown() {
         for (Connection connection : clientMap.values()) {
             connection.close();
         }
-        serverSocket.close();
+        IOUtils.closeQuietly(serverSocket);
     }
 
 }
