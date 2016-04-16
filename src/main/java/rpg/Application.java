@@ -15,9 +15,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
@@ -64,13 +64,8 @@ public class Application extends JFrame implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
             // ctrl+c for exit
-            try {
-                if(server!=null) {
-                    server.shutDown();
-                }
-            } catch (IOException ioe){
-                System.out.println("server shutdown failed");
-                ioe.printStackTrace();
+            if(server!=null) {
+                server.shutDown();
             }
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
