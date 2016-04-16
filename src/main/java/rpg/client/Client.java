@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,15 +26,18 @@ public class Client {
     private Application app;
     private int idCode;
     private boolean serverOpen;
+    private Client client;
 
     public static void main(String[] args) throws IOException{
         //Client client = new Client("192.168.1.81",1336);
+        Client client = new Client("192.168.1.69",1336);
 
-        Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
+        //Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
 
     }
 
     public Client(String IPAddress, int port) throws IOException{
+        this.client = this;
         try {
             socket = new Socket(IPAddress, port);
             serverOpen = true;
@@ -90,6 +92,11 @@ public class Client {
         messageHandling.start();
     }
 
+    public void closeConnection(){
+        this.server.close();
+        IOUtils.closeQuietly(this.socket);
+    }
+
     private class ConnectionToServer {
         ObjectInputStream in;
         ObjectOutputStream out;
@@ -109,7 +116,7 @@ public class Client {
 
             Thread read = new Thread(){
                 public void run(){
-                    while(true){
+                    while(serverOpen){
                         try{
                             Object obj = in.readObject();
                             if (obj instanceof Integer){
@@ -135,8 +142,10 @@ public class Client {
                             System.out.println("Malformed respon1se");
 
                         } catch (IOException e){
+                            System.out.println("jama tekkis");
                             e.printStackTrace();
-
+                            client.closeConnection();
+                            serverOpen = false;
                         }
                     }
                 }
@@ -144,7 +153,7 @@ public class Client {
 
             Thread write = new Thread(){
                 public void run(){
-                    while(true){
+                    while(serverOpen){
                         try{
                             if (app.getScreen().getClass()== ClientScreen.class ){
                                 ClientScreen clientScreen = (ClientScreen) app.getScreen();
@@ -197,6 +206,11 @@ public class Client {
 
         }
 
+        public void close(){
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
+            IOUtils.closeQuietly(socket);
+        }
 
     }
 
