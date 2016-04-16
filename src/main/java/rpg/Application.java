@@ -1,6 +1,7 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.action.DeletedAction;
 import rpg.action.GameAction;
 import rpg.action.Movement;
 import rpg.character.Unit;
@@ -105,18 +106,20 @@ public class Application extends JFrame implements KeyListener {
                 int id = clientdata.getId();
                 // TODO enne liikumist peab kontrollima kas ka võib, pole takistust, maailma lõppu, muud sellist
                 if (i == KeyEvent.VK_RIGHT) {
-                    addGameActions(new Movement(id,0,1));
+                    addGameActions(new Movement(id,1,0));
                     //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()+1);
                 }
                 if (i == KeyEvent.VK_LEFT) {
-                    addGameActions(new Movement(id,0,-1));
+                    addGameActions(new Movement(id,-1,0));
                     //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()-1);
                 }
                 if (i == KeyEvent.VK_UP) {
-                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()-1);
+                    addGameActions(new Movement(id,0,-1));
+//                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()-1);
                 }
                 if (i == KeyEvent.VK_DOWN) {
-                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()+1);
+                    addGameActions(new Movement(id,0,1));
+//                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()+1);
                 }
             }
         }
@@ -134,13 +137,15 @@ public class Application extends JFrame implements KeyListener {
                 if (gameaction.characterID < 1000) {
 
                     players.get((int)gameaction.characterID).addToXY(moveaction.right,moveaction.down);
-                    toRemove.add(gameaction);
+                    //toRemove.add(gameaction);
+                    gameaction.removePriority();
                 }
             }
         }
-        for (GameAction gameAction : toRemove) {
-            gameActions.remove(gameAction);
-        }
+        gameActions.remove(new DeletedAction());
+//        for (GameAction gameAction : toRemove) {
+//            gameActions.remove(gameAction);
+//        }
 
         repaint();
     }

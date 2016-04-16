@@ -1,0 +1,11 @@
+package rpg.action;
+
+/**
+ * Created by Ravana on 16.04.2016.
+ */
+public class DeletedAction extends GameAction{
+    public DeletedAction() {
+        super(-1);
+        removePriority();
+    }
+}
