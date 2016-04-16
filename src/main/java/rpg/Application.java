@@ -1,12 +1,11 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
-import rpg.action.DeletedAction;
 import rpg.action.GameAction;
 import rpg.action.Movement;
+import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
-import rpg.character.Player;
 import rpg.screen.ClientScreen;
 import rpg.screen.PlayScreen;
 import rpg.screen.Screen;
@@ -30,7 +29,7 @@ public class Application extends JFrame implements KeyListener {
     private boolean sentInitialView = false;
     private Map<Integer,Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
-    private Set<GameAction> gameActions = new TreeSet<>();
+    private List<GameAction> gameActions = new ArrayList<>();
 
     Application(){
         super();
@@ -137,15 +136,15 @@ public class Application extends JFrame implements KeyListener {
                 if (gameaction.characterID < 1000) {
 
                     players.get((int)gameaction.characterID).addToXY(moveaction.right,moveaction.down);
-                    //toRemove.add(gameaction);
-                    gameaction.removePriority();
+                    toRemove.add(gameaction);
+                    //gameaction.removePriority();
                 }
             }
         }
-        gameActions.remove(new DeletedAction());
-//        for (GameAction gameAction : toRemove) {
-//            gameActions.remove(gameAction);
-//        }
+        //gameActions.remove(new DeletedAction());
+        for (GameAction gameAction : toRemove) {
+            gameActions.remove(gameAction);
+        }
 
         repaint();
     }
