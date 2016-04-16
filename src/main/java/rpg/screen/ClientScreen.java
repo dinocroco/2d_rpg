@@ -11,6 +11,7 @@ import rpg.world.Tile;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ClientScreen implements Screen {
@@ -78,7 +79,9 @@ public class ClientScreen implements Screen {
     @Override
     public Screen respondToUserInput(KeyEvent key) {
         keycodes.add(key.getKeyCode());
-        System.out.println(keycodes);
+        try {
+            System.out.println(keycodes);
+        } catch (ConcurrentModificationException e){}
         return this;
     }
 
