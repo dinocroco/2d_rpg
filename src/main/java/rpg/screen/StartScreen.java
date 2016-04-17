@@ -2,7 +2,6 @@ package rpg.screen;
 
 import asciiPanel.AsciiPanel;
 import rpg.character.Player;
-import rpg.server.Server;
 
 import java.awt.event.KeyEvent;
 import java.util.Map;
@@ -23,11 +22,6 @@ public class StartScreen implements Screen{
     @Override
     public Screen respondToUserInput(KeyEvent key) {
         return key.getKeyCode() == KeyEvent.VK_ENTER ? new PlayScreen(players) : this;
-    }
-
-    @Override
-    public void sendOutput(Server server) {
-
     }
 
     @Override

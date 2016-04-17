@@ -3,7 +3,6 @@ package rpg.screen;
 import asciiPanel.AsciiPanel;
 import rpg.character.Player;
 import rpg.character.Unit;
-import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 import rpg.world.Tile;
@@ -109,12 +108,6 @@ public class ClientScreen implements Screen {
             if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
             terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
         }
-    }
-
-    @Override
-    public void sendOutput(Server server) {
-
-
     }
 
     @Override

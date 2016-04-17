@@ -1,7 +1,6 @@
 package rpg.screen;
 
 import asciiPanel.AsciiPanel;
-import rpg.action.GameAction;
 import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.server.Server;
@@ -14,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 /**
  * Screen that is seen by gamemaster.
@@ -56,7 +54,6 @@ public class PlayScreen implements Screen {
 
     /**
      * Creates game world and sends players their starting location.
-     * @param players
      */
 
     private void createWorld(Map<Integer,Player> players ){
@@ -101,7 +98,7 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void sendOutput(Server server) {
+    public void sendWorldTerrain(Server server) {
         AsciiSymbol[][] symbols = new AsciiSymbol[width][height];
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){

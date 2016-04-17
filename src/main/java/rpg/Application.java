@@ -34,6 +34,7 @@ public class Application extends JFrame implements KeyListener {
 
     Application(){
         super();
+        setResizable(false);
         terminal = new AsciiPanel();
         add(terminal);
 
@@ -50,11 +51,11 @@ public class Application extends JFrame implements KeyListener {
 
     /**
      * Application constructor for Client
-     * @param type
      */
 
     public Application(int type){
         super();
+        setResizable(false);
         terminal = new AsciiPanel();
         add(terminal);
         screen = new ClientScreen();
@@ -69,12 +70,19 @@ public class Application extends JFrame implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
-            if(server!=null) {
-                server.shutDown();
-            }
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            close();
         }
         screen = screen.respondToUserInput(e);
+        if(screen == null){
+            close();
+        }
+    }
+
+    private void close() {
+        if(server!=null) {
+            server.shutDown();
+        }
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
     public void keyReleased(KeyEvent e) {
@@ -93,7 +101,7 @@ public class Application extends JFrame implements KeyListener {
                 player.setY(startingPoint.getY());
             }
 
-            screen.sendOutput(server);
+            screen.sendWorldTerrain(server);
         }
 
         if(screen.getWorld()!=null) {
@@ -188,7 +196,7 @@ public class Application extends JFrame implements KeyListener {
         terminal.clear();
         if(screen.getClass() == PlayScreen.class) {
             if (!sentInitialView) {
-                screen.sendOutput(server);
+                screen.sendWorldTerrain(server);
                 sentInitialView = true;
             }
             List<Diff> diff = screen.updateDiff();
@@ -247,7 +255,7 @@ public class Application extends JFrame implements KeyListener {
                     unit.setX(startingPoint.getX());
                     unit.setY(startingPoint.getY());
                 }
-                screen.sendOutput(server);
+                screen.sendWorldTerrain(server);
                 screen.getWorld().getUnits().add(unit);
             }
         }

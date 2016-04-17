@@ -13,7 +13,7 @@ import java.util.List;
 public interface Screen {
     void displayOutput(AsciiPanel terminal);
 
-    void sendOutput(Server server);
+    default void sendWorldTerrain(Server server){}
 
     default List<Diff> updateDiff(){return null;}
 
