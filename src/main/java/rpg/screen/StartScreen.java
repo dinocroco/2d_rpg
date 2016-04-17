@@ -16,8 +16,7 @@ public class StartScreen implements Screen{
 
     @Override
     public void displayOutput(AsciiPanel terminal) {
-        // hetkel on 24*80, vajadusel saan uue jar faili teha teise suurusega
-        terminal.write("rl tutorial", 1, 1);
+        //at the moment constant value 24*80, may be changed if needed.
         terminal.writeCenter("-- press [enter] to start --", 22);
     }
 

@@ -30,8 +30,6 @@ public class Client {
     private Client client;
 
     public static void main(String[] args) throws IOException{
-        //Client client = new Client("192.168.1.81",1336);
-        //Client client = new Client("192.168.1.69",1336);
 
         Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
 
@@ -102,8 +100,6 @@ public class Client {
                 out = new ObjectOutputStream(socket.getOutputStream());
                 in = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e){
-                e.printStackTrace();
-                System.out.println("connecting to server failed");
                 closeConnection();
                 return;
             }

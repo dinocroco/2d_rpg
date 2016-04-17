@@ -26,9 +26,11 @@ public class Application extends JFrame implements KeyListener {
     private Tick tick;
     public Server server;
     private boolean sentInitialView = false;
-    //private Map<Integer,Player> players = new HashMap<>();
-    //private List<Unit> units = new ArrayList<>();
     private List<GameAction> gameActions = new ArrayList<>();
+
+    /**
+     * Application constructor for Server, includes game time ticking.
+     */
 
     Application(){
         super();
@@ -46,6 +48,11 @@ public class Application extends JFrame implements KeyListener {
         server = startServer();
     }
 
+    /**
+     * Application constructor for Client
+     * @param type
+     */
+
     public Application(int type){
         super();
         terminal = new AsciiPanel();
@@ -56,26 +63,20 @@ public class Application extends JFrame implements KeyListener {
         pack();
     }
 
-    //@Override
     public void keyTyped(KeyEvent e) {
 
     }
 
-    //@Override
     public void keyPressed(KeyEvent e) {
         if(e.isControlDown() && e.getKeyCode()==KeyEvent.VK_C){
-            // ctrl+c for exit
             if(server!=null) {
                 server.shutDown();
             }
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
         screen = screen.respondToUserInput(e);
-        // instead, ticking is responsible for redraw
-        //repaint();
     }
 
-    //@Override
     public void keyReleased(KeyEvent e) {
 
     }
@@ -94,7 +95,7 @@ public class Application extends JFrame implements KeyListener {
 
             screen.sendOutput(server);
         }
-        // TODO something about this
+
         if(screen.getWorld()!=null) {
             screen.getWorld().getPlayers().put(clientIndex, player);
         } else {
@@ -104,7 +105,6 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public synchronized void onDisconnect(int clientIndex){
-        //screen.getWorld().getPlayers().remove(clientIndex);
         screen.getWorld().removePlayer(clientIndex);
         System.out.println("Kicked client "+clientIndex);
     }
@@ -236,10 +236,6 @@ public class Application extends JFrame implements KeyListener {
         return terminal;
     }
 
-    public void resetView(){
-        sentInitialView = false;
-    }
-
     public synchronized void addNewUnit(long tickNr){
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
@@ -255,8 +251,6 @@ public class Application extends JFrame implements KeyListener {
                 screen.getWorld().getUnits().add(unit);
             }
         }
-
-
 
     }
 

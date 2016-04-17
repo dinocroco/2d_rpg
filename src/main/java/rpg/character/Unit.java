@@ -100,12 +100,9 @@ public class Unit implements GameCharacter, Serializable {
 
     public void goToPlayer(Player player, World world){
 
-        Random rand = new Random();
-        int randomInt = rand.nextInt(2);
         if(Math.abs(player.getX()-x)>Math.abs(player.getY()-y)) {
 
             if (player.getX() - x >= 0 && world.vacantXY(x + 1, y)) {
-                //playeri x koordinaat on suurem
                 x++;
             } else if (player.getX() - x <= 0 && world.vacantXY(x - 1, y)) {
                 x--;

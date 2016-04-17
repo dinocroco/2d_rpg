@@ -1,14 +1,16 @@
 package rpg.world;
 
+
 import java.awt.*;
 import java.io.Serializable;
+
+/**
+ * Wrapper class for describing Tile
+ */
 
 public class AsciiSymbol implements Serializable {
     private char glyph;
     private Color color;
-
-    public AsciiSymbol() {
-    }
 
     public AsciiSymbol(char glyph, Color color) {
         this.glyph = glyph;
@@ -23,11 +25,4 @@ public class AsciiSymbol implements Serializable {
         return color;
     }
 
-    public void setGlyph(char glyph) {
-        this.glyph = glyph;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
 }

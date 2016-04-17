@@ -55,9 +55,6 @@ public class ClientScreen implements Screen {
 
     @Override
     public void displayOutput(AsciiPanel terminal) {
-        //System.out.println("displayOutput redraw");
-        //System.out.println(viewX);
-        //System.out.println(viewY);
         displayTiles(terminal,viewX,viewY);
         displayUnits(terminal, viewX, viewY);
         displayPlayers(terminal,viewX,viewY);
@@ -132,7 +129,6 @@ public class ClientScreen implements Screen {
                 players.removeIf(player -> player.getID() == diffPlayer.getID());
                 return;
             }
-            // find character with same id and replace it
             boolean foundPlayer = false;
             for (int i = 0; i < players.size(); i++) {
                 Player player = players.get(i);
@@ -151,8 +147,6 @@ public class ClientScreen implements Screen {
                 }
             }
             if(!foundPlayer) {
-                // so character with this id not found
-                //check if view location should be changed
                 players.add(diffPlayer);
                 viewX = diffPlayer.getX()-screenWidth/2;
                 viewY = diffPlayer.getY()-screenHeight/2;

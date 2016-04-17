@@ -16,10 +16,6 @@ public abstract class GameAction implements Comparable<GameAction>, Serializable
 
     }
 
-    public void removePriority() {
-        this.priority = -1;
-    }
-
     @Override
     public int compareTo(GameAction o) {
         if (priority > o.priority) {
