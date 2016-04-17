@@ -176,6 +176,24 @@ public class World {
         return Math.sqrt((a.getX()-b.getX())*(a.getX()-b.getX())+(a.getY()-b.getY())*(a.getY()-b.getY()));
     }
 
+    /**
+     *
+     * @return nearest Unit or null
+     */
+    public Unit getNearestUnit(int playerId){
+        Double locMin = null;
+        Unit nearestUnit = null;
+        Player player = players.get(playerId);
+        for (Unit unit : units) {
+            double distance = distanceBetween(player,unit);
+            if(locMin==null || locMin>distance){
+                locMin = distance;
+                nearestUnit = unit;
+            }
+        }
+        return nearestUnit;
+    }
+
     private List<Diff> findPath(GameCharacter unit, GameCharacter goal){
         // this should return path from unit to goal, or null if unreachable, if 20 steps arent enough then unreachable
         // when it is implemented, then public
