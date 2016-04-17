@@ -1,6 +1,7 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.action.FreezeUnit;
 import rpg.action.GameAction;
 import rpg.action.Movement;
 import rpg.character.Player;
@@ -121,6 +122,13 @@ public class Application extends JFrame implements KeyListener {
         if(screen.getClass() == PlayScreen.class) {
             for (int i : clientdata.getKeycodes()) {
                 int id = clientdata.getId();
+                if (i == KeyEvent.VK_Z){
+                    Player player = screen.getWorld().getPlayers().get(id);
+                    Unit nearestUnit = screen.getWorld().getNearestUnit(id);
+                    if (nearestUnit != null && screen.getWorld().distanceBetween(nearestUnit,player) < 4){
+                        addGameActions(new FreezeUnit(id,nearestUnit,15));
+                    }
+                }
                 if (i == KeyEvent.VK_RIGHT) {
                     addGameActions(new Movement(id,1,0));
                 }
@@ -160,7 +168,7 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public synchronized void executeGameEvents(){
+    public synchronized void executeGameEvents(long tickspassed){
         if(screen.getClass()==PlayScreen.class) {
             List<GameAction> toRemove = new ArrayList<>();
             List<Long> idCodes = new ArrayList<>();
@@ -180,13 +188,22 @@ public class Application extends JFrame implements KeyListener {
                         toRemove.add(gameaction);
                     }
                 }
+                if (gameaction instanceof FreezeUnit){
+                    FreezeUnit freezeunit = (FreezeUnit) gameaction;
+                    if (gameaction.characterID < 1000) {
+                        freezeunit.unit.freeze(freezeunit.time, tickspassed);
+                        idCodes.add(id);
+                        toRemove.add(gameaction);
+                    }
+
+                }
 
             }
             for (GameAction gameAction : toRemove) {
                 gameActions.remove(gameAction);
             }
 
-            screen.getWorld().moveUnits();
+            screen.getWorld().moveUnits(tickspassed);
         }
         repaint();
     }

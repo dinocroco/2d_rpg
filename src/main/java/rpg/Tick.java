@@ -43,7 +43,7 @@ public class Tick implements Runnable {
         if(ticksPassed%120==0){
             app.addNewUnit(ticksPassed);
         }
-        app.executeGameEvents();
+        app.executeGameEvents(ticksPassed);
     }
 
 }

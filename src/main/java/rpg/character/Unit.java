@@ -18,6 +18,7 @@ public class Unit implements GameCharacter, Serializable {
     private int health;
     private List<Color> colors = new ArrayList<>();
     public final long idCode;
+    private long freezeEnd = 0;
 
     public Unit(long tickNumber){
         Random rand = new Random();
@@ -129,15 +130,23 @@ public class Unit implements GameCharacter, Serializable {
         return null;
     }
 
-    public void moveUnit(World world){
+    public void moveUnit(World world, long tickspassed){
 
+        if (freezeEnd > tickspassed) {
+            return;
+        }
         Player player = playerNearby(x, y, world);
-        if(player != null){
-            goToPlayer(player,world);
+        if (player != null) {
+            goToPlayer(player, world);
         } else {
             moveUnitRandomWay(world);
         }
 
+        hasChanged = true;
+    }
+
+    public void freeze(int time, long tickspassed){
+        freezeEnd = tickspassed + time;
         hasChanged = true;
     }
 

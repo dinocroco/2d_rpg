@@ -166,9 +166,9 @@ public class World {
         return units;
     }
 
-    public void moveUnits(){
+    public void moveUnits(long tickspassed){
         for (Unit unit : units){
-            unit.moveUnit(this);
+            unit.moveUnit(this, tickspassed);
         }
     }
 
