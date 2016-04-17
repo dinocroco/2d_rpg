@@ -65,20 +65,14 @@ public class Client {
                             app.getScreen().setView(asciiView);
                             ((ClientScreen)app.getScreen()).setPlayerId(idCode);
                             app.getScreen().displayOutput(app.getTerminal());
-                            //app.getScreen().displayOutput(new AsciiPanel(80,24));
                             app.repaint();
                         }
                         if(diff != null){
-                            // handle diff
-                            //System.out.println("received "+diff.toString());
                             ((ClientScreen)app.getScreen()).parseDiff(diff);
                             app.getScreen().displayOutput(app.getTerminal());
                             app.repaint();
                         }
                         sleep(50);
-
-                        //System.out.println(asciiView.getClass());
-                        //System.out.println("Message Received: " + asciiView);
                     } catch (InterruptedException e){
                         throw new RuntimeException(e);
                     }
@@ -89,7 +83,6 @@ public class Client {
             }
         };
 
-        //messageHandling.setDaemon(true);
         messageHandling.start();
     }
 
@@ -131,22 +124,15 @@ public class Client {
                             } else if (obj instanceof Diff){
                                 Diff diff = (Diff) obj;
                                 diffs.put(diff);
-                                //System.out.println("PUT diff");
                             }
 
-                        } catch(InterruptedException e) {
-                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            serverOpen = false;
                         }catch (EOFException e){
-                            System.out.println("unable to read object from inputstream");
                             break;
-
                         } catch (ClassNotFoundException e){
-                            e.printStackTrace();
-                            System.out.println("Malformed respon1se");
-
+                            throw new RuntimeException(e);
                         } catch (IOException e){
-                            System.out.println("jama tekkis");
-                            e.printStackTrace();
                             client.closeConnection();
                             serverOpen = false;
                         }
@@ -164,7 +150,6 @@ public class Client {
                                 if(gotKeycodes.length>0) {
                                     keycodes.add(gotKeycodes);
                                 }
-                                //System.out.println("clientscreen.getkeycodes in Client"+clientScreen.getKeycodes());
 
                             }
                             if(keycodes.size()>0) {
@@ -180,14 +165,12 @@ public class Client {
                                 Thread.sleep(50);
                             }
                         } catch (InterruptedException e){
-                            throw new RuntimeException(e);
+                            serverOpen = false;
                         } catch (SocketException e){
                             System.out.println("server disconnected");
                             serverOpen = false;
-                            break;
-
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            throw new RuntimeException(e);
                         }
                     }
 
@@ -198,7 +181,6 @@ public class Client {
                 }
             };
 
-            //read.setDaemon(true);
             read.start();
             write.start();
         }
@@ -217,7 +199,7 @@ public class Client {
 
     }
 
-    public void send(Object obj) throws IOException{
+    public void send(Object obj) throws IOException {
         server.write(obj);
     }
 }

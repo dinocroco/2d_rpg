@@ -110,27 +110,20 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public synchronized void executeKeyCode(ClientData clientdata){
-        // TODO see peab vaid lisama tegevusi järjekorda, ning tick peaks kontrollima, millal järjekorrast järgmine võetakse
-        //System.out.println("keycodes received:" + Arrays.toString(clientdata.getKeycodes())+" client id:" + clientdata.getId());
         if(screen.getClass() == PlayScreen.class) {
             for (int i : clientdata.getKeycodes()) {
                 int id = clientdata.getId();
-                // TODO enne liikumist peab kontrollima kas ka võib, pole takistust, maailma lõppu, muud sellist
                 if (i == KeyEvent.VK_RIGHT) {
                     addGameActions(new Movement(id,1,0));
-                    //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()+1);
                 }
                 if (i == KeyEvent.VK_LEFT) {
                     addGameActions(new Movement(id,-1,0));
-                    //players.get(clientdata.getId()).setX(players.get(clientdata.getId()).getX()-1);
                 }
                 if (i == KeyEvent.VK_UP) {
                     addGameActions(new Movement(id,0,-1));
-//                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()-1);
                 }
                 if (i == KeyEvent.VK_DOWN) {
                     addGameActions(new Movement(id,0,1));
-//                    players.get(clientdata.getId()).setY(players.get(clientdata.getId()).getY()+1);
                 }
                 if (i == KeyEvent.VK_ESCAPE) {
                     for (int j = 0; j < gameActions.size(); j++) {
@@ -181,7 +174,6 @@ public class Application extends JFrame implements KeyListener {
                 }
 
             }
-            //gameActions.remove(new DeletedAction());
             for (GameAction gameAction : toRemove) {
                 gameActions.remove(gameAction);
             }
@@ -194,7 +186,6 @@ public class Application extends JFrame implements KeyListener {
     @Override
     public void repaint(){
         terminal.clear();
-        //rpg.server sends new data
         if(screen.getClass() == PlayScreen.class) {
             if (!sentInitialView) {
                 screen.sendOutput(server);
@@ -230,7 +221,6 @@ public class Application extends JFrame implements KeyListener {
             ((PlayScreen) screen).displayUnits(terminal, screen.getWorld().getUnits());
             ((PlayScreen) screen).displayPlayers(terminal, screen.getWorld().getPlayers());
         }
-        //System.out.println("repainting "+screen.getClass());
         super.repaint();
     }
 
@@ -239,7 +229,6 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Screen getScreen() {
-        //System.out.println("returning screen");
         return screen;
     }
 

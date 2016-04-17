@@ -21,6 +21,8 @@ public class Server {
     ServerSocket serverSocket;
     private Application app;
     private Map<Integer, Connection> clientMap = Collections.synchronizedMap(new HashMap<>());
+    Thread accept;
+    Thread messageHandling;
 
     public Server(int port, Application app) {
         this.app = app;
@@ -42,15 +44,14 @@ public class Server {
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
-                        sendToOne(randomIndex,new Integer(randomIndex));
+                        sendToOne(randomIndex,randomIndex);
                         //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (SocketException e){
                         System.out.println("socket failed");
-                        //e.printStackTrace();
                         shutDown();
                         break;
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
@@ -69,7 +70,7 @@ public class Server {
                         }
 
                     } catch (InterruptedException ie) {
-                        ie.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -81,6 +82,7 @@ public class Server {
         ObjectInputStream in;
         ObjectOutputStream out;
         Socket socket;
+        Thread read;
 
         public Connection(Socket socket) throws IOException{
             this.socket = socket;
@@ -101,8 +103,12 @@ public class Server {
                             break;
                         } catch (SocketException s){
                             break;
-                        } catch (Exception ioe){
-                            ioe.printStackTrace();
+                        } catch (ClassNotFoundException e){
+                            throw new RuntimeException(e);
+                        } catch (InterruptedException e){
+                            break;
+                        } catch (IOException e){
+                            throw new RuntimeException(e);
                         }
                     }
                 }
@@ -115,25 +121,23 @@ public class Server {
 
         public void write(Object obj) throws IOException{
             out.reset();
-            //System.out.println("sending"+obj.getClass());
             out.writeObject(obj);
         }
         public void close() {
             IOUtils.closeQuietly(out);
             IOUtils.closeQuietly(in);
             IOUtils.closeQuietly(socket);
+            read.interrupt();
         }
     }
 
-    public synchronized void sendToOne(int index, Object message) {
+    public synchronized void sendToOne(int index, Object message) throws IOException{
         try {
             clientMap.get(index).write(message);
         } catch (SocketException e) {
             System.out.println("Client disconnected");
             app.onDisconnect(index);
             clientMap.remove(index);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
     }
 
@@ -156,6 +160,8 @@ public class Server {
     }
 
     public void shutDown() {
+        accept.interrupt();
+        messageHandling.interrupt();
         for (Connection connection : clientMap.values()) {
             connection.close();
         }
