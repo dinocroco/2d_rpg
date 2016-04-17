@@ -16,7 +16,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
 
-    //private List<Connection> connections = new ArrayList<>();
     private LinkedBlockingQueue<ClientData> clientMessages = new LinkedBlockingQueue<>();
     ServerSocket serverSocket;
     private Application app;
@@ -32,7 +31,7 @@ public class Server {
             throw new RuntimeException(e);
         }
 
-        Thread accept = new Thread() {
+        accept = new Thread() {
             public void run() {
                 Random random = new Random();
                 while (true) {
@@ -45,9 +44,8 @@ public class Server {
                         clientMap.put(randomIndex, new Connection(s));
                         app.newConnection(randomIndex);
                         sendToOne(randomIndex,randomIndex);
-                        //connections.get(connections.size()-1).write(app.getScreen());
                     } catch (SocketException e){
-                        System.out.println("socket failed");
+                        System.out.println("Socket failed");
                         shutDown();
                         break;
                     } catch (IOException e) {
@@ -60,7 +58,7 @@ public class Server {
         accept.setDaemon(true);
         accept.start();
 
-        Thread messageHandling = new Thread(){
+        messageHandling = new Thread(){
             public void run(){
                 while(true){
                     try {
@@ -89,7 +87,7 @@ public class Server {
             in = new ObjectInputStream(socket.getInputStream());
             out = new ObjectOutputStream(socket.getOutputStream());
 
-            Thread read = new Thread(){
+            read = new Thread(){
                 public void run(){
                     while(true){
                         try{
