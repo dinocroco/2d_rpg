@@ -41,20 +41,14 @@ public class World {
     }
 
     public synchronized List<Diff> getDiff(){
-        // when changing tiles, then add to diff
-        if(diff.size()>0) {
-            System.out.println("getDiff returning " + diff.size());
-        }
         return diff;
     }
 
     public synchronized void addDiff(Diff diff){
-        System.out.println("added diff in world"+this.diff.size());
         this.diff.add(diff);
     }
 
     public synchronized void clearDiff(){
-        System.out.println("cleared diff");
         diff.clear();
     }
 

@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+/**
+ * Screen that is seen by gamemaster.
+ */
+
 public class PlayScreen implements Screen {
     private World world;
     private final int screenWidth = 80;
@@ -50,6 +54,11 @@ public class PlayScreen implements Screen {
         return this;
     }
 
+    /**
+     * Creates game world and sends players their starting location.
+     * @param players
+     */
+
     private void createWorld(Map<Integer,Player> players ){
         world = new WorldBuilder(width, height)
                 .makeCaves()
@@ -60,10 +69,6 @@ public class PlayScreen implements Screen {
             player.setY(diff.getY());
         }
         world.setPlayers(players);
-    }
-
-    public synchronized void AddEvent(TreeSet<GameAction> events, GameAction action){
-        events.add(action);
     }
 
     private void displayTiles(AsciiPanel terminal, int left, int top) {
@@ -108,22 +113,16 @@ public class PlayScreen implements Screen {
 
     @Override
     public void sendDiff(Server server, Diff diff) {
-        //System.out.println("sending one diff to all");
         server.sendToAll(diff);
     }
 
     @Override
     public synchronized List<Diff> updateDiff() {
-        // send world.getDiff
         List<Diff> diff = new ArrayList<>(world.getDiff());
         if(diff.isEmpty()){
-            // nothing to send
             return null;
         }
         world.clearDiff();
-        if(diff.size()>0){
-            System.out.println("playscreen updatediff "+diff.size());
-        }
         return diff;
     }
 

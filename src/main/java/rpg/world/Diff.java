@@ -5,6 +5,10 @@ import rpg.character.Unit;
 
 import java.io.Serializable;
 
+/**
+ * Class responsible for including differences in gamestate
+ */
+
 public class Diff implements Serializable {
     private Tile tile;
     private int x;
@@ -19,7 +23,6 @@ public class Diff implements Serializable {
     }
 
     public Diff(Player player) {
-        // in client it would work by drawing only most recent case of character of this id
         this.player = player;
     }
 

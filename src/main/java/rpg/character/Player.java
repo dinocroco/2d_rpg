@@ -14,7 +14,7 @@ public class Player implements Serializable, GameCharacter {
     public final int connectionId;
     private boolean hasChanged;
 
-    // eventually load character info from somewhere instead of creating new for each connect
+    // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
         connectionId = id;
         color = AsciiPanel.cyan;
@@ -34,14 +34,12 @@ public class Player implements Serializable, GameCharacter {
 
     @Override
     public void setX(int x) {
-        // checks need to happen before set - character class wont know anything about world
         this.x = x;
         hasChanged = true;
     }
 
     @Override
     public void setY(int y) {
-        // checks need to happen before set - character class wont know anything about world
         this.y = y;
         hasChanged = true;
     }

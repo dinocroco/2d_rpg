@@ -1,15 +1,14 @@
 package rpg;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("this is main class");
-
-
 
         Application app = new Application();
-        app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        app.setResizable(false);
         app.setVisible(true);
+
     }
 }
