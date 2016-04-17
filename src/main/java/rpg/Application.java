@@ -16,6 +16,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +35,7 @@ public class Application extends JFrame implements KeyListener {
         terminal = new AsciiPanel();
         add(terminal);
 
-        screen = new StartScreen();
+        screen = new StartScreen(new HashMap<>());
         addKeyListener(this);
 
         repaint();
@@ -94,7 +95,11 @@ public class Application extends JFrame implements KeyListener {
             screen.sendOutput(server);
         }
         // TODO something about this
-        screen.getWorld().getPlayers().put(clientIndex,player);
+        if(screen.getWorld()!=null) {
+            screen.getWorld().getPlayers().put(clientIndex, player);
+        } else {
+            screen.addPlayer(clientIndex, player);
+        }
         System.out.println("client "+Integer.toString(clientIndex)+" connected");
     }
 

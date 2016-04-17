@@ -26,8 +26,10 @@ public class PlayScreen implements Screen {
     final int width = 90;
     final int height = 31;
 
-    public PlayScreen() {
-        createWorld();
+
+
+    public PlayScreen(Map<Integer,Player> players) {
+        createWorld(players);
     }
 
     public void displayOutput(AsciiPanel terminal) {
@@ -36,8 +38,8 @@ public class PlayScreen implements Screen {
 
     public Screen respondToUserInput(KeyEvent key) {
         switch (key.getKeyCode()){
-            case KeyEvent.VK_ESCAPE: return new LoseScreen();
-            case KeyEvent.VK_ENTER: return new WinScreen();
+            case KeyEvent.VK_ESCAPE: return new LoseScreen(world.getPlayers());
+            case KeyEvent.VK_ENTER: return new WinScreen(world.getPlayers());
             case KeyEvent.VK_LEFT: viewX = viewX<2-screenWidth ? viewX : viewX-1; break;
             case KeyEvent.VK_RIGHT: viewX = viewX>world.width()-2 ? viewX : viewX+1; break;
             case KeyEvent.VK_UP: viewY = viewY<2-screenHeight ? viewY : viewY-1; break;
@@ -47,10 +49,11 @@ public class PlayScreen implements Screen {
         return this;
     }
 
-    private void createWorld(){
+    private void createWorld(Map<Integer,Player> players ){
         world = new WorldBuilder(width, height)
                 .makeCaves()
                 .build();
+        world.setPlayers(players);
     }
 
     public synchronized void AddEvent(TreeSet<GameAction> events, GameAction action){

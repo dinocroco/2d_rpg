@@ -1,11 +1,18 @@
 package rpg.screen;
 
 import asciiPanel.AsciiPanel;
+import rpg.character.Player;
 import rpg.server.Server;
 
 import java.awt.event.KeyEvent;
+import java.util.Map;
 
 public class LoseScreen implements Screen {
+    private Map<Integer,Player> players;
+
+    public LoseScreen(Map<Integer, Player> players) {
+        this.players = players;
+    }
 
     public void displayOutput(AsciiPanel terminal) {
         terminal.write("You lost.", 1, 1);
@@ -13,11 +20,16 @@ public class LoseScreen implements Screen {
     }
 
     public Screen respondToUserInput(KeyEvent key) {
-        return key.getKeyCode() == KeyEvent.VK_ENTER ? new StartScreen() : this;
+        return key.getKeyCode() == KeyEvent.VK_ENTER ? new StartScreen(players) : this;
     }
 
     @Override
     public void sendOutput(Server server) {
 
+    }
+
+    @Override
+    public synchronized void addPlayer(int clientIndex, Player player) {
+        players.put(clientIndex,player);
     }
 }

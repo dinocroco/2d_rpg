@@ -146,6 +146,10 @@ public class World {
         return players;
     }
 
+    public synchronized void setPlayers(Map<Integer, Player> players) {
+        this.players = players;
+    }
+
     public List<Unit> getUnits() {
         return units;
     }

@@ -1,6 +1,7 @@
 package rpg.screen;
 
 import asciiPanel.AsciiPanel;
+import rpg.character.Player;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -26,4 +27,5 @@ public interface Screen {
         return null;
     }
 
+    default void addPlayer(int clientIndex, Player player){}
 }
