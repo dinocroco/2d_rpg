@@ -128,6 +128,10 @@ public class ClientScreen implements Screen {
     public void parseDiff(Diff diff){
         if(diff.getPlayer()!=null){
             Player diffPlayer = diff.getPlayer();
+            if(diffPlayer.getX() == -1 && diffPlayer.getY() == -1){
+                players.removeIf(player -> player.getID() == diffPlayer.getID());
+                return;
+            }
             // find character with same id and replace it
             boolean foundPlayer = false;
             for (int i = 0; i < players.size(); i++) {

@@ -40,12 +40,21 @@ public class World {
         return tile(x, y).color();
     }
 
-    public List<Diff> getDiff(){
+    public synchronized List<Diff> getDiff(){
         // when changing tiles, then add to diff
+        if(diff.size()>0) {
+            System.out.println("getDiff returning " + diff.size());
+        }
         return diff;
     }
 
-    public void clearDiff(){
+    public synchronized void addDiff(Diff diff){
+        System.out.println("added diff in world"+this.diff.size());
+        this.diff.add(diff);
+    }
+
+    public synchronized void clearDiff(){
+        System.out.println("cleared diff");
         diff.clear();
     }
 
@@ -148,6 +157,15 @@ public class World {
 
     public synchronized void setPlayers(Map<Integer, Player> players) {
         this.players = players;
+    }
+
+    public synchronized void removePlayer(int clientIndex){
+        Player player = getPlayers().get(clientIndex);
+        getPlayers().remove(clientIndex);
+        player.setX(-1);
+        player.setY(-1);
+        player.toUnchanged();
+        addDiff(new Diff(player));
     }
 
     public List<Unit> getUnits() {

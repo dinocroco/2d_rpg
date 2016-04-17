@@ -11,6 +11,7 @@ import rpg.world.World;
 import rpg.world.WorldBuilder;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -53,6 +54,11 @@ public class PlayScreen implements Screen {
         world = new WorldBuilder(width, height)
                 .makeCaves()
                 .build();
+        for (Player player : players.values()) {
+            Diff diff = world.playerStartingPoint();
+            player.setX(diff.getX());
+            player.setY(diff.getY());
+        }
         world.setPlayers(players);
     }
 
@@ -107,15 +113,17 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public List<Diff> updateDiff(Server server) {
+    public synchronized List<Diff> updateDiff() {
         // send world.getDiff
-        List<Diff> diff = world.getDiff();
+        List<Diff> diff = new ArrayList<>(world.getDiff());
         if(diff.isEmpty()){
             // nothing to send
             return null;
         }
-        //server.sendToAll(diff);
         world.clearDiff();
+        if(diff.size()>0){
+            System.out.println("playscreen updatediff "+diff.size());
+        }
         return diff;
     }
 

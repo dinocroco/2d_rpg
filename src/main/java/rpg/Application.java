@@ -104,7 +104,8 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public synchronized void onDisconnect(int clientIndex){
-        screen.getWorld().getPlayers().remove(clientIndex);
+        //screen.getWorld().getPlayers().remove(clientIndex);
+        screen.getWorld().removePlayer(clientIndex);
         System.out.println("Kicked client "+clientIndex);
     }
 
@@ -192,20 +193,18 @@ public class Application extends JFrame implements KeyListener {
     public void repaint(){
         terminal.clear();
         //rpg.server sends new data
-        //screen.sendOutput(server);
         if(screen.getClass() == PlayScreen.class) {
             if (!sentInitialView) {
                 screen.sendOutput(server);
                 sentInitialView = true;
             }
-            List<Diff> diff = screen.updateDiff(server);
+            List<Diff> diff = screen.updateDiff();
             if (diff == null) {
                 diff = new ArrayList<>();
             }
             for (int key : screen.getWorld().getPlayers().keySet()) {
                 Player player = screen.getWorld().getPlayers().get(key);
                 if (player.hasChanged()) {
-                    //System.out.println(player);
                     diff.add(new Diff(player));
                     player.toUnchanged();
                 }

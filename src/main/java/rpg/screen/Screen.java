@@ -15,7 +15,7 @@ public interface Screen {
 
     void sendOutput(Server server);
 
-    default List<Diff> updateDiff(Server server){return null;}
+    default List<Diff> updateDiff(){return null;}
 
     Screen respondToUserInput(KeyEvent key);
 
