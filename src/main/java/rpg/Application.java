@@ -171,10 +171,12 @@ public class Application extends JFrame implements KeyListener {
                 if (gameaction instanceof Movement) {
                     Movement moveaction = (Movement) gameaction;
                     if (gameaction.characterID < 1000) {
-                        screen.getWorld().getPlayers().get((int) gameaction.characterID).addToXY(moveaction.right, moveaction.down);
+                        Player player = screen.getWorld().getPlayers().get((int) gameaction.characterID);
+                        if(screen.getWorld().vacantXY(player.getX()+moveaction.right,player.getY()+moveaction.down)){
+                            player.addToXY(moveaction.right, moveaction.down);
+                        }
                         idCodes.add(id);
                         toRemove.add(gameaction);
-                        //gameaction.removePriority();
                     }
                 }
 
