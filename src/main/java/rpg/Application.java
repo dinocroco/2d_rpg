@@ -25,7 +25,7 @@ public class Application extends JFrame implements KeyListener {
     private AsciiPanel terminal;
     private Screen screen;
     private Tick tick;
-    public Server server;
+    private Server server;
     private boolean sentInitialView = false;
     private List<GameAction> gameActions = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class Application extends JFrame implements KeyListener {
     Application(){
         super();
         setResizable(false);
-        terminal = new AsciiPanel();
+        terminal = new AsciiPanel(80,24);
         add(terminal);
 
         screen = new StartScreen(new HashMap<>());
@@ -57,7 +57,7 @@ public class Application extends JFrame implements KeyListener {
     public Application(int type){
         super();
         setResizable(false);
-        terminal = new AsciiPanel();
+        terminal = new AsciiPanel(80,24);
         add(terminal);
         screen = new ClientScreen();
         addKeyListener(this);
