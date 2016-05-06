@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
+    private final int screenWidth = 80;
+    private final int screenHeight = 24;
     private AsciiPanel terminal;
     private Screen screen;
     private Tick tick;
@@ -36,7 +38,7 @@ public class Application extends JFrame implements KeyListener {
     Application(){
         super();
         setResizable(false);
-        terminal = new AsciiPanel(80,24);
+        terminal = new AsciiPanel(screenWidth,screenHeight);
         add(terminal);
 
         screen = new StartScreen(new HashMap<>());
@@ -57,7 +59,7 @@ public class Application extends JFrame implements KeyListener {
     public Application(int type){
         super();
         setResizable(false);
-        terminal = new AsciiPanel(80,24);
+        terminal = new AsciiPanel(screenWidth,screenHeight);
         add(terminal);
         screen = new ClientScreen();
         addKeyListener(this);
@@ -95,8 +97,7 @@ public class Application extends JFrame implements KeyListener {
         Color color = new Color(rand.nextInt(0xFFFFFF));
         Player player = new Player(clientIndex,color);
         if(screen.getClass() == PlayScreen.class){
-            PlayScreen playscreen = (PlayScreen) screen;
-            Diff startingPoint = playscreen.getWorld().playerStartingPoint();
+            Diff startingPoint = screen.getWorld().playerStartingPoint();
             if (startingPoint!=null) {
                 player.setX(startingPoint.getX());
                 player.setY(startingPoint.getY());
@@ -243,8 +244,8 @@ public class Application extends JFrame implements KeyListener {
 
         screen.displayOutput(terminal);
         if (screen.getClass() == PlayScreen.class) {
-            ((PlayScreen) screen).displayUnits(terminal, screen.getWorld().getUnits());
-            ((PlayScreen) screen).displayPlayers(terminal, screen.getWorld().getPlayers());
+            screen.displayUnits(terminal, screen.getWorld().getUnits());
+            screen.displayPlayers(terminal, screen.getWorld().getPlayers());
         }
         super.repaint();
     }
@@ -265,9 +266,7 @@ public class Application extends JFrame implements KeyListener {
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
             if (screen.getWorld().getUnits().size() < 3 ) {
-
-                PlayScreen playscreen = (PlayScreen) screen;
-                Diff startingPoint = playscreen.getWorld().unitStartingPoint();
+                Diff startingPoint = screen.getWorld().unitStartingPoint();
                 if (startingPoint != null) {
                     unit.setX(startingPoint.getX());
                     unit.setY(startingPoint.getY());

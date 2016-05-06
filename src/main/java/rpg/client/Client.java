@@ -61,12 +61,12 @@ public class Client {
                         Diff diff = diffs.poll();
                         if (asciiView != null){
                             app.getScreen().setView(asciiView);
-                            ((ClientScreen)app.getScreen()).setPlayerId(idCode);
+                            app.getScreen().setPlayerId(idCode);
                             app.getScreen().displayOutput(app.getTerminal());
                             app.repaint();
                         }
                         if(diff != null){
-                            ((ClientScreen)app.getScreen()).parseDiff(diff);
+                            app.getScreen().parseDiff(diff);
                             app.getScreen().displayOutput(app.getTerminal());
                             app.repaint();
                         }
@@ -141,8 +141,7 @@ public class Client {
                     while(serverOpen){
                         try{
                             if (app.getScreen().getClass()== ClientScreen.class ){
-                                ClientScreen clientScreen = (ClientScreen) app.getScreen();
-                                int[] gotKeycodes = clientScreen.getKeycodes();
+                                int[] gotKeycodes = app.getScreen().getKeycodes();
                                 if(gotKeycodes.length>0) {
                                     keycodes.add(gotKeycodes);
                                 }

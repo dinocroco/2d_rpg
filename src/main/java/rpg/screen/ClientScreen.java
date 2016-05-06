@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientScreen implements Screen {
-    private int screenWidth = 80;
-    private int screenHeight = 24;
+    private final int screenWidth = 80;
+    private final int screenHeight = 24;
     // from WorldBuilder
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;

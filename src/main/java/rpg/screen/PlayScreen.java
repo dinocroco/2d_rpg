@@ -25,7 +25,7 @@ public class PlayScreen implements Screen {
     private int viewX = 0;
     private int viewY = 0;
 
-    // these will not remain as constants
+    // TODO these should not remain as constants
     final int width = 90;
     final int height = 31;
 
