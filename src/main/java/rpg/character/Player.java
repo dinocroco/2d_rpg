@@ -32,6 +32,10 @@ public class Player implements Serializable, GameCharacter {
         return (long) connectionId;
     }
 
+    public int getId() {
+        return connectionId;
+    }
+
     @Override
     public void setX(int x) {
         this.x = x;

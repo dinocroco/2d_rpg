@@ -40,7 +40,8 @@ public interface Screen {
 
     default void setPlayerId(int playerId){}
 
-    default void displayUnits(AsciiPanel terminal, List<Unit> units){}
+    default void displayUnits(AsciiPanel terminal, List<Unit> units){
+    }
 
     default void displayPlayers(AsciiPanel terminal, Map<Integer,Player> players){}
 

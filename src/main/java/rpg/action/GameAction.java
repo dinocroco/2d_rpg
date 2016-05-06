@@ -1,5 +1,7 @@
 package rpg.action;
 
+import rpg.screen.Screen;
+
 import java.io.Serializable;
 
 public abstract class GameAction implements Comparable<GameAction>, Serializable {
@@ -25,4 +27,6 @@ public abstract class GameAction implements Comparable<GameAction>, Serializable
         }
         return 0;
     }
+
+    public abstract void executeAction(Screen screen, long tickspassed);
 }

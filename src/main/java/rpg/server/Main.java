@@ -1,4 +1,6 @@
-package rpg;
+package rpg.server;
+
+import rpg.Application;
 
 import javax.swing.*;
 

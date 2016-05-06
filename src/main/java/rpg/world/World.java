@@ -52,77 +52,32 @@ public class World {
         diff.clear();
     }
 
-    public Diff playerStartingPoint() {
 
-        int x;
-        int y;
-        List<Integer> randomWidth = new ArrayList<>(width);
-        List<Integer> randomHeight = new ArrayList<>(height);
-        for (int i = 0; i < width; i++) {
-            randomWidth.add(i);
-        }
-        for (int i = 0; i < height; i++) {
-            randomHeight.add(i);
-        }
-        Collections.shuffle(randomWidth);
-        Collections.shuffle(randomHeight);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if(tile(randomWidth.get(i),randomHeight.get(j))==Tile.FLOOR ){
+    public Diff startingPoint(){
+        Random rand = new Random();
+        for (int i = 0;i<1000;i++) {
 
-                    x=randomWidth.get(i);
-                    y=randomHeight.get(j);
-                    for (GameCharacter player: players.values()) {
-                        if (x==player.getX() && y==player.getY()){
-                            x=-1;
-                            y=-1;
-                        }
-                    }
-                    if (x!=-1&&y!=-1){
-                        return new Diff(tile(x,y),x,y);
+            int x = rand.nextInt(width);
+            int y = rand.nextInt(height);
+            if (tile(x, y) == Tile.FLOOR) {
+
+                for (GameCharacter player : players.values()) {
+                    if (x >= player.getX() - 5 && x <= player.getX() + 5 && y <= player.getY() + 5 && y >= player.getY() - 5) {
+                        x = -1;
+                        y = -1;
                     }
                 }
-            }
-        }
-        return null;
-    }
-
-    public Diff unitStartingPoint(){
-        int x;
-        int y;
-        List<Integer> randomWidth = new ArrayList<>(width);
-        List<Integer> randomHeight = new ArrayList<>(height);
-        for (int i = 0; i < width; i++) {
-            randomWidth.add(i);
-        }
-        for (int i = 0; i < height; i++) {
-            randomHeight.add(i);
-        }
-        Collections.shuffle(randomWidth);
-        Collections.shuffle(randomHeight);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if(tile(randomWidth.get(i),randomHeight.get(j))==Tile.FLOOR ){
-
-                    x=randomWidth.get(i);
-                    y=randomHeight.get(j);
-                    for (GameCharacter player: players.values()) {
-                        if (x>=player.getX()-5 && x<=player.getX()+5 && y<=player.getY()+5 && y>=player.getY()-5){
-                            x=-1;
-                            y=-1;
-                        }
-                    }
-                    for (Unit unit:units) {
-                        if (x==unit.getX() && y==unit.getY()){
-                            x=-1;
-                            y=-1;
-                        }
-                    }
-                    if (x!=-1&&y!=-1){
-                        return new Diff(tile(x,y),x,y);
+                for (Unit unit : units) {
+                    if (x == unit.getX() && y == unit.getY()) {
+                        x = -1;
+                        y = -1;
                     }
                 }
+                if (x != -1 && y != -1) {
+                    return new Diff(tile(x, y), x, y);
+                }
             }
+
         }
         return null;
     }

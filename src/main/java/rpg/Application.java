@@ -35,7 +35,7 @@ public class Application extends JFrame implements KeyListener {
      * Application constructor for Server, includes game time ticking.
      */
 
-    Application(){
+    public Application(){
         super();
         setResizable(false);
         terminal = new AsciiPanel(screenWidth,screenHeight);
@@ -97,7 +97,7 @@ public class Application extends JFrame implements KeyListener {
         Color color = new Color(rand.nextInt(0xFFFFFF));
         Player player = new Player(clientIndex,color);
         if(screen.getClass() == PlayScreen.class){
-            Diff startingPoint = screen.getWorld().playerStartingPoint();
+            Diff startingPoint = screen.getWorld().startingPoint();
             if (startingPoint!=null) {
                 player.setX(startingPoint.getX());
                 player.setY(startingPoint.getY());
@@ -178,32 +178,13 @@ public class Application extends JFrame implements KeyListener {
                 if (idCodes.contains(id)) {
                     continue;
                 }
-                if (gameaction instanceof Movement) {
-                    Movement moveaction = (Movement) gameaction;
-                    if (gameaction.characterID < 1000) {
-                        Player player = screen.getWorld().getPlayers().get((int) gameaction.characterID);
-                        if(screen.getWorld().vacantXY(player.getX()+moveaction.right,player.getY()+moveaction.down)){
-                            player.addToXY(moveaction.right, moveaction.down);
-                        }
-                        idCodes.add(id);
-                        toRemove.add(gameaction);
-                    }
-                }
-                if (gameaction instanceof FreezeUnit){
-                    FreezeUnit freezeunit = (FreezeUnit) gameaction;
-                    if (gameaction.characterID < 1000) {
-                        freezeunit.unit.freeze(freezeunit.time, tickspassed);
-                        idCodes.add(id);
-                        toRemove.add(gameaction);
-                    }
-
-                }
-
+                gameaction.executeAction(screen,tickspassed);
+                idCodes.add(id);
+                toRemove.add(gameaction);
             }
             for (GameAction gameAction : toRemove) {
                 gameActions.remove(gameAction);
             }
-
             screen.getWorld().moveUnits(tickspassed);
         }
         repaint();
@@ -266,7 +247,7 @@ public class Application extends JFrame implements KeyListener {
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
             if (screen.getWorld().getUnits().size() < 3 ) {
-                Diff startingPoint = screen.getWorld().unitStartingPoint();
+                Diff startingPoint = screen.getWorld().startingPoint();
                 if (startingPoint != null) {
                     unit.setX(startingPoint.getX());
                     unit.setY(startingPoint.getY());

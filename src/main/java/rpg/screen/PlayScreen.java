@@ -61,7 +61,7 @@ public class PlayScreen implements Screen {
                 .makeCaves()
                 .build();
         for (Player player : players.values()) {
-            Diff diff = world.playerStartingPoint();
+            Diff diff = world.startingPoint();
             player.setX(diff.getX());
             player.setY(diff.getY());
         }

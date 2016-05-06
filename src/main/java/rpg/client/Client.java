@@ -89,19 +89,19 @@ public class Client {
         IOUtils.closeQuietly(this.socket);
     }
 
-    private class ConnectionToServer {
+    private class ConnectionToServer    {
         ObjectInputStream in;
         ObjectOutputStream out;
         Socket socket;
 
-        ConnectionToServer(Socket socket) {
+        ConnectionToServer(Socket socket) throws IOException {
             this.socket = socket;
             try {
                 out = new ObjectOutputStream(socket.getOutputStream());
                 in = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e){
                 closeConnection();
-                return;
+                throw e;
             }
 
 
