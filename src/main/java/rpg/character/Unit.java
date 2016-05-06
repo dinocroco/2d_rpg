@@ -122,6 +122,7 @@ public class Unit implements GameCharacter, Serializable {
     }
 
     public Player playerNearby(int x, int y, World world){
+        // return the one that is nearest
         for (Player player:world.getPlayers().values()){
             if (Math.abs(player.getX() - x) < 10 && Math.abs(player.getY() - y) <10){
                 return player;
