@@ -15,7 +15,8 @@ public class Unit implements GameCharacter, Serializable {
     private char glyph = '?';
     private Color color;
     private boolean hasChanged = false;
-    private int health;
+    private int health = 100;
+    private int damage = 10;
     private List<Color> colors = new ArrayList<>();
     public final long idCode;
     private long freezeEnd = 0;
@@ -25,6 +26,24 @@ public class Unit implements GameCharacter, Serializable {
         this.color = new Color(rand.nextInt(0xFFFFFF));
         this.idCode=tickNumber+1000;//>1000 so it won't match player id
         hasChanged = true;
+    }
+
+    @Override
+    public int getDamage() {
+        return damage;
+    }
+
+    @Override
+    public void addHealth(int value) {
+        health += value;
+        health = Math.min(health,100);
+        hasChanged = true;
+    }
+
+
+    @Override
+    public int getHealth() {
+        return health;
     }
 
     @Override

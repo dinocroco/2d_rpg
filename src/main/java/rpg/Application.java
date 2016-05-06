@@ -1,9 +1,11 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
+import rpg.action.Attack;
 import rpg.action.FreezeUnit;
 import rpg.action.GameAction;
 import rpg.action.Movement;
+import rpg.character.GameCharacter;
 import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
@@ -123,8 +125,17 @@ public class Application extends JFrame implements KeyListener {
         if(screen.getClass() == PlayScreen.class) {
             for (int i : clientdata.getKeycodes()) {
                 int id = clientdata.getId();
+                Player player = screen.getWorld().getPlayers().get(id);
+
+                if (i == KeyEvent.VK_SPACE){
+                    GameCharacter[] targets = new GameCharacter[4];
+                    targets[0] = screen.getWorld().getGameCharacter(player.getX(), player.getY()+1);
+                    targets[1] = screen.getWorld().getGameCharacter(player.getX()+1, player.getY());
+                    targets[2] = screen.getWorld().getGameCharacter(player.getX(), player.getY()-1);
+                    targets[3] = screen.getWorld().getGameCharacter(player.getX()-1, player.getY());
+                    addGameActions(new Attack(targets,player,player.getDamage()));
+                }
                 if (i == KeyEvent.VK_Z){
-                    Player player = screen.getWorld().getPlayers().get(id);
                     Unit nearestUnit = screen.getWorld().getNearestUnit(id);
                     if (nearestUnit != null && screen.getWorld().distanceBetween(nearestUnit,player) < 4){
                         addGameActions(new FreezeUnit(id,nearestUnit,15));

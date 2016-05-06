@@ -13,6 +13,8 @@ public class Player implements Serializable, GameCharacter {
     public final Color color;
     public final int connectionId;
     private boolean hasChanged;
+    private int health = 100;
+    private int damage = 10;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -25,6 +27,23 @@ public class Player implements Serializable, GameCharacter {
         connectionId = id;
         this.color = color;
         hasChanged = true;
+    }
+
+    @Override
+    public int getDamage() {
+        return damage;
+    }
+
+    @Override
+    public void addHealth(int value) {
+        health += value;
+        health = Math.min(health,100);
+        hasChanged = true;
+    }
+
+    @Override
+    public int getHealth() {
+        return health;
     }
 
     @Override

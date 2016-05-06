@@ -16,4 +16,10 @@ public interface GameCharacter {
 
     long getID();
 
+    void addHealth(int value);
+
+    int getHealth();
+
+    int getDamage();
+
 }
