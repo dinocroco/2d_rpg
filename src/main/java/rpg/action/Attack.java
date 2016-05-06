@@ -3,9 +3,6 @@ package rpg.action;
 import rpg.character.GameCharacter;
 import rpg.screen.Screen;
 
-/**
- * Created by mrrobot on 6.05.16.
- */
 public class Attack extends GameAction{
 
     private final GameCharacter[] targets;
