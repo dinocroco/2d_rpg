@@ -121,6 +121,20 @@ public class World {
         return units;
     }
 
+    public GameCharacter getGameCharacter(int x, int y){
+        for (Player player : players.values()) {
+            if(player.getX()==x && player.getY()==y) {
+                return player;
+            }
+        }
+        for (Unit unit : units) {
+            if(unit.getX()==x && unit.getY()==y){
+                return unit;
+            }
+        }
+        return null;
+    }
+
     public void moveUnits(long tickspassed){
         for (Unit unit : units){
             unit.moveUnit(this, tickspassed);
