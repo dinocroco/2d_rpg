@@ -165,9 +165,14 @@ public class Unit implements GameCharacter, Serializable {
         hasChanged = true;
     }
 
+    public boolean frozen(long tickspassed){
+        return freezeEnd > tickspassed;
+    }
+
     public void freeze(int time, long tickspassed){
         freezeEnd = tickspassed + time;
         hasChanged = true;
     }
+
 
 }

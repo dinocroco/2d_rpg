@@ -135,9 +135,28 @@ public class World {
         return null;
     }
 
+    public Player playerAdjacent(int x, int y){
+        for (Player player:players.values()){
+            if (Math.abs(player.getX() - x) + Math.abs(player.getY() - y) <= 1 ){
+                return player;
+            }
+        }
+        return null;
+    }
+
     public void moveUnits(long tickspassed){
         for (Unit unit : units){
-            unit.moveUnit(this, tickspassed);
+            if(unit.frozen(tickspassed)){
+                continue;
+            }
+            Player playerAdjacent = playerAdjacent(unit.getX(),unit.getY());
+            if(playerAdjacent==null) {
+                unit.moveUnit(this, tickspassed);
+            } else {
+                playerAdjacent.addHealth(-unit.getDamage());
+                System.out.println(playerAdjacent.connectionId +";"+ playerAdjacent.getHealth());
+            }
+
         }
     }
 
