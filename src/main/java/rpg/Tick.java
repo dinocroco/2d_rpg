@@ -2,8 +2,9 @@ package rpg;
 
 public class Tick implements Runnable {
 
+    public static final long TICK_LENGTH = 200000000;
+
     private long lastMoment = System.nanoTime();
-    private long tickLength = 200000000;
     private boolean playing = true;
     private double unprocessed = 0.0;
     private Application app;
@@ -20,10 +21,10 @@ public class Tick implements Runnable {
             lastMoment = thisMoment;
             boolean shouldRender = false;
 
-            while (unprocessed/tickLength >= 1) {
+            while (unprocessed/ TICK_LENGTH >= 1) {
                 tick();
                 ticksPassed++;
-                unprocessed -= tickLength;
+                unprocessed -= TICK_LENGTH;
                 shouldRender = true;
             }
 
@@ -31,7 +32,7 @@ public class Tick implements Runnable {
                 app.repaint();
             } else {
                 try {
-                    Thread.sleep((int)((tickLength-unprocessed)/1000000));
+                    Thread.sleep((int)((TICK_LENGTH -unprocessed)/1000000));
                 } catch (InterruptedException e){
                     throw new RuntimeException(e);
                 }

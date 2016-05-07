@@ -15,6 +15,8 @@ public class Player implements Serializable, GameCharacter {
     private boolean hasChanged;
     private int health = 100;
     private int damage = 10;
+    private int deltaX;
+    private int deltaY;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -27,6 +29,14 @@ public class Player implements Serializable, GameCharacter {
         connectionId = id;
         this.color = color;
         hasChanged = true;
+    }
+
+    public int getDeltaX() {
+        return deltaX;
+    }
+
+    public int getDeltaY() {
+        return deltaY;
     }
 
     @Override
@@ -98,18 +108,20 @@ public class Player implements Serializable, GameCharacter {
         return y;
     }
 
-    public void addToX(int x){
+    private void addToX(int x){
         hasChanged = true;
         this.x+=x;
     }
 
-    public void addToY(int y){
+    private void addToY(int y){
         hasChanged = true;
         this.y+=y;
     }
 
     public void addToXY(int x, int y){
         hasChanged = true;
+        deltaX = x;
+        deltaY = y;
         addToX(x);
         addToY(y);
     }

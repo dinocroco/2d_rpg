@@ -32,6 +32,14 @@ public class World {
             return tiles[x][y];
     }
 
+    public synchronized void dig(int x, int y){
+
+        if(tile(x,y) == Tile.WALL){
+            tiles[x][y] = Tile.FLOOR;
+            addDiff(new Diff(tile(x,y),x,y));
+        }
+    }
+
     public char glyph(int x, int y){
         return tile(x, y).glyph();
     }

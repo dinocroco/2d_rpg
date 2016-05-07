@@ -21,7 +21,6 @@ public class Attack extends GameAction{
         for (GameCharacter target : targets) {
             if (target!=null) {
                 target.addHealth(-damage);
-                System.out.println("attack");
                 screen.getWorld().addDiff(new Diff(characterID + " attacked " + target.getID() + ", health now: "
                         +target.getHealth(),target.getX(),target.getY(),15));
             }
