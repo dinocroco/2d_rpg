@@ -25,7 +25,7 @@ import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
     private final int screenWidth = 80;
-    private final int screenHeight = 24;
+    private final int screenHeight = 30;
     private AsciiPanel terminal;
     private Screen screen;
     private Tick tick;
@@ -203,7 +203,7 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void repaint(){
-        terminal.clear();
+        //terminal.clear();
         if(screen.getClass() == PlayScreen.class) {
             if (!sentInitialView) {
                 screen.sendWorldTerrain(server);
