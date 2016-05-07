@@ -182,7 +182,7 @@ public class ClientScreen implements Screen {
     }
 
     private void updateTile(Tile tile, int x, int y){
-        getWorld().setTile(tile,x,y);
+        view[x][y] = new AsciiSymbol(tile.glyph(),tile.color());
     }
 
     private void updateUnitList(Diff diff) {
