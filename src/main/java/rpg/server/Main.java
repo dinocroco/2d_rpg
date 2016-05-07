@@ -9,6 +9,7 @@ public class Main {
 
         Application app = new Application();
         app.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //app.setVisible(false); use false to hide it
         app.setVisible(true);
 
     }

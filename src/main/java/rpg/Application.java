@@ -41,15 +41,15 @@ public class Application extends JFrame implements KeyListener {
         terminal = new AsciiPanel(screenWidth,screenHeight);
         add(terminal);
 
-        screen = new StartScreen(new HashMap<>());
         addKeyListener(this);
 
-        repaint();
         pack();
         tick = new Tick(this);
         Thread ticking = new Thread(tick);
         ticking.start();
         server = startServer();
+        screen = new PlayScreen(new HashMap<>());
+        repaint();
     }
 
     /**
