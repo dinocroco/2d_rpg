@@ -110,7 +110,7 @@ public class PlayScreen implements Screen {
     }
 
     @Override
-    public void sendDiff(Server server, Diff diff) {
+    public synchronized void sendDiff(Server server, Diff diff) {
         server.sendToAll(diff);
     }
 

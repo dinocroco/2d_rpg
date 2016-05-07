@@ -2,6 +2,7 @@ package rpg.action;
 
 import rpg.character.GameCharacter;
 import rpg.screen.Screen;
+import rpg.world.Diff;
 
 public class Attack extends GameAction{
 
@@ -20,6 +21,9 @@ public class Attack extends GameAction{
         for (GameCharacter target : targets) {
             if (target!=null) {
                 target.addHealth(-damage);
+                System.out.println("attack");
+                screen.getWorld().addDiff(new Diff(characterID + " attacked " + target.getID() + ", health now: "
+                        +target.getHealth(),target.getX(),target.getY(),15));
             }
         }
     }

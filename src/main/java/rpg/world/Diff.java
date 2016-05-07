@@ -13,6 +13,8 @@ public class Diff implements Serializable {
     private Tile tile;
     private int x;
     private int y;
+    private int r;
+    private String message;
     private Player player = null;
     private Unit unit = null;
 
@@ -20,6 +22,13 @@ public class Diff implements Serializable {
         this.tile = tile;
         this.x = x;
         this.y = y;
+    }
+
+    public Diff(String message, int x, int y, int r){
+        this.message = message;
+        this.x = x;
+        this.y = y;
+        this.r = r;
     }
 
     public Diff(Player player) {
@@ -48,5 +57,13 @@ public class Diff implements Serializable {
 
     public Unit getUnit() {
         return unit;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public int getR() {
+        return r;
     }
 }
