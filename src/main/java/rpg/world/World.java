@@ -52,6 +52,9 @@ public class World {
         diff.clear();
     }
 
+    public synchronized void setTile(Tile tile, int x, int y){
+        tiles[x][y] = tile;
+    }
 
     public Diff startingPoint(){
         Random rand = new Random();

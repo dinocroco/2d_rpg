@@ -176,6 +176,13 @@ public class ClientScreen implements Screen {
         if(diff.getMessage()!=null){
             addLocatedMessage(diff.getMessage(),diff.getX(),diff.getY(),diff.getR());
         }
+        if(diff.getTile()!=null){
+            updateTile(diff.getTile(),diff.getX(),diff.getY());
+        }
+    }
+
+    private void updateTile(Tile tile, int x, int y){
+        getWorld().setTile(tile,x,y);
     }
 
     private void updateUnitList(Diff diff) {
