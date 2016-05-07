@@ -55,8 +55,12 @@ public class Client {
 
         Thread messageHandling = new Thread() {
             public void run(){
-                while(serverOpen){
-                    try{
+                try{
+                    while(idCode==0){
+                        //System.out.println("Waiting for idCode");
+                        Thread.sleep(50);
+                    }
+                    while(serverOpen){
                         AsciiSymbol[][] asciiView = asciiMessages.poll();
                         Diff diff = diffs.poll();
                         if (asciiView != null){
@@ -71,10 +75,11 @@ public class Client {
                             app.repaint();
                         }
                         sleep(50);
-                    } catch (InterruptedException e){
-                        throw new RuntimeException(e);
-                    }
 
+
+                    }
+                } catch (InterruptedException e){
+                    throw new RuntimeException(e);
                 }
                 app.setDisconnectScreen();
                 app.repaint();
