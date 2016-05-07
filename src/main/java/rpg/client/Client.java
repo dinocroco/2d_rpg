@@ -32,7 +32,7 @@ public class Client {
 
     public static void main(String[] args) throws IOException{
 
-        Client client = new Client(InetAddress.getLocalHost().getHostAddress(),1336);
+        Client client = new Client(InetAddress.getLocalHost().getHostAddress(),Application.PORT);
 
     }
 
