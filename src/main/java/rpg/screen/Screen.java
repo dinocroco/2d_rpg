@@ -45,4 +45,7 @@ public interface Screen {
 
     default void displayPlayers(AsciiPanel terminal, Map<Integer,Player> players){}
 
+    default void addLocatedMessage(String message, int x, int y, int radius){}
+
+    default void addMessage(String message){}
 }

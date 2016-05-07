@@ -9,14 +9,14 @@ import rpg.world.Tile;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class ClientScreen implements Screen {
-    private final int screenWidth = 80;
-    private final int screenHeight = 24;
+    private final int viewWidth = 80;
+    private final int viewHeight = 24;
+    private final int totalWidth = 80;
+    private final int totalHeight = 30;
     // from WorldBuilder
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
@@ -26,6 +26,7 @@ public class ClientScreen implements Screen {
     private List<Unit> units = new ArrayList<>();
     private List<Integer> keycodes = new ArrayList<>();
     private Map<Integer, Integer> keymap = new HashMap<>();
+    private LinkedList<String> messages = new LinkedList<>();
 
     public int[] getKeycodes() {
         int[] keycodesarray= new int[10];
@@ -60,6 +61,25 @@ public class ClientScreen implements Screen {
         displayTiles(terminal,viewX,viewY);
         displayUnits(terminal, viewX, viewY);
         displayPlayers(terminal,viewX,viewY);
+        displayMessages(terminal);
+    }
+
+    private void displayMessages(AsciiPanel terminal) {
+        //for (int i = Math.min(totalHeight - viewHeight-1,messages.size()-1); i >= 0; i--) {
+        for (int i = 0; i < Math.min(totalHeight - viewHeight,messages.size()); i++) {
+            while (messages.size()<totalHeight-viewHeight){
+                messages.add("");
+            }
+            String line = messages.get(totalHeight-viewHeight-i-1);
+            if(line.length()==totalWidth) {
+                terminal.write(line.substring(0,totalWidth-1), 0, viewHeight + i);
+                // küllap on nii vaja sellepärast et stringi lõpus mingi jupp ütleb et see on lõpp
+                char c = line.charAt(totalWidth-1);
+                terminal.write(c,totalWidth-1,viewHeight+i);
+            } else {
+                terminal.write(line, 0, viewHeight + i);
+            }
+        }
     }
 
     private AsciiSymbol[][] startView(int width, int height){
@@ -81,12 +101,36 @@ public class ClientScreen implements Screen {
         } else {
             keycodes.add(key.getKeyCode());
         }
+        if(key.getKeyCode()==KeyEvent.VK_ENTER){
+            addMessage("Enter pressed at "+System.currentTimeMillis()+" and then some longlonglonglonglonglonglonglonglonglonglonglonglonglong");
+        }
         return this;
     }
 
+    @Override
+    public void addLocatedMessage(String message, int x, int y, int radius){
+        if((players.get(playerId).getX()-x)*(players.get(playerId).getX()-x)+
+                (players.get(playerId).getY()-y)*(players.get(playerId).getY()-y) < radius*radius){
+            addMessage(message);
+        }
+    }
+
+    @Override
+    public void addMessage(String message){
+        String s;
+        List<String> tmpMsg = new ArrayList<>();
+        do {
+            s = message.substring(0,Math.min(totalWidth,message.length()));
+            if(s.length()==0) break;
+            tmpMsg.add(s);
+            message = message.replaceFirst(".{0,80}","");
+        } while(s.length()>0);
+        tmpMsg.forEach(msg -> messages.add(0,msg));
+    }
+
     private void displayTiles(AsciiPanel terminal, int left, int top) {
-        for (int x = 0; x < screenWidth; x++){
-            for (int y = 0; y < screenHeight; y++){
+        for (int x = 0; x < viewWidth; x++){
+            for (int y = 0; y < viewHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
                 AsciiSymbol sym = new AsciiSymbol(Tile.BOUNDS.glyph(),Tile.BOUNDS.color());
@@ -103,7 +147,7 @@ public class ClientScreen implements Screen {
         for (Player player : players.values()) {
             int wx = player.getX()-left;
             int wy = player.getY()-top;
-            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
         }
     }
@@ -112,7 +156,7 @@ public class ClientScreen implements Screen {
         for (Unit unit : units ){
             int wx = unit.getX()-left;
             int wy = unit.getY()-top;
-            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
             terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
         }
     }
@@ -160,8 +204,10 @@ public class ClientScreen implements Screen {
 
         if(players.containsKey(playerId)) {
 
-            viewX = players.get(playerId).getX() - screenWidth / 2;
-            viewY = players.get(playerId).getY() - screenHeight / 2;
+            viewX = players.get(playerId).getX() - viewWidth / 2;
+            viewY = players.get(playerId).getY() - viewHeight / 2;
+        } else {
+            System.out.println("I am not found in players list! "+playerId);
         }
     }
 

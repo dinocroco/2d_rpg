@@ -10,9 +10,7 @@ import rpg.world.World;
 import rpg.world.WorldBuilder;
 
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Screen that is seen by gamemaster.
@@ -20,10 +18,13 @@ import java.util.Map;
 
 public class PlayScreen implements Screen {
     private World world;
-    private final int screenWidth = 80;
-    private final int screenHeight = 24;
+    private final int viewWidth = 80;
+    private final int viewHeight = 24;
+    private final int totalWidth = 80;
+    private final int totalHeight = 30;
     private int viewX = 0;
     private int viewY = 0;
+    private Queue<String> messages = new ArrayDeque<>();
 
     // TODO these should not remain as constants
     final int width = 90;
@@ -43,9 +44,9 @@ public class PlayScreen implements Screen {
         switch (key.getKeyCode()){
             case KeyEvent.VK_ESCAPE: return new LoseScreen(world.getPlayers());
             case KeyEvent.VK_ENTER: return new WinScreen(world.getPlayers());
-            case KeyEvent.VK_LEFT: viewX = viewX<2-screenWidth ? viewX : viewX-1; break;
+            case KeyEvent.VK_LEFT: viewX = viewX<2- viewWidth ? viewX : viewX-1; break;
             case KeyEvent.VK_RIGHT: viewX = viewX>world.width()-2 ? viewX : viewX+1; break;
-            case KeyEvent.VK_UP: viewY = viewY<2-screenHeight ? viewY : viewY-1; break;
+            case KeyEvent.VK_UP: viewY = viewY<2- viewHeight ? viewY : viewY-1; break;
             case KeyEvent.VK_DOWN: viewY = viewY>world.height()-2 ? viewY : viewY+1; break;
         }
 
@@ -69,8 +70,8 @@ public class PlayScreen implements Screen {
     }
 
     private void displayTiles(AsciiPanel terminal, int left, int top) {
-        for (int x = 0; x < screenWidth; x++){
-            for (int y = 0; y < screenHeight; y++){
+        for (int x = 0; x < viewWidth; x++){
+            for (int y = 0; y < viewHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
 
@@ -83,7 +84,7 @@ public class PlayScreen implements Screen {
         for (Player player : players.values()) {
             int wx = player.getX()-viewX;
             int wy = player.getY()-viewY;
-            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
             terminal.write(player.glyph,wx,wy,player.color);
         }
     }
@@ -92,7 +93,7 @@ public class PlayScreen implements Screen {
         for (Unit unit : units) {
             int wx = unit.getX()-viewX;
             int wy = unit.getY()-viewY;
-            if(wx>=screenWidth || wx<0 ||wy>=screenHeight || wy<0) continue;
+            if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
             terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
         }
     }
