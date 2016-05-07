@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
+
+    public static final int PORT = 1336;
+
     private final int screenWidth = 80;
     private final int screenHeight = 30;
     private AsciiPanel terminal;
@@ -187,7 +190,7 @@ public class Application extends JFrame implements KeyListener {
             if (gameaction.characterID == actionToAdd.characterID){
                 count++;
             }
-            if (count > 3){
+            if (count > 1){
                 return;
             }
         }
@@ -218,7 +221,6 @@ public class Application extends JFrame implements KeyListener {
 
     @Override
     public void repaint(){
-        //terminal.clear();
         if(screen.getClass() == PlayScreen.class) {
             if (!sentInitialView) {
                 screen.sendWorldTerrain(server);
@@ -258,7 +260,7 @@ public class Application extends JFrame implements KeyListener {
     }
 
     public Server startServer(){
-        return new Server(1336,this);
+        return new Server(PORT,this);
     }
 
     public Screen getScreen() {
