@@ -7,6 +7,7 @@ import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,7 +23,7 @@ public class Client {
     private ConnectionToServer server;
     private LinkedBlockingQueue<AsciiSymbol[][]> asciiMessages;
     private LinkedBlockingQueue<Diff> diffs;
-    private LinkedBlockingQueue<int[]> keycodes;
+    private LinkedBlockingQueue<KeyEventWrapper[]> keyevents;
     private Socket socket;
     private Application app;
     private int idCode;
@@ -49,7 +50,7 @@ public class Client {
         app.setVisible(true);
         asciiMessages = new LinkedBlockingQueue<>();
         server = new ConnectionToServer(socket);
-        keycodes = new LinkedBlockingQueue<>();
+        keyevents = new LinkedBlockingQueue<>();
         diffs = new LinkedBlockingQueue<>();
 
 
@@ -146,18 +147,18 @@ public class Client {
                     while(serverOpen){
                         try{
                             if (app.getScreen().getClass()== ClientScreen.class ){
-                                int[] gotKeycodes = app.getScreen().getKeycodes();
-                                if(gotKeycodes.length>0) {
-                                    keycodes.add(gotKeycodes);
+                                KeyEventWrapper[] gotKeyEvents = app.getScreen().getKeyEvents();
+                                if(gotKeyEvents.length>0) {
+                                    keyevents.add(gotKeyEvents);
                                 }
 
                             }
-                            if(keycodes.size()>0) {
-                                int[] sendingCodes = keycodes.take();
+                            if(keyevents.size()>0) {
+                                KeyEventWrapper[] sendingEvents = keyevents.take();
                                 ClientData dataToSend = new ClientData(idCode);
-                                dataToSend.addKeycodes(sendingCodes);
+                                dataToSend.addKeyEvents(sendingEvents);
 
-                                if(sendingCodes.length>0) {
+                                if(sendingEvents.length>0) {
                                     send(dataToSend);
 
                                 }

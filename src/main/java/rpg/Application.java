@@ -6,6 +6,7 @@ import rpg.character.GameCharacter;
 import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
+import rpg.client.KeyEventWrapper;
 import rpg.screen.*;
 import rpg.server.Server;
 import rpg.world.Diff;
@@ -120,13 +121,11 @@ public class Application extends JFrame implements KeyListener {
 
     public synchronized void executeKeyCode(ClientData clientdata){
         if(screen.getClass() == PlayScreen.class) {
-            for (int i : clientdata.getKeycodes()) {
+            for (KeyEventWrapper e : clientdata.getKeyEvents()) {
+                int i = e.getKeyCode();
                 int id = clientdata.getId();
                 Player player = screen.getWorld().getPlayers().get(id);
 
-                if (i == KeyEvent.VK_X){
-                    addGameActions(new Dig(player));
-                }
                 if (i == KeyEvent.VK_SPACE){
                     GameCharacter[] targets = new GameCharacter[4];
                     targets[0] = screen.getWorld().getGameCharacter(player.getX(), player.getY()+1);
@@ -141,17 +140,33 @@ public class Application extends JFrame implements KeyListener {
                         addGameActions(new FreezeUnit(id,nearestUnit,15));
                     }
                 }
-                if (i == KeyEvent.VK_RIGHT) {
-                    addGameActions(new Movement(id,1,0));
-                }
-                if (i == KeyEvent.VK_LEFT) {
-                    addGameActions(new Movement(id,-1,0));
-                }
-                if (i == KeyEvent.VK_UP) {
-                    addGameActions(new Movement(id,0,-1));
-                }
-                if (i == KeyEvent.VK_DOWN) {
-                    addGameActions(new Movement(id,0,1));
+                if (!e.isShiftDown()) {
+                    if (i == KeyEvent.VK_RIGHT) {
+                        addGameActions(new Movement(player, 1, 0, false));
+                    }
+                    if (i == KeyEvent.VK_LEFT) {
+                        addGameActions(new Movement(player, -1, 0, false));
+                    }
+                    if (i == KeyEvent.VK_UP) {
+                        addGameActions(new Movement(player, 0, -1, false));
+                    }
+                    if (i == KeyEvent.VK_DOWN) {
+                        addGameActions(new Movement(player, 0, 1, false));
+                    }
+                } else {
+                    if (i == KeyEvent.VK_RIGHT) {
+                        addGameActions(new Movement(player, 1, 0, true));
+                    }
+                    if (i == KeyEvent.VK_LEFT) {
+                        addGameActions(new Movement(player, -1, 0, true));
+                    }
+                    if (i == KeyEvent.VK_UP) {
+                        addGameActions(new Movement(player, 0, -1, true));
+                    }
+                    if (i == KeyEvent.VK_DOWN) {
+                        addGameActions(new Movement(player, 0, 1, true));
+                    }
+
                 }
                 if (i == KeyEvent.VK_ESCAPE) {
                     for (int j = 0; j < gameActions.size(); j++) {

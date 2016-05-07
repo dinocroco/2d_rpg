@@ -3,6 +3,7 @@ package rpg.screen;
 import asciiPanel.AsciiPanel;
 import rpg.character.Player;
 import rpg.character.Unit;
+import rpg.client.KeyEventWrapper;
 import rpg.server.Server;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
@@ -31,7 +32,7 @@ public interface Screen {
 
     default void addPlayer(int clientIndex, Player player){}
 
-    default int[] getKeycodes(){
+    default KeyEventWrapper[] getKeyEvents(){
         return null;
     }
 

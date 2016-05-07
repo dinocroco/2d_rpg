@@ -3,8 +3,9 @@ package rpg.world;
 import asciiPanel.AsciiPanel;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public enum Tile {
+public enum Tile implements Serializable{
     FLOOR((char)250, AsciiPanel.yellow),
     WALL((char)177, AsciiPanel.yellow),
     BOUNDS('x', AsciiPanel.brightBlack);

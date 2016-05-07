@@ -3,6 +3,7 @@ package rpg.screen;
 import asciiPanel.AsciiPanel;
 import rpg.character.Player;
 import rpg.character.Unit;
+import rpg.client.KeyEventWrapper;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 import rpg.world.Tile;
@@ -24,36 +25,36 @@ public class ClientScreen implements Screen {
     private int playerId;
     private Map<Integer, Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
-    private List<Integer> keycodes = new ArrayList<>();
+    private List<KeyEvent> keyEvents = new ArrayList<>();
     private Map<Integer, Integer> keymap = new HashMap<>();
     private LinkedList<String> messages = new LinkedList<>();
 
-    public int[] getKeycodes() {
-        int[] keycodesarray= new int[10];
+    public KeyEventWrapper[] getKeyEvents() {
+        KeyEvent[] keyeventsArray= new KeyEvent[10];
         int index = 0;
-        for (int i = 0; i < keycodesarray.length; i++, index++) {
-            if(i< keycodes.size() && keycodes.get(i)!=null){
-                keycodesarray[index]=keycodes.get(i);
-                keycodes.remove(i);
+        for (int i = 0; i < keyeventsArray.length; i++, index++) {
+            if(i< keyEvents.size() && keyEvents.get(i)!=null){
+                keyeventsArray[index]= keyEvents.get(i);
+                keyEvents.remove(i);
                 i--;
             }
         }
         int count = 0;
-        for (int i : keycodesarray) {
-            if(i == 0) continue;
+        for (KeyEvent i : keyeventsArray) {
+            if(i == null) continue;
             count++;
         }
         if(count==0){
-            return new int[0];
+            return new KeyEventWrapper[0];
         }
-        int[] notNullKeycodes = new int[count];
+        KeyEventWrapper[] notNullKeyEvents = new KeyEventWrapper[count];
         index = 0;
-        for(int i: keycodesarray){
-            if(i==0) continue;
-            notNullKeycodes[index] = i;
+        for(KeyEvent i: keyeventsArray){
+            if(i==null) continue;
+            notNullKeyEvents[index] = new KeyEventWrapper(i.getKeyCode(),i.isShiftDown(),i.isAltDown(),i.isControlDown());
             index++;
         }
-        return notNullKeycodes;
+        return notNullKeyEvents;
     }
 
     @Override
@@ -96,13 +97,14 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-        if(keymap.containsKey(key.getKeyCode())){
-            keycodes.add(keymap.get(key.getKeyCode())); //for user-configured keymap
-        } else {
-            keycodes.add(key.getKeyCode());
-        }
-        if(key.getKeyCode()==KeyEvent.VK_ENTER){
-            addMessage("Enter pressed at "+System.currentTimeMillis()+" and then some longlonglonglonglonglonglonglonglonglonglonglonglonglong");
+/*        if(keymap.containsKey(key.getKeyCode())){
+            keyEvents.add(keymap.get(key.getKeyCode())); //for user-configured keymap
+        } else {*/
+
+        keyEvents.add(key);
+
+        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
+            addMessage("Enter pressed at " + System.currentTimeMillis() + " and then some longlonglonglonglonglonglonglonglonglonglonglonglonglong");
         }
         return this;
     }
