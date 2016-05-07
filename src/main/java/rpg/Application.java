@@ -1,10 +1,7 @@
 package rpg;
 
 import asciiPanel.AsciiPanel;
-import rpg.action.Attack;
-import rpg.action.FreezeUnit;
-import rpg.action.GameAction;
-import rpg.action.Movement;
+import rpg.action.*;
 import rpg.character.GameCharacter;
 import rpg.character.Player;
 import rpg.character.Unit;
@@ -127,6 +124,9 @@ public class Application extends JFrame implements KeyListener {
                 int id = clientdata.getId();
                 Player player = screen.getWorld().getPlayers().get(id);
 
+                if (i == KeyEvent.VK_X){
+                    addGameActions(new Dig(player));
+                }
                 if (i == KeyEvent.VK_SPACE){
                     GameCharacter[] targets = new GameCharacter[4];
                     targets[0] = screen.getWorld().getGameCharacter(player.getX(), player.getY()+1);

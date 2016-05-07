@@ -123,7 +123,7 @@ public class ClientScreen implements Screen {
             s = message.substring(0,Math.min(totalWidth,message.length()));
             if(s.length()==0) break;
             tmpMsg.add(s);
-            message = message.replaceFirst(".{0,80}","");
+            message = message.replaceFirst(".{0,"+totalWidth+"}","");
         } while(s.length()>0);
         tmpMsg.forEach(msg -> messages.add(0,msg));
     }
