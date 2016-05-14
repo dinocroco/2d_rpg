@@ -72,6 +72,7 @@ public class ClientScreen implements Screen {
                 messages.add("");
             }
             String line = messages.get(totalHeight-viewHeight-i-1);
+            terminal.clear(' ', 0, viewHeight+i, totalWidth, 1);
             if(line.length()==totalWidth) {
                 terminal.write(line.substring(0,totalWidth-1), 0, viewHeight + i);
                 // küllap on nii vaja sellepärast et stringi lõpus mingi jupp ütleb et see on lõpp
