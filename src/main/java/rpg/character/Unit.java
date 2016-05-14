@@ -94,6 +94,7 @@ public class Unit implements GameCharacter, Serializable {
 
     public void setMaxhealth(int maxhealth) {
         this.maxhealth = maxhealth;
+        hasChanged = true;
     }
 
     public char getGlyph() {

@@ -162,7 +162,7 @@ public class World {
         return null;
     }
 
-    public void repairPoints(long tickspassed) {
+    public void recoverPoints(long tickspassed) {
         if (tickspassed % 25 == 0) {
             for (Player player : players.values()) {
                 if (player.getHealth() < player.getMaxhealth()) {
