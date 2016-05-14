@@ -172,4 +172,8 @@ public class Server {
         IOUtils.closeQuietly(serverSocket);
     }
 
+    public void kick(int id){
+        clientMap.get(id).close();
+    }
+
 }

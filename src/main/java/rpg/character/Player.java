@@ -6,12 +6,14 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class Player implements Serializable, GameCharacter {
-
+    private String name;
+    private String password;
     private int x;
     private int y;
     public final char glyph = (char)254;
     public final Color color;
     private int connectionId;
+    private int oldconnectionId;
     private boolean hasChanged;
     private boolean connected = true;
     private int health = 100;
@@ -172,12 +174,22 @@ public class Player implements Serializable, GameCharacter {
 
     public void setMaxhealth(int maxhealth) {
         this.maxhealth = maxhealth;
+        hasChanged = true;
     }
 
     public void setConnectionId(int connectionId) {
         // this may ONLY be called when player is not in any world or screen
+        oldconnectionId = this.connectionId;
         this.connectionId = connectionId;
         hasChanged = true;
+    }
+
+    public int getOldconnectionId() {
+        return oldconnectionId;
+    }
+
+    public void resetOldconnectionId() {
+        this.oldconnectionId = connectionId;
     }
 
     public boolean isConnected() {
@@ -185,7 +197,26 @@ public class Player implements Serializable, GameCharacter {
     }
 
     public void setConnected(boolean connected) {
+        System.out.println(getId()+" connected set to "+connected);
         this.connected = connected;
+        hasChanged = true;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        hasChanged = true;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
         hasChanged = true;
     }
 }

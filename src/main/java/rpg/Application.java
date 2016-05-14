@@ -99,6 +99,18 @@ public class Application extends JFrame implements KeyListener {
         // search if that player exists already
         Player player;
         if(passwordPlayer.containsKey(playerData.playername+"/"+playerData.password)) {
+            int id = -1;
+            // kick previous one if any
+            for (Player p : screen.getWorld().getPlayers().values()) {
+                if((p.getName()+"/"+p.getPassword()).equals(playerData.playername+"/"+playerData.password)){
+                    id = p.getId();
+                    break;
+                }
+            }
+            if(id>=0) {
+                //screen.getWorld().removePlayer(id);
+                server.kick(id);
+            }
             player = passwordPlayer.get(playerData.playername+"/"+playerData.password);
             player.setConnectionId(playerData.idCode);
             player.setConnected(true);
@@ -116,6 +128,8 @@ public class Application extends JFrame implements KeyListener {
                     player.setY(startingPoint.getY());
                 }
             }
+            player.setName(playerData.playername);
+            player.setPassword(playerData.password);
             passwordPlayer.put(playerData.playername+"/"+playerData.password,player);
             // saves everyone who connects
             System.out.println("put to passwordPlayer");
@@ -255,6 +269,7 @@ public class Application extends JFrame implements KeyListener {
                 Player player = screen.getWorld().getPlayers().get(key);
                 if (player.hasChanged()) {
                     diff.add(new Diff(player));
+                    player.resetOldconnectionId();
                     player.toUnchanged();
                 }
             }

@@ -129,7 +129,9 @@ public class World {
         getPlayers().remove(clientIndex);
         //player.setX(-1);
         //player.setY(-1);
-        player.setConnected(false);
+        if(player.getOldconnectionId()==player.getId()) {
+            player.setConnected(false);
+        }
         player.toUnchanged();
         addDiff(new Diff(player));
     }
