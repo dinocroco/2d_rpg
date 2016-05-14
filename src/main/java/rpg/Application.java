@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class Application extends JFrame implements KeyListener {
         ticking.start();
         server = startServer();
         screen = new PlayScreen(new HashMap<>());
+        readPasswordPlayers();
         repaint();
     }
 
@@ -87,6 +89,9 @@ public class Application extends JFrame implements KeyListener {
     private void close() {
         if(server!=null) {
             server.shutDown();
+        }
+        if(passwordPlayer.size()>0){
+            writePasswordPlayers();
         }
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
@@ -317,6 +322,38 @@ public class Application extends JFrame implements KeyListener {
                 screen.sendWorldTerrain(server);
                 screen.getWorld().getUnits().add(unit);
             }
+        }
+    }
+
+    public void readPasswordPlayers(){
+        try(ObjectInputStream dis = new ObjectInputStream(new FileInputStream("players.dat"))){
+            while(true) {
+                try {
+                    Player player = (Player) dis.readObject();
+                    passwordPlayer.put(player.getName()+"/"+player.getPassword(),player);
+                } catch (EOFException e) {
+                    // fail sai otsa
+                    break;
+                } catch (ClassNotFoundException e) {
+                    // mingi suurem jama
+                    throw new RuntimeException(e);
+                }
+            }
+
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.out.println("Reading passwords failed.");
+            passwordPlayer = new HashMap<>();
+        }
+    }
+
+    public void writePasswordPlayers(){
+        try(ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream("players.dat"))){
+            for (Player player : passwordPlayer.values()) {
+                dos.writeObject(player);
+            }
+        } catch (IOException e){
+            System.out.println("Saving passwords failed.");
         }
     }
 
