@@ -127,8 +127,6 @@ public class World {
     public synchronized void removePlayer(int clientIndex){
         Player player = getPlayers().get(clientIndex);
         getPlayers().remove(clientIndex);
-        //player.setX(-1);
-        //player.setY(-1);
         if(player.getOldconnectionId()==player.getId()) {
             player.setConnected(false);
         }

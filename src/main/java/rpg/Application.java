@@ -108,14 +108,13 @@ public class Application extends JFrame implements KeyListener {
                 }
             }
             if(id>=0) {
-                //screen.getWorld().removePlayer(id);
                 server.kick(id);
             }
             player = passwordPlayer.get(playerData.playername+"/"+playerData.password);
             player.setConnectionId(playerData.idCode);
             player.setConnected(true);
-            System.out.println("player rejoined");
-            // TODO make sure the location is free
+            //System.out.println("player rejoined");
+            // maybe make sure the location is free, but not that important
         } else {
             Random rand = new Random();
             Color color = new Color(rand.nextInt(0xFFFFFF));
@@ -132,7 +131,6 @@ public class Application extends JFrame implements KeyListener {
             player.setPassword(playerData.password);
             passwordPlayer.put(playerData.playername+"/"+playerData.password,player);
             // saves everyone who connects
-            System.out.println("put to passwordPlayer");
         }
         if (screen.getClass() == PlayScreen.class) {
             screen.sendWorldTerrain(server);
@@ -320,7 +318,6 @@ public class Application extends JFrame implements KeyListener {
                 screen.getWorld().getUnits().add(unit);
             }
         }
-
     }
 
     public void setDisconnectScreen(){

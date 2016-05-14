@@ -197,7 +197,6 @@ public class Player implements Serializable, GameCharacter {
     }
 
     public void setConnected(boolean connected) {
-        System.out.println(getId()+" connected set to "+connected);
         this.connected = connected;
         hasChanged = true;
     }
