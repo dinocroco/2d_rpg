@@ -174,5 +174,4 @@ public class Unit implements GameCharacter, Serializable {
         hasChanged = true;
     }
 
-
 }

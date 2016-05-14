@@ -14,9 +14,12 @@ public class Player implements Serializable, GameCharacter {
     public final int connectionId;
     private boolean hasChanged;
     private int health = 100;
+    private int maxhealth = 100;
     private int damage = 10;
     private int deltaX;
     private int deltaY;
+    private boolean active = true;
+    private long backToActive;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -47,7 +50,7 @@ public class Player implements Serializable, GameCharacter {
     @Override
     public void addHealth(int value) {
         health += value;
-        health = Math.min(health,100);
+        health = Math.min(health,maxhealth);
         hasChanged = true;
     }
 
@@ -75,6 +78,15 @@ public class Player implements Serializable, GameCharacter {
     public void setY(int y) {
         this.y = y;
         hasChanged = true;
+    }
+
+    public void setActive(boolean inGame) {
+        this.active = inGame;
+        hasChanged=true;
+    }
+
+    public boolean isActive(){
+        return active;
     }
 
     @Override
@@ -124,5 +136,22 @@ public class Player implements Serializable, GameCharacter {
         deltaY = y;
         addToX(x);
         addToY(y);
+    }
+
+    public long getBackToActive() {
+        return backToActive;
+    }
+
+    public void setBackToActive(long backToActive) {
+        this.backToActive = backToActive;
+        hasChanged = true;
+    }
+
+    public int getMaxhealth() {
+        return maxhealth;
+    }
+
+    public void setMaxhealth(int maxhealth) {
+        this.maxhealth = maxhealth;
     }
 }

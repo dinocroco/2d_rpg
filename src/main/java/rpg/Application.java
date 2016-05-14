@@ -128,7 +128,9 @@ public class Application extends JFrame implements KeyListener {
                 int i = e.getKeyCode();
                 int id = clientdata.getId();
                 Player player = screen.getWorld().getPlayers().get(id);
-
+                if(!player.isActive()){
+                    return;
+                }
                 if (i == KeyEvent.VK_SPACE){
                     GameCharacter[] targets = new GameCharacter[4];
                     targets[0] = screen.getWorld().getGameCharacter(player.getX(), player.getY()+1);
@@ -207,14 +209,18 @@ public class Application extends JFrame implements KeyListener {
                 if (idCodes.contains(id)) {
                     continue;
                 }
-                gameaction.executeAction(screen,tickspassed);
-                idCodes.add(id);
+                if (screen.getWorld().getPlayers().get((int)id).isActive()){
+                    gameaction.executeAction(screen,tickspassed);
+                    screen.getWorld().handleDeadPlayers(tickspassed);
+                    idCodes.add(id);
+                }
                 toRemove.add(gameaction);
             }
             for (GameAction gameAction : toRemove) {
                 gameActions.remove(gameAction);
             }
             screen.getWorld().moveUnits(tickspassed);
+            screen.getWorld().handleDeadPlayers(tickspassed);
         }
         repaint();
     }

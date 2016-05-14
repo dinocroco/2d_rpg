@@ -22,4 +22,5 @@ public interface GameCharacter {
 
     int getDamage();
 
+
 }

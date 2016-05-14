@@ -9,6 +9,9 @@ import java.util.*;
 import java.util.List;
 
 public class World {
+
+    public static final long BACKTOACTIVE = 30;
+
     private Tile[][] tiles;
     private int width;
     private List<Diff> diff = new ArrayList<>();
@@ -153,6 +156,28 @@ public class World {
             }
         }
         return null;
+    }
+
+    public synchronized void handleDeadPlayers(long tickspassed){
+
+        for (Player player : players.values()) {
+            if (player.isActive() && player.getHealth()<=0){
+                player.setActive(false);
+                player.setX(-20); //inactive player not displayed on the screen and doesn't influence other player's actions
+                player.setY(-20);
+                player.setBackToActive(BACKTOACTIVE+tickspassed);
+            }
+            if (!player.isActive()){
+                if (player.getBackToActive()<=tickspassed){
+                    player.setActive(true);
+                    player.addHealth(player.getMaxhealth()-player.getHealth());
+                    Diff location = startingPoint();
+                    player.setX(location.getX());
+                    player.setY(location.getY());
+
+                }
+            }
+        }
     }
 
     public void moveUnits(long tickspassed){

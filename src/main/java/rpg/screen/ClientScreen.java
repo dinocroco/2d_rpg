@@ -147,10 +147,13 @@ public class ClientScreen implements Screen {
     private void displayPlayers(AsciiPanel terminal, int left, int top) {
         // TODO display only works after first movement after join
         for (Player player : players.values()) {
-            int wx = player.getX()-left;
-            int wy = player.getY()-top;
-            if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
-            terminal.write(player.glyph,wx,wy,player.color);
+            if (player.getHealth() <= 0) {
+                continue;
+            }
+            int wx = player.getX() - left;
+            int wy = player.getY() - top;
+            if (wx >= viewWidth || wx < 0 || wy >= viewHeight || wy < 0) continue;
+            terminal.write(player.glyph, wx, wy, player.color);
         }
     }
 
