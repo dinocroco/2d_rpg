@@ -2,7 +2,9 @@ package rpg.server;
 
 import org.apache.commons.io.IOUtils;
 import rpg.Application;
+import rpg.character.Player;
 import rpg.client.ClientData;
+import rpg.client.PlayerData;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -92,6 +94,10 @@ public class Server {
                     while(true){
                         try{
                             Object obj = in.readObject();
+                            if (obj instanceof PlayerData){
+                                PlayerData playerData = (PlayerData) obj;
+                                //app.
+                            }
                             if (obj instanceof ClientData) {
                                 ClientData clientdata = (ClientData) obj;
                                 clientMessages.put(clientdata);

@@ -2,16 +2,14 @@ package rpg.client;
 
 import org.apache.commons.io.IOUtils;
 import rpg.Application;
+import rpg.character.Player;
 import rpg.screen.ClientScreen;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -20,6 +18,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Client {
+
+    private static final String FILENAME = "clientData.txt";
+
     private ConnectionToServer server;
     private LinkedBlockingQueue<AsciiSymbol[][]> asciiMessages;
     private LinkedBlockingQueue<Diff> diffs;
@@ -27,19 +28,28 @@ public class Client {
     private Socket socket;
     private Application app;
     private int idCode;
+    private String playername = null;
+    private String serverIp = null;
+    private String password = null;
     private boolean serverOpen;
     private Client client;
 
+
     public static void main(String[] args) throws IOException{
 
-        Client client = new Client(InetAddress.getLocalHost().getHostAddress(),Application.PORT);
+        Client client = new Client(Application.PORT);
 
     }
 
-    public Client(String IPAddress, int port) throws IOException{
+    public Client(int port) throws IOException{
         this.client = this;
+        getClientPreferences();
+
+        if(serverIp == null){
+            serverIp = InetAddress.getLocalHost().getHostAddress();
+        }
         try {
-            socket = new Socket(IPAddress, port);
+            socket = new Socket(serverIp, port);
             serverOpen = true;
         } catch (ConnectException e){
             System.out.println("There is no server running");
@@ -60,6 +70,9 @@ public class Client {
                     while(idCode==0){
                         //System.out.println("Waiting for idCode");
                         Thread.sleep(50);
+                    }
+                    if (playername == null){
+                        playername = idCode+"";
                     }
                     while(serverOpen){
                         AsciiSymbol[][] asciiView = asciiMessages.poll();
@@ -99,6 +112,7 @@ public class Client {
         ObjectInputStream in;
         ObjectOutputStream out;
         Socket socket;
+        boolean playerDataSent = false;
 
         ConnectionToServer(Socket socket) throws IOException {
             this.socket = socket;
@@ -144,8 +158,15 @@ public class Client {
 
             Thread write = new Thread(){
                 public void run(){
+
                     while(serverOpen){
                         try{
+
+                            if(!playerDataSent){
+                                PlayerData playerdata = new PlayerData(idCode,playername,password);
+                                send(playerdata);
+                                playerDataSent = true;
+                            }
                             if (app.getScreen().getClass()== ClientScreen.class ){
                                 KeyEventWrapper[] gotKeyEvents = app.getScreen().getKeyEvents();
                                 if(gotKeyEvents.length>0) {
@@ -203,4 +224,26 @@ public class Client {
     public void send(Object obj) throws IOException {
         server.write(obj);
     }
+
+    public void getClientPreferences() throws IOException{
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(FILENAME)))) {
+
+            String name = in.readLine();
+            if (name != null) {
+                playername = name;
+            }
+
+            String passWord = in.readLine();
+            if(passWord != null){
+                password = passWord;
+            }
+
+            String ipAddress = in.readLine();
+            if (ipAddress != null){
+                serverIp = ipAddress;
+            }
+
+        }
+    }
+
 }

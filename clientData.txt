@@ -1,0 +1,3 @@
+Player_name
+Player_password
+Server_ip
