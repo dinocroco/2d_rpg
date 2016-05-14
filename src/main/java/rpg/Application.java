@@ -142,7 +142,7 @@ public class Application extends JFrame implements KeyListener {
                 if (i == KeyEvent.VK_Z){
                     Unit nearestUnit = screen.getWorld().getNearestUnit(id);
                     if (nearestUnit != null && screen.getWorld().distanceBetween(nearestUnit,player) < 4){
-                        addGameActions(new FreezeUnit(id,nearestUnit,15));
+                        addGameActions(new FreezeUnit(player,nearestUnit,15));
                     }
                 }
                 if (!e.isShiftDown()) {

@@ -22,6 +22,7 @@ public class Player implements Serializable, GameCharacter {
     private long backToActive;
     private int attackSpeed = 5;
     private int attackCounter = 0;
+    private int freezeAbility = 5;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -34,6 +35,14 @@ public class Player implements Serializable, GameCharacter {
         connectionId = id;
         this.color = color;
         hasChanged = true;
+    }
+
+    public int getFreezeAbility() {
+        return freezeAbility;
+    }
+
+    public void addFreezeAbility(int freezeAbility) {
+        this.freezeAbility += freezeAbility;
     }
 
     public int getAttackCounter() {
