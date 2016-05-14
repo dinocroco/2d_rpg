@@ -20,6 +20,8 @@ public class Unit implements GameCharacter, Serializable {
     private List<Color> colors = new ArrayList<>();
     public final long idCode;
     private long freezeEnd = 0;
+    private int attackSpeed = 5;
+    private int attackCounter = 0;
 
     public Unit(long tickNumber){
         Random rand = new Random();
@@ -174,4 +176,19 @@ public class Unit implements GameCharacter, Serializable {
         hasChanged = true;
     }
 
+    public int getAttackCounter() {
+        return attackCounter;
+    }
+
+    public void setAttackCounter(int attackCounter) {
+        this.attackCounter = attackCounter;
+    }
+
+    public int getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public void setAttackSpeed(int attackSpeed) {
+        this.attackSpeed = attackSpeed;
+    }
 }

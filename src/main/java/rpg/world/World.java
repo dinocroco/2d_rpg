@@ -17,6 +17,7 @@ public class World {
     private List<Diff> diff = new ArrayList<>();
     private Map<Integer,Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
+
     public int width() { return width; }
 
     private int height;
@@ -189,8 +190,14 @@ public class World {
             if(playerAdjacent==null) {
                 unit.moveUnit(this, tickspassed);
             } else {
-                playerAdjacent.addHealth(-unit.getDamage());
-                System.out.println(playerAdjacent.connectionId +";"+ playerAdjacent.getHealth());
+                if(unit.getAttackCounter()+1==unit.getAttackSpeed()) {
+                    playerAdjacent.addHealth(-unit.getDamage());
+                    System.out.println(playerAdjacent.connectionId + ";" + playerAdjacent.getHealth());
+                    addDiff(new Diff(unit.getID() + " attacked " + playerAdjacent.getID() + ", health now: "
+                            +playerAdjacent.getHealth(),playerAdjacent.getX(),playerAdjacent.getY(),15));
+
+                }
+                unit.setAttackCounter((unit.getAttackCounter()+1)%unit.getAttackSpeed());
             }
 
         }
