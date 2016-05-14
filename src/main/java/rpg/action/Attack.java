@@ -23,12 +23,13 @@ public class Attack extends GameAction{
 
         for (GameCharacter target : targets) {
             if (target!=null) {
-                if(player.getAttackCounter()+1==player.getAttackSpeed()) {
+                if(player.getLastAttackTime()+player.getAttackSpeed()<tickspassed) {
                     target.addHealth(-damage);
-                    screen.getWorld().addDiff(new Diff(characterID + " attacked " + target.getID() + ", health now: "
+                    screen.getWorld().addDiff(new Diff(player.toMessage() + " attacked "
+                            + target.toMessage() + ", health now: "
                             + target.getHealth(), target.getX(), target.getY(), 15));
+                    player.setLastAttackTime(tickspassed);
                 }
-                player.setAttackCounter((player.getAttackCounter()+1)%player.getAttackSpeed());
 
             }
         }

@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.List;
 
 public class Unit implements GameCharacter, Serializable {
-
+    private String name = "Unit";
     private int x;
     private int y;
     private char glyph = '?';
@@ -197,5 +197,23 @@ public class Unit implements GameCharacter, Serializable {
 
     public void setAttackSpeed(int attackSpeed) {
         this.attackSpeed = attackSpeed;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return name +"(" + idCode + ')';
+    }
+
+    public String toMessage() {
+        return toString();
     }
 }

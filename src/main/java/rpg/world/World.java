@@ -165,7 +165,7 @@ public class World {
 
         for (Player player : players.values()) {
             if (player.isActive() && player.getHealth()<=0){
-                addDiff(new Diff("Player "+ player.getId()+" passed out.", player.getX(),player.getY(),HEARINGRADIUS));
+                addDiff(new Diff(player.toMessage()+" passed out.", player.getX(),player.getY(),HEARINGRADIUS));
                 player.setActive(false);
                 player.setX(-20); //inactive player not displayed on the screen and doesn't influence other player's actions
                 player.setY(-20);
@@ -178,7 +178,7 @@ public class World {
                     Diff location = startingPoint();
                     player.setX(location.getX());
                     player.setY(location.getY());
-                    addDiff(new Diff("Player "+ player.getId()+" returned to life.", player.getX(),player.getY(),HEARINGRADIUS));
+                    addDiff(new Diff(player.toMessage()+" returned to life.", player.getX(),player.getY(),HEARINGRADIUS));
 
 
                 }

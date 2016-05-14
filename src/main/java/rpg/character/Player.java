@@ -24,7 +24,7 @@ public class Player implements Serializable, GameCharacter {
     private boolean active = true;
     private long backToActive;
     private int attackSpeed = 5;
-    private int attackCounter = 0;
+    private long lastAttackTime = 0;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -39,12 +39,12 @@ public class Player implements Serializable, GameCharacter {
         hasChanged = true;
     }
 
-    public int getAttackCounter() {
-        return attackCounter;
+    public long getLastAttackTime() {
+        return lastAttackTime;
     }
 
-    public void setAttackCounter(int attackCounter) {
-        this.attackCounter = attackCounter;
+    public void setLastAttackTime(long lastAttackTime) {
+        this.lastAttackTime = lastAttackTime;
     }
 
     public int getAttackSpeed() {
@@ -131,6 +131,10 @@ public class Player implements Serializable, GameCharacter {
                 '}';
     }
 
+    public String toMessage(){
+        return name + "(" + getId() + ')';
+    }
+
     @Override
     public int getX() {
         return x;
@@ -201,6 +205,7 @@ public class Player implements Serializable, GameCharacter {
         hasChanged = true;
     }
 
+    @Override
     public String getName() {
         return name;
     }
