@@ -24,7 +24,7 @@ public class Player implements Serializable, GameCharacter {
     private boolean active = true;
     private long backToActive;
     private int attackSpeed = 5;
-    private int lastAttackTime = 0;
+    private long lastAttackTime = 0;
     private int freezeAbility = 5;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
@@ -48,7 +48,7 @@ public class Player implements Serializable, GameCharacter {
         this.freezeAbility += freezeAbility;
     }
 
-    public int getLastAttackTime() {
+    public long getLastAttackTime() {
         return lastAttackTime;
     }
 
