@@ -7,6 +7,7 @@ import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
 import rpg.client.KeyEventWrapper;
+import rpg.client.PlayerData;
 import rpg.screen.*;
 import rpg.server.Server;
 import rpg.world.Diff;
@@ -16,10 +17,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
 
@@ -33,6 +32,7 @@ public class Application extends JFrame implements KeyListener {
     private Server server;
     private boolean sentInitialView = false;
     private List<GameAction> gameActions = new ArrayList<>();
+    private Map<String,Player> passwordPlayer = new HashMap<>();
 
     /**
      * Application constructor for Server, includes game time ticking.
@@ -95,26 +95,41 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public synchronized void newConnection(int clientIndex){
-        Random rand = new Random();
-        Color color = new Color(rand.nextInt(0xFFFFFF));
-        Player player = new Player(clientIndex,color);
-        if(screen.getClass() == PlayScreen.class){
-            Diff startingPoint = screen.getWorld().startingPoint();
-            if (startingPoint!=null) {
-                player.setX(startingPoint.getX());
-                player.setY(startingPoint.getY());
-            }
+    public synchronized void newConnection(PlayerData playerData){
+        // search if that player exists already
+        Player player;
+        if(passwordPlayer.containsKey(playerData.playername+"/"+playerData.password)) {
+            player = passwordPlayer.get(playerData.playername+"/"+playerData.password);
+            player.setConnectionId(playerData.idCode);
+            player.setConnected(true);
+            System.out.println("player rejoined");
+            // TODO make sure the location is free
+        } else {
+            Random rand = new Random();
+            Color color = new Color(rand.nextInt(0xFFFFFF));
+            player = new Player(playerData.idCode, color);
 
+            if (screen.getClass() == PlayScreen.class) {
+                Diff startingPoint = screen.getWorld().startingPoint();
+                if (startingPoint != null) {
+                    player.setX(startingPoint.getX());
+                    player.setY(startingPoint.getY());
+                }
+            }
+            passwordPlayer.put(playerData.playername+"/"+playerData.password,player);
+            // saves everyone who connects
+            System.out.println("put to passwordPlayer");
+        }
+        if (screen.getClass() == PlayScreen.class) {
             screen.sendWorldTerrain(server);
         }
 
         if(screen.getWorld()!=null) {
-            screen.getWorld().getPlayers().put(clientIndex, player);
+            screen.getWorld().getPlayers().put(playerData.idCode, player);
         } else {
-            screen.addPlayer(clientIndex, player);
+            screen.addPlayer(playerData.idCode, player);
         }
-        System.out.println("client "+Integer.toString(clientIndex)+" connected");
+        System.out.println("client "+Integer.toString(playerData.idCode)+" connected");
     }
 
     public synchronized void onDisconnect(int clientIndex){
@@ -209,7 +224,7 @@ public class Application extends JFrame implements KeyListener {
                 if (idCodes.contains(id)) {
                     continue;
                 }
-                if (screen.getWorld().getPlayers().get((int)id).isActive()){
+                if (screen.getWorld().getPlayers().get((int)id)!=null && screen.getWorld().getPlayers().get((int)id).isActive()){
                     gameaction.executeAction(screen,tickspassed);
                     screen.getWorld().handleDeadPlayers(tickspassed);
                     idCodes.add(id);

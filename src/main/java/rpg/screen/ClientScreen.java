@@ -211,7 +211,7 @@ public class ClientScreen implements Screen {
 
     private void updatePlayerMap(Diff diff) {
         Player diffPlayer = diff.getPlayer();
-        if (diffPlayer.getX() == -1 && diffPlayer.getY() == -1) {
+        if (!diffPlayer.isConnected()) {
             players.remove(diffPlayer.getId());
             return;
         }

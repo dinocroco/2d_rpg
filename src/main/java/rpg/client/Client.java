@@ -2,13 +2,11 @@ package rpg.client;
 
 import org.apache.commons.io.IOUtils;
 import rpg.Application;
-import rpg.character.Player;
 import rpg.screen.ClientScreen;
 import rpg.world.AsciiSymbol;
 import rpg.world.Diff;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.InetAddress;
@@ -161,7 +159,10 @@ public class Client {
 
                     while(serverOpen){
                         try{
-
+                            while(idCode==0){
+                                //System.out.println("Waiting for idCode");
+                                Thread.sleep(50);
+                            }
                             if(!playerDataSent){
                                 PlayerData playerdata = new PlayerData(idCode,playername,password);
                                 send(playerdata);

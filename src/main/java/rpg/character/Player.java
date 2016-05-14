@@ -11,8 +11,9 @@ public class Player implements Serializable, GameCharacter {
     private int y;
     public final char glyph = (char)254;
     public final Color color;
-    public final int connectionId;
+    private int connectionId;
     private boolean hasChanged;
+    private boolean connected = true;
     private int health = 100;
     private int maxhealth = 100;
     private int damage = 10;
@@ -171,5 +172,20 @@ public class Player implements Serializable, GameCharacter {
 
     public void setMaxhealth(int maxhealth) {
         this.maxhealth = maxhealth;
+    }
+
+    public void setConnectionId(int connectionId) {
+        // this may ONLY be called when player is not in any world or screen
+        this.connectionId = connectionId;
+        hasChanged = true;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+        hasChanged = true;
     }
 }
