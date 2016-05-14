@@ -11,6 +11,7 @@ import java.util.List;
 public class World {
 
     public static final long BACKTOACTIVE = 30;
+    public static final int HEARINGRADIUS = 15;
 
     private Tile[][] tiles;
     private int width;
@@ -163,6 +164,7 @@ public class World {
 
         for (Player player : players.values()) {
             if (player.isActive() && player.getHealth()<=0){
+                addDiff(new Diff("Player "+ player.getId()+" passed out.", player.getX(),player.getY(),HEARINGRADIUS));
                 player.setActive(false);
                 player.setX(-20); //inactive player not displayed on the screen and doesn't influence other player's actions
                 player.setY(-20);
@@ -175,6 +177,8 @@ public class World {
                     Diff location = startingPoint();
                     player.setX(location.getX());
                     player.setY(location.getY());
+                    addDiff(new Diff("Player "+ player.getId()+" returned to life.", player.getX(),player.getY(),HEARINGRADIUS));
+
 
                 }
             }
@@ -194,7 +198,7 @@ public class World {
                     playerAdjacent.addHealth(-unit.getDamage());
                     System.out.println(playerAdjacent.connectionId + ";" + playerAdjacent.getHealth());
                     addDiff(new Diff(unit.getID() + " attacked " + playerAdjacent.getID() + ", health now: "
-                            +playerAdjacent.getHealth(),playerAdjacent.getX(),playerAdjacent.getY(),15));
+                            +playerAdjacent.getHealth(),playerAdjacent.getX(),playerAdjacent.getY(),HEARINGRADIUS));
 
                 }
                 unit.setAttackCounter((unit.getAttackCounter()+1)%unit.getAttackSpeed());
