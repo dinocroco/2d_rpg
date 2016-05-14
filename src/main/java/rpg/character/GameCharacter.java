@@ -22,5 +22,7 @@ public interface GameCharacter {
 
     int getDamage();
 
+    String getName();
 
+    String toMessage();
 }

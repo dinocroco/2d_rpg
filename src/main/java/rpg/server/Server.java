@@ -3,6 +3,7 @@ package rpg.server;
 import org.apache.commons.io.IOUtils;
 import rpg.Application;
 import rpg.client.ClientData;
+import rpg.client.PlayerData;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class Server {
                             randomIndex = random.nextInt(998)+1;
                         } while (clientMap.containsKey(randomIndex));
                         clientMap.put(randomIndex, new Connection(s));
-                        app.newConnection(randomIndex);
+                        //app.newConnection(randomIndex);
                         sendToOne(randomIndex,randomIndex);
                     } catch (SocketException e){
                         System.out.println("Socket failed");
@@ -92,6 +93,11 @@ public class Server {
                     while(true){
                         try{
                             Object obj = in.readObject();
+                            if (obj instanceof PlayerData){
+                                PlayerData playerData = (PlayerData) obj;
+                                app.newConnection(playerData);
+                                //System.out.println(playerData);
+                            }
                             if (obj instanceof ClientData) {
                                 ClientData clientdata = (ClientData) obj;
                                 clientMessages.put(clientdata);
@@ -164,6 +170,10 @@ public class Server {
             connection.close();
         }
         IOUtils.closeQuietly(serverSocket);
+    }
+
+    public void kick(int id){
+        clientMap.get(id).close();
     }
 
 }

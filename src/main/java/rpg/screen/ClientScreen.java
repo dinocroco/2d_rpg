@@ -112,6 +112,9 @@ public class ClientScreen implements Screen {
 
     @Override
     public void addLocatedMessage(String message, int x, int y, int radius){
+        if(players.get(playerId)==null){
+            return;
+        }
         if((players.get(playerId).getX()-x)*(players.get(playerId).getX()-x)+
                 (players.get(playerId).getY()-y)*(players.get(playerId).getY()-y) < radius*radius){
             addMessage(message);
@@ -211,11 +214,20 @@ public class ClientScreen implements Screen {
 
     private void updatePlayerMap(Diff diff) {
         Player diffPlayer = diff.getPlayer();
-        if (diffPlayer.getX() == -1 && diffPlayer.getY() == -1) {
+        if(diffPlayer.getOldconnectionId()!=diffPlayer.getId()){
+            System.out.println("old and new differ "+diffPlayer.getOldconnectionId()+" "+diffPlayer.getId());
+            players.remove(diffPlayer.getOldconnectionId());
+            System.out.println("old and new differ "+diffPlayer.getOldconnectionId()+" "+diffPlayer.getId());
+            if(diffPlayer.getOldconnectionId()==playerId){
+                System.out.println("im "+playerId);
+                playerId = diffPlayer.getId();
+                System.out.println("im "+playerId);
+            }
+        }
+        if (!diffPlayer.isConnected()) {
             players.remove(diffPlayer.getId());
             return;
         }
-
         players.put(diffPlayer.getId(), diffPlayer);
 
         if(players.containsKey(playerId)) {

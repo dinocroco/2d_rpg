@@ -7,6 +7,7 @@ import rpg.character.Player;
 import rpg.character.Unit;
 import rpg.client.ClientData;
 import rpg.client.KeyEventWrapper;
+import rpg.client.PlayerData;
 import rpg.screen.*;
 import rpg.server.Server;
 import rpg.world.Diff;
@@ -16,10 +17,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 
 public class Application extends JFrame implements KeyListener {
 
@@ -33,6 +33,7 @@ public class Application extends JFrame implements KeyListener {
     private Server server;
     private boolean sentInitialView = false;
     private List<GameAction> gameActions = new ArrayList<>();
+    private Map<String,Player> passwordPlayer = new HashMap<>();
 
     /**
      * Application constructor for Server, includes game time ticking.
@@ -52,6 +53,7 @@ public class Application extends JFrame implements KeyListener {
         ticking.start();
         server = startServer();
         screen = new PlayScreen(new HashMap<>());
+        readPasswordPlayers();
         repaint();
     }
 
@@ -88,6 +90,9 @@ public class Application extends JFrame implements KeyListener {
         if(server!=null) {
             server.shutDown();
         }
+        if(passwordPlayer.size()>0){
+            writePasswordPlayers();
+        }
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -95,26 +100,53 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public synchronized void newConnection(int clientIndex){
-        Random rand = new Random();
-        Color color = new Color(rand.nextInt(0xFFFFFF));
-        Player player = new Player(clientIndex,color);
-        if(screen.getClass() == PlayScreen.class){
-            Diff startingPoint = screen.getWorld().startingPoint();
-            if (startingPoint!=null) {
-                player.setX(startingPoint.getX());
-                player.setY(startingPoint.getY());
+    public synchronized void newConnection(PlayerData playerData){
+        // search if that player exists already
+        Player player;
+        if(passwordPlayer.containsKey(playerData.playername+"/"+playerData.password)) {
+            int id = -1;
+            // kick previous one if any
+            for (Player p : screen.getWorld().getPlayers().values()) {
+                if((p.getName()+"/"+p.getPassword()).equals(playerData.playername+"/"+playerData.password)){
+                    id = p.getId();
+                    break;
+                }
             }
+            if(id>=0) {
+                server.kick(id);
+            }
+            player = passwordPlayer.get(playerData.playername+"/"+playerData.password);
+            player.setConnectionId(playerData.idCode);
+            player.setConnected(true);
+            //System.out.println("player rejoined");
+            // maybe make sure the location is free, but not that important
+        } else {
+            Random rand = new Random();
+            Color color = new Color(rand.nextInt(0xFFFFFF));
+            player = new Player(playerData.idCode, color);
 
+            if (screen.getClass() == PlayScreen.class) {
+                Diff startingPoint = screen.getWorld().startingPoint();
+                if (startingPoint != null) {
+                    player.setX(startingPoint.getX());
+                    player.setY(startingPoint.getY());
+                }
+            }
+            player.setName(playerData.playername);
+            player.setPassword(playerData.password);
+            passwordPlayer.put(playerData.playername+"/"+playerData.password,player);
+            // saves everyone who connects
+        }
+        if (screen.getClass() == PlayScreen.class) {
             screen.sendWorldTerrain(server);
         }
 
         if(screen.getWorld()!=null) {
-            screen.getWorld().getPlayers().put(clientIndex, player);
+            screen.getWorld().getPlayers().put(playerData.idCode, player);
         } else {
-            screen.addPlayer(clientIndex, player);
+            screen.addPlayer(playerData.idCode, player);
         }
-        System.out.println("client "+Integer.toString(clientIndex)+" connected");
+        System.out.println("client "+Integer.toString(playerData.idCode)+" connected");
     }
 
     public synchronized void onDisconnect(int clientIndex){
@@ -209,7 +241,7 @@ public class Application extends JFrame implements KeyListener {
                 if (idCodes.contains(id)) {
                     continue;
                 }
-                if (screen.getWorld().getPlayers().get((int)id).isActive()){
+                if (screen.getWorld().getPlayers().get((int)id)!=null && screen.getWorld().getPlayers().get((int)id).isActive()){
                     gameaction.executeAction(screen,tickspassed);
                     screen.getWorld().handleDeadPlayers(tickspassed);
                     idCodes.add(id);
@@ -240,6 +272,7 @@ public class Application extends JFrame implements KeyListener {
                 Player player = screen.getWorld().getPlayers().get(key);
                 if (player.hasChanged()) {
                     diff.add(new Diff(player));
+                    player.resetOldconnectionId();
                     player.toUnchanged();
                 }
             }
@@ -290,7 +323,38 @@ public class Application extends JFrame implements KeyListener {
                 screen.getWorld().getUnits().add(unit);
             }
         }
+    }
 
+    public void readPasswordPlayers(){
+        try(ObjectInputStream dis = new ObjectInputStream(new FileInputStream("players.dat"))){
+            while(true) {
+                try {
+                    Player player = (Player) dis.readObject();
+                    passwordPlayer.put(player.getName()+"/"+player.getPassword(),player);
+                } catch (EOFException e) {
+                    // fail sai otsa
+                    break;
+                } catch (ClassNotFoundException e) {
+                    // mingi suurem jama
+                    throw new RuntimeException(e);
+                }
+            }
+
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.out.println("Reading passwords failed.");
+            passwordPlayer = new HashMap<>();
+        }
+    }
+
+    public void writePasswordPlayers(){
+        try(ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream("players.dat"))){
+            for (Player player : passwordPlayer.values()) {
+                dos.writeObject(player);
+            }
+        } catch (IOException e){
+            System.out.println("Saving passwords failed.");
+        }
     }
 
     public void setDisconnectScreen(){
