@@ -26,6 +26,8 @@ public class Player implements Serializable, GameCharacter {
     private int attackSpeed = 5;
     private long lastAttackTime = 0;
     private int freezeAbility = 5;
+    private int maxFreezeAbility = 4;
+    private int healingSpeed = 1;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -119,6 +121,19 @@ public class Player implements Serializable, GameCharacter {
         return active;
     }
 
+    public int getMaxFreezeAbility() {
+        return maxFreezeAbility;
+    }
+
+    public int getHealingSpeed() {
+        return healingSpeed;
+    }
+
+    public void setHealingSpeed(int healingSpeed) {
+        this.healingSpeed = healingSpeed;
+        hasChanged = true;
+    }
+
     @Override
     public boolean hasChanged() {
         return hasChanged;
@@ -181,6 +196,7 @@ public class Player implements Serializable, GameCharacter {
         hasChanged = true;
     }
 
+    @Override
     public int getMaxhealth() {
         return maxhealth;
     }

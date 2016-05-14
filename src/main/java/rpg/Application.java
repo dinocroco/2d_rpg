@@ -236,6 +236,7 @@ public class Application extends JFrame implements KeyListener {
         if(screen.getClass()==PlayScreen.class) {
             List<GameAction> toRemove = new ArrayList<>();
             List<Long> idCodes = new ArrayList<>();
+            screen.getWorld().repairPoints(tickspassed);
             for (GameAction gameaction : gameActions) {
                 long id = gameaction.characterID;
                 if (idCodes.contains(id)) {

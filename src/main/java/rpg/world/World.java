@@ -18,6 +18,7 @@ public class World {
     private List<Diff> diff = new ArrayList<>();
     private Map<Integer,Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
+    private final int healingPointsAmount = 10;
 
     public int width() { return width; }
 
@@ -159,6 +160,37 @@ public class World {
             }
         }
         return null;
+    }
+
+    public void repairPoints(long tickspassed) {
+        if (tickspassed % 25 == 0) {
+            for (Player player : players.values()) {
+                if (player.getHealth() < player.getMaxhealth()) {
+                    int healthToAdd = healingPointsAmount * player.getHealingSpeed();
+                    player.addHealth(healthToAdd);
+                    if (player.getHealth()==player.getMaxhealth()) {
+                        addDiff(new Diff(player.toMessage() + " has healed to maximum health!", player.getX(), player.getY(), HEARINGRADIUS));
+                    }
+
+                }
+            }
+        }
+        if (tickspassed % 50 == 0) {
+            for (Player player : players.values()) {
+                if (player.getFreezeAbility() < player.getMaxFreezeAbility()) {
+                    player.addFreezeAbility(1);
+                }
+            }
+
+        }
+        if (tickspassed % 20 == 0) {
+            for (Unit unit : units) {
+                if (unit.getHealth() < unit.getMaxhealth()) {
+                    unit.addHealth(healingPointsAmount);
+                }
+            }
+        }
+
     }
 
     public synchronized void handleDeadPlayers(long tickspassed){

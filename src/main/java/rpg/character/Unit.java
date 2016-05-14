@@ -16,6 +16,7 @@ public class Unit implements GameCharacter, Serializable {
     private Color color;
     private boolean hasChanged = false;
     private int health = 100;
+    private int maxhealth = 100;
     private int damage = 10;
     private List<Color> colors = new ArrayList<>();
     public final long idCode;
@@ -38,10 +39,9 @@ public class Unit implements GameCharacter, Serializable {
     @Override
     public void addHealth(int value) {
         health += value;
-        health = Math.min(health,100);
+        health = Math.min(health,maxhealth);
         hasChanged = true;
     }
-
 
     @Override
     public int getHealth() {
@@ -85,6 +85,15 @@ public class Unit implements GameCharacter, Serializable {
         this.y=y;
         hasChanged = true;
 
+    }
+
+    @Override
+    public int getMaxhealth() {
+        return maxhealth;
+    }
+
+    public void setMaxhealth(int maxhealth) {
+        this.maxhealth = maxhealth;
     }
 
     public char getGlyph() {

@@ -27,7 +27,9 @@ public class FreezeUnit extends GameAction{
             unit.freeze(time, tickspassed);
             screen.getWorld().addDiff(new Diff(player.toMessage() + " froze " + unit.toMessage() + ", health: "
                     +unit.getHealth() + " for " + time* Tick.TICK_LENGTH/1000000000 + " seconds",unit.getX(),unit.getY(),15));
+            player.addFreezeAbility(-1);
         }
+
     }
 }
 

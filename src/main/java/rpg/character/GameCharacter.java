@@ -20,6 +20,8 @@ public interface GameCharacter {
 
     int getHealth();
 
+    int getMaxhealth();
+
     int getDamage();
 
     String getName();
