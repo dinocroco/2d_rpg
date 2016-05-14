@@ -22,7 +22,8 @@ public class FreezeUnit extends GameAction{
 
     @Override
     public void executeAction(Screen screen, long tickspassed) {
-        if (characterID < 1000) {
+
+        if (player.getFreezeAbility()>0) {
             unit.freeze(time, tickspassed);
             screen.getWorld().addDiff(new Diff(player.toMessage() + " froze " + unit.toMessage() + ", health: "
                     +unit.getHealth() + " for " + time* Tick.TICK_LENGTH/1000000000 + " seconds",unit.getX(),unit.getY(),15));
