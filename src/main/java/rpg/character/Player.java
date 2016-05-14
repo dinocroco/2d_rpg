@@ -20,6 +20,8 @@ public class Player implements Serializable, GameCharacter {
     private int deltaY;
     private boolean active = true;
     private long backToActive;
+    private int attackSpeed = 5;
+    private int attackCounter = 0;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -32,6 +34,22 @@ public class Player implements Serializable, GameCharacter {
         connectionId = id;
         this.color = color;
         hasChanged = true;
+    }
+
+    public int getAttackCounter() {
+        return attackCounter;
+    }
+
+    public void setAttackCounter(int attackCounter) {
+        this.attackCounter = attackCounter;
+    }
+
+    public int getAttackSpeed() {
+        return attackSpeed;
+    }
+
+    public void setAttackSpeed(int attackSpeed) {
+        this.attackSpeed = attackSpeed;
     }
 
     public int getDeltaX() {
