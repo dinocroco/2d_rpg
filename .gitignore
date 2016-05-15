@@ -16,3 +16,5 @@ out/
 target/
 *.iws
 *.iml
+
+clientData.txt
