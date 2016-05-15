@@ -169,7 +169,6 @@ public class Server {
         for (Connection connection : clientMap.values()) {
             connection.close();
         }
-        //IOUtils.closeQuietly(serverSocket);
         closeLoudly(serverSocket);
     }
 
