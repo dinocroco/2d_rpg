@@ -25,9 +25,14 @@ public class Attack extends GameAction{
             if (target!=null) {
                 if(player.getLastAttackTime()+player.getAttackSpeed()<tickspassed) {
                     target.addHealth(-damage);
-                    screen.getWorld().addDiff(new Diff(player.toMessage() + " attacked "
-                            + target.toMessage() + ", health now: "
-                            + target.getHealth(), target.getX(), target.getY(), 15));
+                    if (target.getHealth() < 0){
+                        screen.getWorld().addDiff(new Diff(player.toMessage() + " killed " + target.toMessage(), target.getX(), target.getY(), 15));
+                    }
+                    else {
+                        screen.getWorld().addDiff(new Diff(player.toMessage() + " attacked "
+                                + target.toMessage() + ", health now: "
+                                + target.getHealth(), target.getX(), target.getY(), 15));
+                    }
                     player.setLastAttackTime(tickspassed);
                     if(target.getHealth()<=0){
                         player.receiveKill(target);
