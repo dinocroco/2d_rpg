@@ -242,7 +242,7 @@ public class Player implements Serializable, GameCharacter {
 
     public void receiveKill(GameCharacter target){
         xp+=target.getLevel()*1000;
-        if(xp>level*level*1000){
+        if(xp>=level*level*1000){
             levelUp();
         }
     }
@@ -268,5 +268,9 @@ public class Player implements Serializable, GameCharacter {
 
     public int getLevel() {
         return level;
+    }
+
+    public double getXp() {
+        return xp;
     }
 }

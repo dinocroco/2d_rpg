@@ -76,6 +76,13 @@ public class ClientScreen implements Screen {
             }
             terminal.write(line, messageWidth, viewHeight + i);
             i++;
+            line = "XP "+Math.floor((player.getXp()/1000-((player.getLevel()-1)*(player.getLevel()-1)))
+                    /(player.getLevel()*player.getLevel()-(player.getLevel()-1)*(player.getLevel()-1))*1000+0.5)/10;
+            while(line.length()+1<totalWidth-messageWidth){
+                line = line.replaceFirst(" ","  ");
+            }
+            terminal.write(line, messageWidth, viewHeight + i);
+            i++;
             line = "HP "+player.getHealth();
             while(line.length()+1<totalWidth-messageWidth){
                 line = line.replaceFirst(" ","  ");
