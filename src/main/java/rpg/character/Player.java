@@ -149,7 +149,7 @@ public class Player implements Serializable, GameCharacter {
     }
 
     public String toMessage(){
-        return name + "(" + getId() + ')';
+        return name + "(" + level + ')';
     }
 
     @Override

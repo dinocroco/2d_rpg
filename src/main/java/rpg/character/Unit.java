@@ -226,7 +226,7 @@ public class Unit implements GameCharacter, Serializable {
 
     @Override
     public String toString() {
-        return name +"(" + idCode + ')';
+        return name +"(" + level + ")";
     }
 
     public String toMessage() {

@@ -228,7 +228,6 @@ public class World {
     }
 
     public void moveUnits(long tickspassed){
-        // TODO if there are more than 3-4 units in one screen then merge them, levelup
         unitLevelUp();
         for (Unit unit : units){
             if(unit.frozen(tickspassed)){
@@ -241,11 +240,11 @@ public class World {
                 if(unit.getAttackCounter()+1==unit.getAttackSpeed()) {
                     playerAdjacent.addHealth(-unit.getDamage());
                     if (playerAdjacent.getHealth() > 0) {
-                        addDiff(new Diff(playerAdjacent.toMessage() + " was attacked by " + unit.toMessage() + ", health now: "
+                        addDiff(new Diff(unit.toMessage() + " attacked " +playerAdjacent.toMessage() + ", HP -> "
                                 + playerAdjacent.getHealth(), playerAdjacent.getX(), playerAdjacent.getY(), HEARINGRADIUS));
                     } else {
-                        addDiff(new Diff(playerAdjacent.toMessage() + " passed out. "
-                                + playerAdjacent.getHealth(), playerAdjacent.getX(), playerAdjacent.getY(), HEARINGRADIUS));
+                        addDiff(new Diff(unit.toMessage() + " killed " + playerAdjacent.toMessage()
+                                , playerAdjacent.getX(), playerAdjacent.getY(), 100));
                     }
                 }
                 unit.setAttackCounter((unit.getAttackCounter()+1)%unit.getAttackSpeed());
@@ -262,7 +261,7 @@ public class World {
      *
      * @return nearest Unit or null
      */
-    public Unit getNearestUnit(int playerId){
+    public synchronized Unit getNearestUnit(int playerId){
         Double locMin = null;
         Unit nearestUnit = null;
         Player player = players.get(playerId);
@@ -286,7 +285,7 @@ public class World {
                 for (int k = 0; k < units.size(); k++) {
                     k=Math.max(k,0);
                     if (i == k || j == k) continue;
-                    int limit = 5;
+                    int limit = 7;
                     assert(!(i<0 || j<0 || k<0));
 
                     if (distanceBetween(units.get(i), units.get(j)) < limit && distanceBetween(units.get(k), units.get(j)) < limit

@@ -26,7 +26,6 @@ public class ClientScreen implements Screen {
     private Map<Integer, Player> players = new HashMap<>();
     private List<Unit> units = new ArrayList<>();
     private List<KeyEvent> keyEvents = new ArrayList<>();
-    private Map<Integer, Integer> keymap = new HashMap<>();
     private LinkedList<String> messages = new LinkedList<>();
 
     public KeyEventWrapper[] getKeyEvents() {
@@ -98,15 +97,8 @@ public class ClientScreen implements Screen {
 
     @Override
     public Screen respondToUserInput(KeyEvent key) {
-/*        if(keymap.containsKey(key.getKeyCode())){
-            keyEvents.add(keymap.get(key.getKeyCode())); //for user-configured keymap
-        } else {*/
 
         keyEvents.add(key);
-
-        if (key.getKeyCode() == KeyEvent.VK_ENTER) {
-            addMessage("Enter pressed at " + System.currentTimeMillis() + " and then some longlonglonglonglonglonglonglonglonglonglonglonglonglong");
-        }
         return this;
     }
 
@@ -149,7 +141,6 @@ public class ClientScreen implements Screen {
     }
 
     private void displayPlayers(AsciiPanel terminal, int left, int top) {
-        // TODO display only works after first movement after join
         for (Player player : players.values()) {
             if (player.getHealth() <= 0) {
                 continue;
@@ -221,9 +212,7 @@ public class ClientScreen implements Screen {
     private void updatePlayerMap(Diff diff) {
         Player diffPlayer = diff.getPlayer();
         if(diffPlayer.getOldconnectionId()!=diffPlayer.getId()){
-            System.out.println("old and new differ "+diffPlayer.getOldconnectionId()+" "+diffPlayer.getId());
             players.remove(diffPlayer.getOldconnectionId());
-            System.out.println("old and new differ "+diffPlayer.getOldconnectionId()+" "+diffPlayer.getId());
             if(diffPlayer.getOldconnectionId()==playerId){
                 System.out.println("im "+playerId);
                 playerId = diffPlayer.getId();
@@ -237,11 +226,8 @@ public class ClientScreen implements Screen {
         players.put(diffPlayer.getId(), diffPlayer);
 
         if(players.containsKey(playerId)) {
-
             viewX = players.get(playerId).getX() - viewWidth / 2;
             viewY = players.get(playerId).getY() - viewHeight / 2;
-        } else {
-            System.out.println("I am not found in players list! "+playerId);
         }
     }
 

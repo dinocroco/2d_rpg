@@ -4,6 +4,7 @@ import rpg.character.GameCharacter;
 import rpg.character.Player;
 import rpg.screen.Screen;
 import rpg.world.Diff;
+import rpg.world.World;
 
 public class Attack extends GameAction{
 
@@ -32,15 +33,15 @@ public class Attack extends GameAction{
                             player.leveled(false);
                             screen.getWorld().addDiff(new Diff(player.toMessage() + " killed "
                                     + target.toMessage() + " and leveled up!",
-                                    target.getX(), target.getY(), 15));
+                                    target.getX(), target.getY(), World.HEARINGRADIUS));
                         } else {
-                            screen.getWorld().addDiff(new Diff(player.toMessage() + " killed " + target.toMessage(), target.getX(), target.getY(), 15));
+                            screen.getWorld().addDiff(new Diff(player.toMessage() + " killed " + target.toMessage(), target.getX(), target.getY(), 100));
 
                         }
                     } else {
                         screen.getWorld().addDiff(new Diff(player.toMessage() + " attacked "
-                                + target.toMessage() + ", health now: "
-                                + target.getHealth(), target.getX(), target.getY(), 15));
+                                + target.toMessage() + ", HP -> "
+                                + target.getHealth(), target.getX(), target.getY(), World.HEARINGRADIUS));
                     }
                 }
 
