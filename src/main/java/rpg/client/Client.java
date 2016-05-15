@@ -66,7 +66,6 @@ public class Client {
             public void run(){
                 try{
                     while(idCode==0){
-                        //System.out.println("Waiting for idCode");
                         Thread.sleep(50);
                     }
                     if (playername == null){
@@ -101,10 +100,30 @@ public class Client {
         messageHandling.start();
     }
 
-    public void closeConnection(){
+    public void closeConnection() throws IOException{
         this.server.close();
-        IOUtils.closeQuietly(this.socket);
+        closeLoudly(this.socket);
     }
+
+    public void closeLoudly(Closeable... closeables) throws IOException {
+
+        IOException exceptionToThrow = null;
+
+        for (Closeable closeable : closeables) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                if (exceptionToThrow == null) {
+                    exceptionToThrow = e;
+                }
+            }
+        }
+
+        if (exceptionToThrow != null) {
+            throw exceptionToThrow;
+        }
+    }
+
 
     private class ConnectionToServer    {
         ObjectInputStream in;
@@ -147,7 +166,11 @@ public class Client {
                         } catch (ClassNotFoundException e){
                             throw new RuntimeException(e);
                         } catch (IOException e){
-                            client.closeConnection();
+                            try {
+                                client.closeConnection();
+                            } catch (IOException ioe){
+                                throw new RuntimeException(ioe);
+                            }
                             serverOpen = false;
                         }
                     }
@@ -160,7 +183,6 @@ public class Client {
                     while(serverOpen){
                         try{
                             while(idCode==0){
-                                //System.out.println("Waiting for idCode");
                                 Thread.sleep(50);
                             }
                             if(!playerDataSent){
@@ -197,9 +219,11 @@ public class Client {
                         }
                     }
 
-                    IOUtils.closeQuietly(in);
-                    IOUtils.closeQuietly(out);
-                    IOUtils.closeQuietly(socket);
+                    try {
+                        closeLoudly(in, out, socket);
+                    } catch (IOException e){
+                        throw new RuntimeException(e);
+                    }
 
                 }
             };
@@ -214,10 +238,8 @@ public class Client {
 
         }
 
-        public void close(){
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(socket);
+        public void close() throws IOException{
+            closeLoudly(in,out,socket);
         }
 
     }
