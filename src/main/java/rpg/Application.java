@@ -264,6 +264,9 @@ public class Application extends JFrame implements KeyListener {
             screen.getWorld().handleDeadPlayers(tickspassed);
             screen.getWorld().handleDeadUnits(tickspassed);
         }
+        if(tickspassed%50==0) {
+            writePasswordPlayers();
+        }
         repaint();
     }
 
@@ -335,7 +338,7 @@ public class Application extends JFrame implements KeyListener {
         }
     }
 
-    public void readPasswordPlayers(){
+    public synchronized void readPasswordPlayers(){
         try(ObjectInputStream dis = new ObjectInputStream(new FileInputStream("players.dat"))){
             while(true) {
                 try {
@@ -362,7 +365,7 @@ public class Application extends JFrame implements KeyListener {
         }
     }
 
-    public void writePasswordPlayers(){
+    public synchronized void writePasswordPlayers(){
         try(ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream("players.dat"))){
             for (Player player : passwordPlayer.values()) {
                 dos.writeObject(player);
