@@ -240,7 +240,7 @@ public class World {
             } else {
                 if(unit.getAttackCounter()+1==unit.getAttackSpeed()) {
                     playerAdjacent.addHealth(-unit.getDamage());
-                    addDiff(new Diff(unit.getID() + " attacked " + playerAdjacent.getID() + ", health now: "
+                    addDiff(new Diff(playerAdjacent.toMessage()+ " was attacked by " +unit.toMessage() +  ", health now: "
                             +playerAdjacent.getHealth(),playerAdjacent.getX(),playerAdjacent.getY(),HEARINGRADIUS));
 
                 }

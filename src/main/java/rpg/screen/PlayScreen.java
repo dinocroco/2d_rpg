@@ -120,12 +120,11 @@ public class PlayScreen implements Screen {
             if(diff.getUnit()!=null){
                 // units move constantly, so they will get updated anyways
                 if(diff.getUnit().getHealth()<=0 || Math.abs(diff.getUnit().getX()-player.getX())<40 && Math.abs(diff.getUnit().getY()-player.getY())<12){
-                    System.out.println("sending to oneU "+player.getId()+" "+diff);
                     server.sendToOne(player.getId(),diff);
                     continue;
                 }
             }
-            // tile tuleb alati saata
+            // tile has to be always sent
             if(diff.getTile()!=null){
                 server.sendToAll(diff);
                 return;
@@ -133,14 +132,12 @@ public class PlayScreen implements Screen {
             if(diff.getMessage()!=null){
                 double distance = (player.getX() - diff.getX()) * (player.getX() - diff.getX()) + (player.getY() - diff.getY()) + (player.getY() - diff.getY());
                 if(Math.sqrt(distance)<44+diff.getR()){
-                    System.out.println("sending to oneM "+player.getId()+" "+diff);
                     server.sendToOne(player.getId(),diff);
                     continue;
                 }
             }
             assert(false);
         }
-        //server.sendToAll(diff);
     }
 
     @Override
