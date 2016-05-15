@@ -126,8 +126,8 @@ public class Application extends JFrame implements KeyListener {
             player.setConnected(true);
             player.setLastAttackTime(0);
             //System.out.println("player rejoined");
-            // maybe make sure the location is free, but not that important
-            // TODO it should use old ticks amount not just resetting it
+            // maybe make sure the location is free, but not that important, there is dig
+            // maybe it should use old ticks amount not just resetting it - not needed
         } else {
             Random rand = new Random();
             Color color = new Color(rand.nextInt(0xFFFFFF));
