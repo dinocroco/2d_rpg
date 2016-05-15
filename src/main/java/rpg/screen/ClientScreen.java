@@ -18,6 +18,7 @@ public class ClientScreen implements Screen {
     private final int viewHeight = 24;
     private final int totalWidth = 80;
     private final int totalHeight = 30;
+    int messageWidth = totalWidth -8;
     // from WorldBuilder
     private AsciiSymbol[][] view = startView(90,31);
     private int viewX = 0;
@@ -62,6 +63,38 @@ public class ClientScreen implements Screen {
         displayUnits(terminal, viewX, viewY);
         displayPlayers(terminal,viewX,viewY);
         displayMessages(terminal);
+        displayMyStats(terminal);
+    }
+
+    private void displayMyStats(AsciiPanel terminal){
+        int i = 0;
+        if(players.containsKey(playerId)){
+            Player player = players.get(playerId);
+            String line = "lvl "+player.getLevel();
+            while(line.length()+1<totalWidth-messageWidth){
+                line = line.replaceFirst(" ","  ");
+            }
+            terminal.write(line, messageWidth, viewHeight + i);
+            i++;
+            line = "HP "+player.getHealth();
+            while(line.length()+1<totalWidth-messageWidth){
+                line = line.replaceFirst(" ","  ");
+            }
+            terminal.write(line, messageWidth, viewHeight + i);
+            i++;
+            line = "Max "+player.getMaxhealth();
+            while(line.length()+1<totalWidth-messageWidth){
+                line = line.replaceFirst(" ","  ");
+            }
+            terminal.write(line, messageWidth, viewHeight + i);
+            i++;
+            line = "Frz "+player.getFreezeAbility();
+            while(line.length()+1<totalWidth-messageWidth){
+                line = line.replaceFirst(" ","  ");
+            }
+            terminal.write(line, messageWidth, viewHeight + i);
+            i++;
+        }
     }
 
     private void displayMessages(AsciiPanel terminal) {
@@ -71,12 +104,12 @@ public class ClientScreen implements Screen {
                 messages.add("");
             }
             String line = messages.get(totalHeight-viewHeight-i-1);
-            terminal.clear(' ', 0, viewHeight+i, totalWidth, 1);
-            if(line.length()==totalWidth) {
-                terminal.write(line.substring(0,totalWidth-1), 0, viewHeight + i);
+            terminal.clear(' ', 0, viewHeight+i, messageWidth, 1);
+            if(line.length()==messageWidth) {
+                terminal.write(line.substring(0,messageWidth-1), 0, viewHeight + i);
                 // küllap on nii vaja sellepärast et stringi lõpus mingi jupp ütleb et see on lõpp
-                char c = line.charAt(totalWidth-1);
-                terminal.write(c,totalWidth-1,viewHeight+i);
+                char c = line.charAt(messageWidth-1);
+                terminal.write(c,messageWidth-1,viewHeight+i);
             } else {
                 terminal.write(line, 0, viewHeight + i);
             }
@@ -117,11 +150,12 @@ public class ClientScreen implements Screen {
     public void addMessage(String message){
         String s;
         List<String> tmpMsg = new ArrayList<>();
+
         do {
-            s = message.substring(0,Math.min(totalWidth,message.length()));
+            s = message.substring(0,Math.min(messageWidth,message.length()));
             if(s.length()==0) break;
             tmpMsg.add(s);
-            message = message.replaceFirst(".{0,"+totalWidth+"}","");
+            message = message.replaceFirst(".{0,"+messageWidth+"}","");
         } while(s.length()>0);
         tmpMsg.forEach(msg -> messages.add(0,msg));
     }
