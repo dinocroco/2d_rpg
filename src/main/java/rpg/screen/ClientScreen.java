@@ -165,6 +165,7 @@ public class ClientScreen implements Screen {
         for (Unit unit : units ){
             int wx = unit.getX()-left;
             int wy = unit.getY()-top;
+            if(unit.getHealth()<=0) continue;
             if(wx>= viewWidth || wx<0 ||wy>= viewHeight || wy<0) continue;
             terminal.write(unit.getGlyph(),wx,wy,unit.getColor());
         }
@@ -199,6 +200,12 @@ public class ClientScreen implements Screen {
         boolean foundUnit = false;
         for (int i = 0; i < units.size(); i++) {
             Unit unit= units.get(i);
+            if(unit.getHealth()<=0){
+                System.out.println("client removed unit");
+                units.remove(i);
+                foundUnit = true;
+                break;
+            }
             if (unit.idCode == diffUnit.idCode) {
                 units.remove(i);
                 units.add(diffUnit);

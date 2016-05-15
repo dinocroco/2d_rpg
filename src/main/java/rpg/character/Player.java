@@ -27,7 +27,10 @@ public class Player implements Serializable, GameCharacter {
     private long lastAttackTime = 0;
     private int freezeAbility = 5;
     private int maxFreezeAbility = 4;
-    private int healingSpeed = 1;
+    private double healingSpeed = 1;
+    private boolean leveled = false;
+    private int level = 1;
+    private double xp = 0;
 
     // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
@@ -125,7 +128,7 @@ public class Player implements Serializable, GameCharacter {
         return maxFreezeAbility;
     }
 
-    public int getHealingSpeed() {
+    public double getHealingSpeed() {
         return healingSpeed;
     }
 
@@ -247,5 +250,34 @@ public class Player implements Serializable, GameCharacter {
     public void setPassword(String password) {
         this.password = password;
         hasChanged = true;
+    }
+
+    public void receiveKill(GameCharacter target){
+        xp+=target.getLevel()*1000;
+        if(xp<=level*level*1000){
+            levelUp();
+            leveled(true);
+        }
+    }
+
+    public void levelUp(){
+        damage++;
+        maxFreezeAbility++;
+        freezeAbility=maxFreezeAbility;
+        healingSpeed+=0.1;
+        maxhealth+=10;
+        health=maxhealth;
+    }
+
+    public boolean leveled() {
+        return leveled;
+    }
+
+    public void leveled(boolean leveled) {
+        this.leveled = leveled;
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

@@ -14,7 +14,7 @@ public class Diff implements Serializable {
     private int x;
     private int y;
     private int r;
-    private String message;
+    private String message = null;
     private Player player = null;
     private Unit unit = null;
 

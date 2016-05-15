@@ -27,4 +27,6 @@ public interface GameCharacter {
     String getName();
 
     String toMessage();
+
+    int getLevel();
 }

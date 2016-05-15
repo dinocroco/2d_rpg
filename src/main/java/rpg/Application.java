@@ -18,6 +18,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -118,8 +120,10 @@ public class Application extends JFrame implements KeyListener {
             player = passwordPlayer.get(playerData.playername+"/"+playerData.password);
             player.setConnectionId(playerData.idCode);
             player.setConnected(true);
+            player.setLastAttackTime(0);
             //System.out.println("player rejoined");
             // maybe make sure the location is free, but not that important
+            // TODO it should use old ticks amount not just resetting it
         } else {
             Random rand = new Random();
             Color color = new Color(rand.nextInt(0xFFFFFF));
@@ -254,6 +258,7 @@ public class Application extends JFrame implements KeyListener {
             }
             screen.getWorld().moveUnits(tickspassed);
             screen.getWorld().handleDeadPlayers(tickspassed);
+            screen.getWorld().handleDeadUnits(tickspassed);
         }
         repaint();
     }
@@ -314,7 +319,7 @@ public class Application extends JFrame implements KeyListener {
     public synchronized void addNewUnit(long tickNr){
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
-            if (screen.getWorld().getUnits().size() < 3 ) {
+            if (screen.getWorld().getUnits().size() < 10 ) {
                 Diff startingPoint = screen.getWorld().startingPoint();
                 if (startingPoint != null) {
                     unit.setX(startingPoint.getX());
@@ -334,6 +339,11 @@ public class Application extends JFrame implements KeyListener {
                     passwordPlayer.put(player.getName()+"/"+player.getPassword(),player);
                 } catch (EOFException e) {
                     // fail sai otsa
+                    break;
+                } catch (InvalidClassException e){
+                    // old format file
+                    dis.close();
+                    Files.delete(Paths.get("players.dat"));
                     break;
                 } catch (ClassNotFoundException e) {
                     // mingi suurem jama

@@ -29,6 +29,15 @@ public class Attack extends GameAction{
                             + target.toMessage() + ", health now: "
                             + target.getHealth(), target.getX(), target.getY(), 15));
                     player.setLastAttackTime(tickspassed);
+                    if(target.getHealth()<=0){
+                        player.receiveKill(target);
+                        if(player.leveled()) {
+                            player.leveled(false);
+                            screen.getWorld().addDiff(new Diff(player.toMessage() + " killed "
+                                    + target.toMessage() + " and leveled up!",
+                                    target.getX(), target.getY(), 15));
+                        }
+                    }
                 }
 
             }

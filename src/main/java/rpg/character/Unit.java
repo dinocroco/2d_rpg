@@ -10,6 +10,7 @@ import java.util.List;
 
 public class Unit implements GameCharacter, Serializable {
     private String name = "Unit";
+    private int level = 1;
     private int x;
     private int y;
     private char glyph = '?';
@@ -225,5 +226,10 @@ public class Unit implements GameCharacter, Serializable {
 
     public String toMessage() {
         return toString();
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
     }
 }

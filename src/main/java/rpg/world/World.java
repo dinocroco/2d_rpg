@@ -166,7 +166,7 @@ public class World {
         if (tickspassed % 25 == 0) {
             for (Player player : players.values()) {
                 if (player.getHealth() < player.getMaxhealth()) {
-                    int healthToAdd = healingPointsAmount * player.getHealingSpeed();
+                    int healthToAdd = (int)Math.floor(healingPointsAmount * player.getHealingSpeed());
                     player.addHealth(healthToAdd);
                     if (player.getHealth()==player.getMaxhealth()) {
                         addDiff(new Diff(player.toMessage() + " has healed to maximum health!", player.getX(), player.getY(), HEARINGRADIUS));
@@ -218,7 +218,18 @@ public class World {
         }
     }
 
+    public synchronized void handleDeadUnits(long tickspassed){
+        for (int i = 0; i < units.size(); i++) {
+            if(units.get(i).getHealth()<=0){
+                addDiff(new Diff(units.get(i)));
+                units.remove(i);
+                i--;
+            }
+        }
+    }
+
     public void moveUnits(long tickspassed){
+        // TODO if there are more than 3-4 units in one screen then merge them, levelup
         for (Unit unit : units){
             if(unit.frozen(tickspassed)){
                 continue;

@@ -135,13 +135,15 @@ public class Server {
         }
     }
 
-    public synchronized void sendToOne(int index, Object message) throws IOException{
+    public synchronized void sendToOne(int index, Object message) {
         try {
             clientMap.get(index).write(message);
         } catch (SocketException e) {
             System.out.println("Client disconnected");
             app.onDisconnect(index);
             clientMap.remove(index);
+        } catch (IOException ioe){
+            ioe.printStackTrace();
         }
     }
 
