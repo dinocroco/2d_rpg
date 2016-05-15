@@ -254,19 +254,20 @@ public class Player implements Serializable, GameCharacter {
 
     public void receiveKill(GameCharacter target){
         xp+=target.getLevel()*1000;
-        if(xp<=level*level*1000){
+        if(xp>level*level*1000){
             levelUp();
-            leveled(true);
         }
     }
 
     public void levelUp(){
+        level++;
         damage++;
         maxFreezeAbility++;
         freezeAbility=maxFreezeAbility;
         healingSpeed+=0.1;
         maxhealth+=10;
         health=maxhealth;
+        leveled(true);
     }
 
     public boolean leveled() {
