@@ -1,6 +1,5 @@
 package rpg.client;
 
-import org.apache.commons.io.IOUtils;
 import rpg.Application;
 import rpg.screen.ClientScreen;
 import rpg.world.AsciiSymbol;

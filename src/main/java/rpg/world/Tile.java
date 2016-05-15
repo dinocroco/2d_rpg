@@ -20,8 +20,4 @@ public enum Tile implements Serializable{
         this.glyph = glyph;
         this.color = color;
     }
-
-    public boolean isGround() {
-        return this != WALL && this != BOUNDS;
-    }
 }

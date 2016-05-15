@@ -20,13 +20,9 @@ public class PlayScreen implements Screen {
     private World world;
     private final int viewWidth = 80;
     private final int viewHeight = 24;
-    private final int totalWidth = 80;
-    private final int totalHeight = 30;
     private int viewX = 0;
     private int viewY = 0;
-    private Queue<String> messages = new ArrayDeque<>();
 
-    // TODO these should not remain as constants
     final int width = 90;
     final int height = 31;
 
@@ -42,8 +38,6 @@ public class PlayScreen implements Screen {
 
     public Screen respondToUserInput(KeyEvent key) {
         switch (key.getKeyCode()){
-            case KeyEvent.VK_ESCAPE: return new LoseScreen(world.getPlayers());
-            case KeyEvent.VK_ENTER: return new WinScreen(world.getPlayers());
             case KeyEvent.VK_LEFT: viewX = viewX<2- viewWidth ? viewX : viewX-1; break;
             case KeyEvent.VK_RIGHT: viewX = viewX>world.width()-2 ? viewX : viewX+1; break;
             case KeyEvent.VK_UP: viewY = viewY<2- viewHeight ? viewY : viewY-1; break;

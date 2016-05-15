@@ -261,10 +261,10 @@ public class Application extends JFrame implements KeyListener {
                 gameActions.remove(gameAction);
             }
             screen.getWorld().handleDeadPlayers(tickspassed);
-            screen.getWorld().handleDeadUnits(tickspassed);
+            screen.getWorld().handleDeadUnits();
             screen.getWorld().moveUnits(tickspassed);
             screen.getWorld().handleDeadPlayers(tickspassed);
-            screen.getWorld().handleDeadUnits(tickspassed);
+            screen.getWorld().handleDeadUnits();
         }
         if(tickspassed%50==0) {
             writePasswordPlayers();
@@ -347,15 +347,12 @@ public class Application extends JFrame implements KeyListener {
                     Player player = (Player) dis.readObject();
                     passwordPlayer.put(player.getName()+"/"+player.getPassword(),player);
                 } catch (EOFException e) {
-                    // fail sai otsa
                     break;
                 } catch (InvalidClassException e){
-                    // old format file
                     dis.close();
                     Files.delete(Paths.get("players.dat"));
                     break;
                 } catch (ClassNotFoundException e) {
-                    // mingi suurem jama
                     throw new RuntimeException(e);
                 }
             }

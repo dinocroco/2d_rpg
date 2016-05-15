@@ -217,7 +217,7 @@ public class World {
         }
     }
 
-    public synchronized void handleDeadUnits(long tickspassed){
+    public synchronized void handleDeadUnits(){
         for (int i = 0; i < units.size(); i++) {
             if(units.get(i).getHealth()<=0){
                 addDiff(new Diff(units.get(i)));
@@ -294,7 +294,7 @@ public class World {
                         units.get(i).addLevel(units.get(j).getLevel() + units.get(k).getLevel());
                         units.get(j).addHealth(-2*units.get(j).getHealth());
                         units.get(k).addHealth(-2*units.get(k).getHealth());
-                        handleDeadUnits(0);
+                        handleDeadUnits();
                         i--;
                         i--;
                         j+=units.size();
@@ -308,9 +308,4 @@ public class World {
 
     }
 
-    private List<Diff> findPath(GameCharacter unit, GameCharacter goal){
-        // this should return path from unit to goal, or null if unreachable, if 20 steps arent enough then unreachable
-        // when it is implemented, then public
-        return null;
-    }
 }

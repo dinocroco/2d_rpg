@@ -30,7 +30,6 @@ public class Player implements Serializable, GameCharacter {
     private int level = 1;
     private double xp = 0;
 
-    // TODO eventually load character info from somewhere instead of creating new for each connect
     public Player(int id) {
         connectionId = id;
         color = AsciiPanel.cyan;
@@ -65,6 +64,7 @@ public class Player implements Serializable, GameCharacter {
 
     public void setAttackSpeed(int attackSpeed) {
         this.attackSpeed = attackSpeed;
+        hasChanged = true;
     }
 
     @Override

@@ -93,12 +93,11 @@ public class ClientScreen implements Screen {
                 line = line.replaceFirst(" ","  ");
             }
             terminal.write(line, messageWidth, viewHeight + i);
-            i++;
         }
     }
 
     private void displayMessages(AsciiPanel terminal) {
-        //for (int i = Math.min(totalHeight - viewHeight-1,messages.size()-1); i >= 0; i--) {
+
         for (int i = 0; i < Math.min(totalHeight - viewHeight,messages.size()); i++) {
             while (messages.size()<totalHeight-viewHeight){
                 messages.add("");
@@ -107,7 +106,6 @@ public class ClientScreen implements Screen {
             terminal.clear(' ', 0, viewHeight+i, messageWidth, 1);
             if(line.length()==messageWidth) {
                 terminal.write(line.substring(0,messageWidth-1), 0, viewHeight + i);
-                // küllap on nii vaja sellepärast et stringi lõpus mingi jupp ütleb et see on lõpp
                 char c = line.charAt(messageWidth-1);
                 terminal.write(c,messageWidth-1,viewHeight+i);
             } else {

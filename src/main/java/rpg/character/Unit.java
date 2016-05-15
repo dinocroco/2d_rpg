@@ -19,7 +19,6 @@ public class Unit implements GameCharacter, Serializable {
     private int health = 100;
     private int maxhealth = 100;
     private int damage = 10;
-    private List<Color> colors = new ArrayList<>();
     public final long idCode;
     private long freezeEnd = 0;
     private int attackSpeed = 5;
@@ -134,8 +133,6 @@ public class Unit implements GameCharacter, Serializable {
         hasChanged = true;
     }
 
-
-
     public void goToPlayer(Player player, World world){
 
         Random rand = new Random();
@@ -213,10 +210,12 @@ public class Unit implements GameCharacter, Serializable {
 
     public void setAttackSpeed(int attackSpeed) {
         this.attackSpeed = attackSpeed;
+        hasChanged = true;
     }
 
     public void setName(String name) {
         this.name = name;
+        hasChanged = true;
     }
 
     @Override
