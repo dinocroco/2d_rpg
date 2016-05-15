@@ -19,8 +19,6 @@ public class Player implements Serializable, GameCharacter {
     private int health = 100;
     private int maxhealth = 100;
     private int damage = 10;
-    private int deltaX;
-    private int deltaY;
     private boolean active = true;
     private long backToActive;
     private int attackSpeed = 5;
@@ -67,14 +65,6 @@ public class Player implements Serializable, GameCharacter {
 
     public void setAttackSpeed(int attackSpeed) {
         this.attackSpeed = attackSpeed;
-    }
-
-    public int getDeltaX() {
-        return deltaX;
-    }
-
-    public int getDeltaY() {
-        return deltaY;
     }
 
     @Override
@@ -184,8 +174,6 @@ public class Player implements Serializable, GameCharacter {
 
     public void addToXY(int x, int y){
         hasChanged = true;
-        deltaX = x;
-        deltaY = y;
         addToX(x);
         addToY(y);
     }

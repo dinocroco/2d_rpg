@@ -260,6 +260,8 @@ public class Application extends JFrame implements KeyListener {
             for (GameAction gameAction : toRemove) {
                 gameActions.remove(gameAction);
             }
+            screen.getWorld().handleDeadPlayers(tickspassed);
+            screen.getWorld().handleDeadUnits(tickspassed);
             screen.getWorld().moveUnits(tickspassed);
             screen.getWorld().handleDeadPlayers(tickspassed);
             screen.getWorld().handleDeadUnits(tickspassed);

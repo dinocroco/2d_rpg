@@ -230,6 +230,7 @@ public class World {
 
     public void moveUnits(long tickspassed){
         // TODO if there are more than 3-4 units in one screen then merge them, levelup
+        unitLevelUp();
         for (Unit unit : units){
             if(unit.frozen(tickspassed)){
                 continue;
@@ -270,6 +271,39 @@ public class World {
             }
         }
         return nearestUnit;
+    }
+
+    public synchronized void unitLevelUp(){
+
+        for (int i = 0; i < units.size(); i++) {
+            i=Math.max(i,0);
+            for (int j = 0; j < units.size(); j++) {
+                j=Math.max(j,0);
+                if (i == j) continue;
+                for (int k = 0; k < units.size(); k++) {
+                    k=Math.max(k,0);
+                    if (i == k || j == k) continue;
+                    int limit = 5;
+                    assert(!(i<0 || j<0 || k<0));
+
+                    if (distanceBetween(units.get(i), units.get(j)) < limit && distanceBetween(units.get(k), units.get(j)) < limit
+                            && distanceBetween(units.get(i), units.get(k)) < limit) {
+
+                        units.get(i).addLevel(units.get(j).getLevel() + units.get(k).getLevel());
+                        units.get(j).addHealth(-2*units.get(j).getHealth());
+                        units.get(k).addHealth(-2*units.get(k).getHealth());
+                        handleDeadUnits(0);
+                        i--;
+                        i--;
+                        j+=units.size();
+                        k+=units.size();
+
+                    }
+
+                }
+            }
+        }
+
     }
 
     private List<Diff> findPath(GameCharacter unit, GameCharacter goal){

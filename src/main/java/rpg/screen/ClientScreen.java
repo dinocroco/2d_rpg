@@ -201,7 +201,6 @@ public class ClientScreen implements Screen {
         for (int i = 0; i < units.size(); i++) {
             Unit unit= units.get(i);
             if(unit.getHealth()<=0){
-                System.out.println("client removed unit");
                 units.remove(i);
                 foundUnit = true;
                 break;

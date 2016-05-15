@@ -102,6 +102,11 @@ public class Unit implements GameCharacter, Serializable {
         return glyph;
     }
 
+    public void setGlyph(char glyph) {
+        this.glyph = glyph;
+        hasChanged = true;
+    }
+
     public Color getColor() {
         return color;
     }
@@ -231,5 +236,35 @@ public class Unit implements GameCharacter, Serializable {
     @Override
     public int getLevel() {
         return level;
+    }
+
+    public void addLevel(int level) {
+        this.level += level;
+
+        damage++;
+        switch (this.level){
+            case 1:
+                setGlyph('?');
+                break;
+            case 2: case 3:
+                setGlyph('2');
+                break;
+            case 4: case 5: case 6:
+                setGlyph('3');
+                break;
+            default:
+                if(this.level < 15) {
+                    setGlyph('*');
+                }
+                else if(this.level < 30) {
+                    setGlyph('%');
+                }
+                else {
+                    setGlyph('$');
+                    damage--;
+                }
+        }
+        health = Math.max(health,maxhealth/2);
+        hasChanged = true;
     }
 }
