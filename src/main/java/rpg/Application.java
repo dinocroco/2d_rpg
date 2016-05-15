@@ -325,7 +325,7 @@ public class Application extends JFrame implements KeyListener {
     public synchronized void addNewUnit(long tickNr){
         Unit unit = new Unit(tickNr);
         if(screen.getClass() == PlayScreen.class) {
-            if (screen.getWorld().getUnits().size() < 8 ) {
+            if (screen.getWorld().getUnits().size() < 5 ) {
                 Diff startingPoint = screen.getWorld().startingPoint();
                 if (startingPoint != null) {
                     unit.setX(startingPoint.getX());
