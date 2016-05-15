@@ -7,12 +7,13 @@ Fight with them and other players to gain experience points and increase your le
 
 Server has to be running before clients connect to it. Game will automatically save players' progress.
 
-For setting up your player name, password and server IP edit file "clientData.txt" as follows:
+Game setup:  
+For setting up your player name, password and server IP edit file "clientData.txt" as follows:   
 *First line - your player name  
 *Second line - your password. Server will use combination of name and password to check if there is a saved player with that information. (This information will be shared with all players).  
 *Third line - server IP.  
 
-Example:
+Example:  
 MyPlayerName  
 MyPlaintextPassword  
 127.0.0.1  
