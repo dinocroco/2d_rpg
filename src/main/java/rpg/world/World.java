@@ -197,7 +197,6 @@ public class World {
 
         for (Player player : players.values()) {
             if (player.isActive() && player.getHealth()<=0){
-                addDiff(new Diff(player.toMessage()+" passed out.", player.getX(),player.getY(),HEARINGRADIUS));
                 player.setActive(false);
                 player.setX(-20); //inactive player not displayed on the screen and doesn't influence other player's actions
                 player.setY(-20);
@@ -241,9 +240,13 @@ public class World {
             } else {
                 if(unit.getAttackCounter()+1==unit.getAttackSpeed()) {
                     playerAdjacent.addHealth(-unit.getDamage());
-                    addDiff(new Diff(playerAdjacent.toMessage()+ " was attacked by " +unit.toMessage() +  ", health now: "
-                            +playerAdjacent.getHealth(),playerAdjacent.getX(),playerAdjacent.getY(),HEARINGRADIUS));
-
+                    if (playerAdjacent.getHealth() > 0) {
+                        addDiff(new Diff(playerAdjacent.toMessage() + " was attacked by " + unit.toMessage() + ", health now: "
+                                + playerAdjacent.getHealth(), playerAdjacent.getX(), playerAdjacent.getY(), HEARINGRADIUS));
+                    } else {
+                        addDiff(new Diff(playerAdjacent.toMessage() + " passed out. "
+                                + playerAdjacent.getHealth(), playerAdjacent.getX(), playerAdjacent.getY(), HEARINGRADIUS));
+                    }
                 }
                 unit.setAttackCounter((unit.getAttackCounter()+1)%unit.getAttackSpeed());
             }
