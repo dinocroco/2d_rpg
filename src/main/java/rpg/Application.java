@@ -88,14 +88,18 @@ public class Application extends JFrame implements KeyListener {
         }
     }
 
-    private void close() {
-        if(server!=null) {
-            server.shutDown();
-        }
+    private void close(){
         if(passwordPlayer.size()>0){
             writePasswordPlayers();
         }
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        if(server!=null) {
+            try {
+                server.shutDown();
+            } catch (IOException e){
+                throw new RuntimeException(e); //no point in throwing IOE again
+            }
+        }
     }
 
     public void keyReleased(KeyEvent e) {

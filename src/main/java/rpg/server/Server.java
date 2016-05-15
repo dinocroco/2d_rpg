@@ -5,10 +5,7 @@ import rpg.Application;
 import rpg.client.ClientData;
 import rpg.client.PlayerData;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -47,7 +44,11 @@ public class Server {
                         sendToOne(randomIndex,randomIndex);
                     } catch (SocketException e){
                         System.out.println("Socket failed");
-                        shutDown();
+                        try {
+                            shutDown();
+                        } catch (IOException e1){
+                            throw new RuntimeException(e1);
+                        }
                         break;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -96,7 +97,6 @@ public class Server {
                             if (obj instanceof PlayerData){
                                 PlayerData playerData = (PlayerData) obj;
                                 app.newConnection(playerData);
-                                //System.out.println(playerData);
                             }
                             if (obj instanceof ClientData) {
                                 ClientData clientdata = (ClientData) obj;
@@ -127,10 +127,8 @@ public class Server {
             out.reset();
             out.writeObject(obj);
         }
-        public void close() {
-            IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(socket);
+        public void close() throws IOException{
+            closeLoudly(out,in,socket);
             read.interrupt();
         }
     }
@@ -165,17 +163,42 @@ public class Server {
         }
     }
 
-    public void shutDown() {
+    public void shutDown() throws IOException {
         accept.interrupt();
         messageHandling.interrupt();
         for (Connection connection : clientMap.values()) {
             connection.close();
         }
-        IOUtils.closeQuietly(serverSocket);
+        //IOUtils.closeQuietly(serverSocket);
+        closeLoudly(serverSocket);
     }
 
-    public void kick(int id){
-        clientMap.get(id).close();
+    public void kick(int id) {
+        try {
+            clientMap.get(id).close();
+        } catch (IOException e){
+            e.printStackTrace();
+            System.out.println("exception while kicking client");
+        }
+    }
+
+    public void closeLoudly(Closeable... closeables) throws IOException {
+
+        IOException exceptionToThrow = null;
+
+        for (Closeable closeable : closeables) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                if (exceptionToThrow == null) {
+                    exceptionToThrow = e;
+                }
+            }
+        }
+
+        if (exceptionToThrow != null) {
+            throw exceptionToThrow;
+        }
     }
 
 }
