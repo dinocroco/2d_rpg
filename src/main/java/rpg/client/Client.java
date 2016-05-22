@@ -67,9 +67,7 @@ public class Client {
                     while(idCode==0){
                         Thread.sleep(50);
                     }
-                    if (playername == null){
-                        playername = idCode+"";
-                    }
+
                     while(serverOpen){
                         AsciiSymbol[][] asciiView = asciiMessages.poll();
                         Diff diff = diffs.poll();
@@ -185,6 +183,9 @@ public class Client {
                                 Thread.sleep(50);
                             }
                             if(!playerDataSent){
+                                if (playername == null){
+                                    playername = idCode+"";
+                                }
                                 PlayerData playerdata = new PlayerData(idCode,playername,password);
                                 send(playerdata);
                                 playerDataSent = true;

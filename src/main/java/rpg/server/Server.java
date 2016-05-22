@@ -170,13 +170,10 @@ public class Server {
         closeLoudly(serverSocket);
     }
 
-    public void kick(int id) {
-        try {
+    public void kick(int id) throws IOException{
+
             clientMap.get(id).close();
-        } catch (IOException e){
-            e.printStackTrace();
-            System.out.println("exception while kicking client");
-        }
+
     }
 
     public void closeLoudly(Closeable... closeables) throws IOException {

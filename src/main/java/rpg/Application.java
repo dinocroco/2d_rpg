@@ -106,7 +106,7 @@ public class Application extends JFrame implements KeyListener {
 
     }
 
-    public synchronized void newConnection(PlayerData playerData){
+    public synchronized void newConnection(PlayerData playerData) throws IOException{
         // search if that player exists already
         Player player;
         if(passwordPlayer.containsKey(playerData.playername+"/"+playerData.password)) {
@@ -182,34 +182,21 @@ public class Application extends JFrame implements KeyListener {
                         addGameActions(new FreezeUnit(player,nearestUnit,15));
                     }
                 }
-                if (!e.isShiftDown()) {
-                    if (i == KeyEvent.VK_RIGHT) {
-                        addGameActions(new Movement(player, 1, 0, false));
-                    }
-                    if (i == KeyEvent.VK_LEFT) {
-                        addGameActions(new Movement(player, -1, 0, false));
-                    }
-                    if (i == KeyEvent.VK_UP) {
-                        addGameActions(new Movement(player, 0, -1, false));
-                    }
-                    if (i == KeyEvent.VK_DOWN) {
-                        addGameActions(new Movement(player, 0, 1, false));
-                    }
-                } else {
-                    if (i == KeyEvent.VK_RIGHT) {
-                        addGameActions(new Movement(player, 1, 0, true));
-                    }
-                    if (i == KeyEvent.VK_LEFT) {
-                        addGameActions(new Movement(player, -1, 0, true));
-                    }
-                    if (i == KeyEvent.VK_UP) {
-                        addGameActions(new Movement(player, 0, -1, true));
-                    }
-                    if (i == KeyEvent.VK_DOWN) {
-                        addGameActions(new Movement(player, 0, 1, true));
-                    }
-
+                boolean dig = e.isShiftDown();
+                if (i == KeyEvent.VK_RIGHT) {
+                    addGameActions(new Movement(player, 1, 0, dig));
                 }
+                if (i == KeyEvent.VK_LEFT) {
+                    addGameActions(new Movement(player, -1, 0, dig));
+                }
+                if (i == KeyEvent.VK_UP) {
+                    addGameActions(new Movement(player, 0, -1, dig));
+                }
+                if (i == KeyEvent.VK_DOWN) {
+                    addGameActions(new Movement(player, 0, 1, dig));
+                }
+
+
                 if (i == KeyEvent.VK_ESCAPE) {
                     for (int j = 0; j < gameActions.size(); j++) {
                         if (gameActions.get(j).characterID == clientdata.getId()){
@@ -364,6 +351,9 @@ public class Application extends JFrame implements KeyListener {
     public synchronized void writePasswordPlayers(){
         try(ObjectOutputStream dos = new ObjectOutputStream(new FileOutputStream("players.dat"))){
             for (Player player : passwordPlayer.values()) {
+                if (player.getPassword() == null){
+                    continue;
+                }
                 dos.writeObject(player);
             }
         } catch (IOException e){
